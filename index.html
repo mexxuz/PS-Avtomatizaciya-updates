@@ -617,11 +617,13 @@
   function lockNote(id) {
     return '<div class="lockbox"><b>🔒 ' + esc(modName(id)) + ' — эта часть не входит в ваш ключ.</b><div class="ex">Всё остальное работает как обычно. ' +
       'Чтобы включить эту часть, напишите за доступом и передайте код компьютера: <b>' + esc(S.lic.code) + '</b>. ' +
-      'Часть включится новым ключом — переустанавливать ничего не нужно.</div></div>';
+      'Часть включится новым ключом — переустанавливать ничего не нужно.</div>' +
+      (S.lic.contact ? '<div class="ex">Куда писать: <b>' + esc(S.lic.contact) + '</b></div>' : '') + '</div>';
   }
   function lockSay(id) {
     say(modName(id) + ' — эта часть не входит в ваш ключ. Код компьютера: ' + S.lic.code +
-        '. Напишите за доступом: часть включится новым ключом, переустанавливать ничего не нужно.');
+        (S.lic.contact ? '. Напишите за доступом: ' + S.lic.contact : '. Напишите за доступом') +
+        '. Часть включится новым ключом, переустанавливать ничего не нужно.');
   }
 
   function inArr(a, v) { for (var i = 0; i < a.length; i++) if (a[i] == v) return true; return false; }
@@ -746,6 +748,10 @@
               (L.mods[j].on ? '✓ ' : '🔒 ') + esc(L.mods[j].name) + '</div>';
       }
       mh += '<div class="ex">Закрытые части включаются новым ключом — переустанавливать ничего не нужно.</div>';
+    }
+    if (L.contact) {
+      mh += '<div class="note" style="margin-top:8px">Куда писать за ключом:</div><div class="ex"><b>' + esc(L.contact) + '</b></div>';
+      mh += '<div class="ex">Пробный ключ — все части на 14 дней, попросите при обращении.</div>';
     }
     $('licMods').innerHTML = mh;
     var b = $('licBar');
