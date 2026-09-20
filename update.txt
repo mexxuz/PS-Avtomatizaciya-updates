@@ -1,8 +1,8 @@
-version=1.7.2
-note=Контакт для связи в панели: телефон, телеграм и почта — видно в окне активации и там, где часть закрыта.
-file=VarPrint.gms|af5aac2941c20b17c3af16a48f097b3d352df858879c7dba3c9f9c6e304c842b
-file=index.html|20069857efe2408ca3d53e8747c8a9e820d0a00654c288303d41540d1eb859eb
-file=VarPrint_merge.exe|923e4c99b5ff37210ce2b9d75247362d873659a0952327e7143e28dd51a8ce41
+version=1.7.3
+note=Пробный период — 7 дней.
+file=VarPrint.gms|78359a9720fddea6f03919d2ccfcad6c1ae8288d05db588d498c485df15d453c
+file=index.html|3818a827e3a45d9948be5f7d91abba242bbebd210c122296a96e38650eec5db1
+file=VarPrint_merge.exe|553b6f28e59c6374065259f36861c66c2c4837768dd2c37440ea7bd1a5844627
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=oMCyOhrtZMpsWDwhelrdVtGL3Mi492B-_rgF-Mnpyvd-NLm4tK-5BuYP80wjYou0MQi4em42yPGbZCVHj3DdAA
+sig=kG65ntMpYgm8q_tVwF6n3So1IqpvDfT_L-_w2cnNUPEtcDvm6U9DGhGwRlZ8LVSGoRoHnrJ5yZo2X722aJb73A
