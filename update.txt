@@ -1,0 +1,8 @@
+version=1.7.0
+note=Перепечатка брака, ведомость листов, журнал номеров, проверка файла клиента, текст из нескольких столбцов. Белила и лак — отдельная вкладка: слой или плашечный цвет, свои имена каналов, зеркало для DTF. Продажа частями. Обновление через интернет.
+file=VarPrint.gms|256f613f75ac795b91d7031c123570b50c2c7cd7ec426ec6711747ad416c676d
+file=index.html|7d46e7404d4c8556420df3dfba19067af29297583c30254426891141541c1b6a
+file=VarPrint_merge.exe|da87413b4eb79860d9b241a03622a215c81e727ed94c23f860d0ececa7d742ec
+file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
+file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
+sig=VpQV29vSI2MoThgxoaMq8i1PSM_BTDhK1Lq7JHQEQErSw4YmQGXDNWuy4mYVy-XWiw53-bBAkCquqaSvDPPhRw
