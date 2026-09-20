@@ -151,6 +151,15 @@
   input[type=text]:hover, textarea:hover { border-color: #737373; }
   textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 3px 5px; resize: vertical; margin: 4px 0; }
   input[type=text].full { width: 100%; box-sizing: border-box; }
+  /* пошаговая инструкция: полоска внизу панели и подсветка нужной кнопки */
+  .tourbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: #1d2a33; border-top: 1px solid #2d5d93;
+             padding: 8px 10px; box-shadow: 0 -2px 8px rgba(0,0,0,.35); }
+  .tourbar .tnum { color: #8fb8e6; font-size: 11px; }
+  .tourbar .ttext { margin: 3px 0 6px; }
+  .tourbar .tdone { color: #8fd08f; }
+  .tourbar .btns { margin: 0; }
+  body.tour { padding-bottom: 104px; }
+  .tourhi { outline: 2px solid #4a86c5; outline-offset: 1px; }
   .lockbox { border: 1px solid #5a4a22; background: #2a2418; border-radius: 4px; padding: 8px 10px; margin: 8px 0; }
   .lockbox b { color: #e8c67a; }
   .page.locked > *:not(.lockbox) { opacity: .35; }
@@ -530,6 +539,8 @@
 
   <div style="padding:0 10px 10px"><div class="msg" id="msg"></div>
   <button class="btn full" data-act="refresh">Обновить</button>
+  <button class="btn full" data-act="tour" style="margin-top:6px">Показать, как работать</button>
+  <div class="ex">Проведёт по шагам: подсветит нужную кнопку и подскажет, что сделать. Можно прервать и продолжить позже.</div>
   <div class="ex" id="verLine" style="margin-top:6px"></div>
   <div style="margin-top:8px"><a class="lnk" data-act="report">Что-то не так? Скопировать отчёт о проблеме</a></div>
   <div class="ex">Отчёт соберёт, что вы нажимали и что ответил макрос. Он скопируется — вставьте его в сообщение разработчику. Ещё он сохранится файлом «PS-отчёт.txt» на рабочем столе.</div></div>
@@ -660,6 +671,10 @@
     'reprint|pdf': 'PDF только с испорченными картами.',
     'journal': 'Папка с журналами номеров — по файлу на заказчика.',
     'updcheck': 'Проверить, есть ли новая версия, и поставить её. Обычно ставится сама.',
+    'tour': 'Провести по шагам: от образца карты до готовых файлов в печать.',
+    'tournext': 'Следующий шаг.',
+    'tourback': 'Предыдущий шаг.',
+    'tourstop': 'Закрыть инструкцию. Место запомнится — можно продолжить позже.',
     'inkmark|0': 'Краска отмечена отдельным слоем: всё, что на нём, печатается этой краской.',
     'inkmark|1': 'Краска отмечена плашечным цветом: объекты этого цвета печатаются этой краской.',
     'inkcreate': 'Создать в макете слой или плашечный цвет этой краски.',
@@ -680,7 +695,7 @@
     'template': 'marks', 'run|preview|trial': 'eye', 'run|tiff|trial': 'image', 'run|tiff|order': 'image', 'run|pdf|order': 'pdf', 'run|print|order': 'print',
     'white': 'drop', 'pickfile': 'folder', 'pfcheck': 'search', 'pfshow': 'eye', 'pffix': 'wand', 'pfpdf': 'pdf', 'proof': 'image',
     'package': 'pack', 'batch': 'folder', 'refresh': 'refresh', 'liccopy': 'copy', 'licgo': 'key', 'goto|0': 'arrowL', 'goto|1': 'arrowL', 'goto|2': 'arrowR',
-    'underlay': 'drop', 'varnish': 'drop', 'inkassign': 'drop', 'inkcreate': 'plus', 'checkdata': 'search', 'rpfind': 'search', 'reprint|preview': 'eye', 'reprint|tiff': 'image', 'reprint|pdf': 'pdf', 'journal': 'folder' };
+    'underlay': 'drop', 'varnish': 'drop', 'inkassign': 'drop', 'inkcreate': 'plus', 'tour': 'eye', 'checkdata': 'search', 'rpfind': 'search', 'reprint|preview': 'eye', 'reprint|tiff': 'image', 'reprint|pdf': 'pdf', 'journal': 'folder' };
   function iconFor(e) {
     var a = e.getAttribute('data-act'); if (!a) return '';
     var k = [a, e.getAttribute('data-mode'), e.getAttribute('data-scope')].join('|').replace(/\|+$/, '');
@@ -751,13 +766,101 @@
     $('verLine').innerHTML = h;
   }
 
+  // ---------- пошаговая инструкция ----------
+  // Шаги: на какой вкладке, что подсветить, что сказать и как понять, что шаг сделан.
+  // done(S) — проверка по состоянию документа; нет проверки — человек нажимает «Дальше».
+  var TOUR = [
+    { tab: 1, sel: '[data-act="impmode"][data-v="sample"]',
+      text: 'Начинаем с образца карты: один файл, где нарисована одна карта, а страницы — это стороны (лицо, оборот). Откройте такой файл в CorelDRAW.',
+      done: function (S) { return S.doc && S.doc.sample; } },
+    { tab: 0, sel: '[data-act="add"][data-kind="text"]', mod: 'D',
+      text: 'Выделите на карте надпись, которая должна меняться (номер, имя), и нажмите подсвеченную кнопку. Надпись станет переменным полем.',
+      done: function (S) { return S.fields && S.fields.length > 0; } },
+    { tab: 0, sel: '.seg', mod: 'D',
+      text: 'Выберите, откуда брать значения: «По порядку» — номера подряд, «Из файла клиента» — из Excel или текста. Ниже задайте первый номер или выберите файл и столбец.',
+      done: function (S) { return S.fields && S.fields.length > 0 && !S.fields[0].err; } },
+    { tab: 0, sel: '[data-act="show"]', mod: 'D',
+      text: 'Нажмите, чтобы подставить на карту первое значение и посмотреть глазами: тот ли шрифт, то ли место, все ли цифры влезли.' },
+    { tab: 4, sel: '[data-act="inkassign"][data-i="1"]', mod: 'U',
+      text: 'Если печать на УФ или DTF: отметьте, что печатается белилами и лаком. Этот шаг можно пропустить кнопкой «Дальше».' },
+    { tab: 1, sel: '[data-act="impose"]', mod: '',
+      text: 'Задайте размер листа и зазоры, потом нажмите подсвеченную кнопку — карты разложатся на лист в новом файле. Исходный образец не меняется.',
+      done: function (S) { return S.doc && !S.doc.sample; } },
+    { tab: 2, sel: '[data-act="run"][data-mode="preview"]', mod: 'D',
+      text: 'Пробный лист: подставит номера одного листа прямо в раскладку на экране. Проверьте первый номер, оборот и нули.' },
+    { tab: 2, sel: '[data-act="run"][data-mode="tiff"][data-scope="trial"]', mod: 'U',
+      text: 'Теперь пробный лист в TIFF — откройте его в Фотошопе или программе печати и убедитесь, что белила и лак на месте.' },
+    { tab: 2, sel: '[data-act="run"][data-scope="order"]', mod: 'D',
+      text: 'Последний шаг — весь заказ: TIFF для УФ-печати, PDF или сразу на принтер. CorelDRAW будет занят; остановить можно кнопкой «Стоп» в окошке.' },
+    { tab: 3, sel: '[data-act="pfcheck"]', mod: 'O',
+      text: 'И на будущее: чужой макет перед печатью можно проверить здесь — цвета, картинки, вылеты. Это конец инструкции.' }
+  ];
+  var tourStep = -1;
+  try { var ts = localStorage.getItem('tourStep'); if (ts !== null) tourStep = +ts; } catch (x) { }
+
+  function tourSave() { try { localStorage.setItem('tourStep', String(tourStep)); } catch (x) { } }
+
+  // пропускаем шаги тех частей, которых нет в ключе
+  function tourSkip(i, dir) {
+    while (i >= 0 && i < TOUR.length && TOUR[i].mod && !hasMod(TOUR[i].mod)) i += dir;
+    return i;
+  }
+
+  function tourGo(i) {
+    tourStep = tourSkip(i, 1);
+    if (tourStep >= TOUR.length) { tourEnd('Инструкция пройдена. Кнопка «Показать, как работать» всегда внизу панели.'); return; }
+    tourSave();
+    var st = TOUR[tourStep];
+    if (st.tab != null && st.tab != tab) { tab = st.tab; }
+    load();
+  }
+
+  function tourEnd(msg) {
+    tourStep = -1; tourSave();
+    var b = $('tourBar'); if (b) b.parentNode.removeChild(b);
+    document.body.className = document.body.className.replace(' tour', '');
+    if (msg) say(msg);
+    render();
+  }
+
+  function renderTour() {
+    var old = $('tourBar');
+    if (old) old.parentNode.removeChild(old);
+    var hi = document.getElementsByClassName('tourhi');
+    while (hi.length) hi[0].className = hi[0].className.replace(' tourhi', '').replace('tourhi', '');
+    if (tourStep < 0 || tourStep >= TOUR.length) {
+      document.body.className = document.body.className.replace(' tour', '');
+      return;
+    }
+    if (document.body.className.indexOf('tour') < 0) document.body.className += ' tour';
+    var st = TOUR[tourStep], ok = false;
+    try { ok = st.done ? !!st.done(S) : false; } catch (x) { }
+    var h = '<div class="tnum">Шаг ' + (tourStep + 1) + ' из ' + TOUR.length + (ok ? ' · <span class="tdone">сделано ✓</span>' : '') + '</div>';
+    h += '<div class="ttext">' + esc(st.text) + '</div>';
+    h += '<div class="btns"><button class="btn" data-act="tourback">← Назад</button>' +
+         '<button class="btn main" data-act="tournext">' + (ok ? 'Дальше →' : 'Дальше →') + '</button>' +
+         '<button class="btn" data-act="tourstop">Закрыть</button></div>';
+    var d = document.createElement('div');
+    d.className = 'tourbar'; d.id = 'tourBar'; d.innerHTML = h;
+    document.body.appendChild(d);
+    // подсветить нужную кнопку
+    var el = null;
+    try { el = document.querySelector(st.sel); } catch (x) { }
+    if (el) {
+      el.className += ' tourhi';
+      try { el.scrollIntoView(); } catch (x) { }
+    }
+  }
+
   function render() {
     if (S.fields && S.fields.length && !field(cur)) cur = S.fields[0].id;
     if (renderLic()) { $('doc').innerHTML = 'PS • Автоматизация — активация'; bind(); return; }
     if (!S.doc) { $('doc').innerHTML = 'Нет открытого документа'; bind(); return; }
     $('doc').innerHTML = (S.doc.sample ? 'Образец карты: ' : 'Раскладка: ') + '<b>' + esc(S.doc.name) + '</b>' +
       (S.doc.sample ? '' : ' · ' + S.run.places + ' на лист');
-    renderSteps(); renderFields(); renderEditor(); renderImpose(); renderOutput(); renderPF(); renderInks(); renderLocks(); renderVer(); bind();
+    var tz = document.querySelectorAll('.tab');
+    for (var ti = 0; ti < tz.length; ti++) tz[ti].className = 'tab' + (ti == tab ? ' on' : '');
+    renderSteps(); renderFields(); renderEditor(); renderImpose(); renderOutput(); renderPF(); renderInks(); renderLocks(); renderVer(); renderTour(); bind();
   }
 
   // Вкладка «Краски»: белила и лак — чем отмечены в макете и как называются в файле для печати
@@ -1355,6 +1458,10 @@
     var a = e.getAttribute('data-act'), r;
     say('');
     if (a == 'refresh') { load(); return; }
+    if (a == 'tour') { tourGo(0); return; }
+    if (a == 'tournext') { tourGo(tourStep + 1); return; }
+    if (a == 'tourback') { var b = tourSkip(tourStep - 1, -1); tourGo(b < 0 ? 0 : b); return; }
+    if (a == 'tourstop') { tourEnd(''); return; }
     if (a == 'updcheck') { say('Смотрю, есть ли обновление…'); setTimeout(function () { say(call('UpdateCheck')); }, 30); return; }
     if (a == 'src') { call('SetField', cur, 'source', e.getAttribute('data-v')); load(); return; }
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; var tz = document.querySelectorAll('.tab'); for (var t = 0; t < tz.length; t++) tz[t].className = 'tab' + (t == tab ? ' on' : ''); load(); return; }
