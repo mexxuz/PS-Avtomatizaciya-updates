@@ -543,7 +543,15 @@
   <div class="ex">Проведёт по шагам: подсветит нужную кнопку и подскажет, что сделать. Можно прервать и продолжить позже.</div>
   <div class="ex" id="verLine" style="margin-top:6px"></div>
   <div style="margin-top:8px"><a class="lnk" data-act="report">Что-то не так? Скопировать отчёт о проблеме</a></div>
-  <div class="ex">Отчёт соберёт, что вы нажимали и что ответил макрос. Он скопируется — вставьте его в сообщение разработчику. Ещё он сохранится файлом «PS-отчёт.txt» на рабочем столе.</div></div>
+  <div class="ex">Отчёт соберёт, что вы нажимали и что ответил макрос. Он скопируется — вставьте его в сообщение разработчику. Ещё он сохранится файлом «PS-отчёт.txt» на рабочем столе.</div>
+  <div class="note" style="margin-top:8px">Что-то выглядит неправильно?</div>
+  <textarea id="problem" rows="3" placeholder="Например: белила вылезают из-под краски на третьей карте сверху"></textarea>
+  <label class="chk"><input type="checkbox" id="withShot" checked>Приложить снимок окна CorelDRAW</label>
+  <button class="btn full main" data-act="problem">Сообщить о проблеме</button>
+  <div class="ex">Уйдёт ваше описание, снимок окна и отчёт о том, что нажимали. Макеты и файлы клиентов не отправляются.</div>
+  <button class="btn full" data-act="sendreport" style="margin-top:6px">Отправить только отчёт</button>
+  <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях самому</label>
+  <div class="ex" style="margin-left:19px">Уходит только текст отчёта: что нажимали, что ответил макрос, версия и код компьютера. Макеты, номера и файлы клиентов не отправляются. Нет связи — отчёт подождёт и уйдёт позже.</div></div>
 
 <script src="printers.js"></script>
 <script>
@@ -590,7 +598,17 @@
     try { if (window.external && window.external.Application) host = window.external.Application; } catch (e) { host = null; }
     if (!host) { $('doc').innerText = 'Панель не видит CorelDRAW.'; return false; }
     // После запуска CorelDRAW панель открывается раньше, чем подгружаются макросы
-    try { host.InitializeVBA(); } catch (e) { }
+    var vba = true;
+    try { host.InitializeVBA(); } catch (e) { vba = false; }
+    try { if (!host.GMSManager) vba = false; } catch (e) { vba = false; }
+    if (!vba) {
+      // Такое бывает, когда CorelDRAW поставили без поддержки макросов — лучше сказать прямо
+      $('doc').innerHTML = '<span class="bad">В этом CorelDRAW нет поддержки макросов.</span>';
+      $('msg').style.display = 'block';
+      $('msg').innerText = 'Программа не может работать без поддержки макросов (VBA). Переустановите CorelDRAW и при установке включите компонент «Visual Basic for Applications». ' +
+        'Проверить можно так: Инструменты — Параметры — CorelDRAW — VBA: если там всё серое и не меняется, поддержки нет.';
+      return false;
+    }
     return true;
   }
 
@@ -673,6 +691,8 @@
     'reprint|pdf': 'PDF только с испорченными картами.',
     'journal': 'Папка с журналами номеров — по файлу на заказчика.',
     'updcheck': 'Проверить, есть ли новая версия, и поставить её. Обычно ставится сама.',
+    'sendreport': 'Отправить отчёт о проблеме разработчику через интернет.',
+    'problem': 'Отправить разработчику описание проблемы со снимком окна CorelDRAW.',
     'tour': 'Провести по шагам: от образца карты до готовых файлов в печать.',
     'tournext': 'Следующий шаг.',
     'tourback': 'Предыдущий шаг.',
@@ -697,7 +717,7 @@
     'template': 'marks', 'run|preview|trial': 'eye', 'run|tiff|trial': 'image', 'run|tiff|order': 'image', 'run|pdf|order': 'pdf', 'run|print|order': 'print',
     'white': 'drop', 'pickfile': 'folder', 'pfcheck': 'search', 'pfshow': 'eye', 'pffix': 'wand', 'pfpdf': 'pdf', 'proof': 'image',
     'package': 'pack', 'batch': 'folder', 'refresh': 'refresh', 'liccopy': 'copy', 'licgo': 'key', 'goto|0': 'arrowL', 'goto|1': 'arrowL', 'goto|2': 'arrowR',
-    'underlay': 'drop', 'varnish': 'drop', 'inkassign': 'drop', 'inkcreate': 'plus', 'tour': 'eye', 'checkdata': 'search', 'rpfind': 'search', 'reprint|preview': 'eye', 'reprint|tiff': 'image', 'reprint|pdf': 'pdf', 'journal': 'folder' };
+    'underlay': 'drop', 'varnish': 'drop', 'inkassign': 'drop', 'inkcreate': 'plus', 'tour': 'eye', 'sendreport': 'flag', 'problem': 'flag', 'checkdata': 'search', 'rpfind': 'search', 'reprint|preview': 'eye', 'reprint|tiff': 'image', 'reprint|pdf': 'pdf', 'journal': 'folder' };
   function iconFor(e) {
     var a = e.getAttribute('data-act'); if (!a) return '';
     var k = [a, e.getAttribute('data-mode'), e.getAttribute('data-scope')].join('|').replace(/\|+$/, '');
@@ -770,6 +790,7 @@
       h = '<span class="ok">✓ Обновлено до версии ' + esc(u[0]) + '.</span> ' + (u[1] ? esc(u[1]) + ' ' : '') + h;
     }
     $('verLine').innerHTML = h;
+    if ($('repAuto')) $('repAuto').checked = (S.repAuto !== false);
   }
 
   // ---------- пошаговая инструкция ----------
@@ -1468,6 +1489,14 @@
     if (a == 'tournext') { tourGo(tourStep + 1); return; }
     if (a == 'tourback') { var b = tourSkip(tourStep - 1, -1); tourGo(b < 0 ? 0 : b); return; }
     if (a == 'tourstop') { tourEnd(''); return; }
+    if (a == 'problem') {
+      var pt = $('problem').value;
+      if (!/\S/.test(pt)) { say('Напишите одной строкой, что не так.'); return; }
+      say('Отправляю…');
+      setTimeout(function () { var pr = call('ProblemSend', pt, $('withShot').checked ? '1' : '0'); say(pr); if (pr.indexOf('Отправлено') === 0) $('problem').value = ''; }, 30);
+      return;
+    }
+    if (a == 'sendreport') { say('Отправляю отчёт…'); setTimeout(function () { say(call('ReportSend')); }, 30); return; }
     if (a == 'updcheck') { say('Смотрю, есть ли обновление…'); setTimeout(function () { say(call('UpdateCheck')); }, 30); return; }
     if (a == 'src') { call('SetField', cur, 'source', e.getAttribute('data-v')); load(); return; }
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; var tz = document.querySelectorAll('.tab'); for (var t = 0; t < tz.length; t++) tz[t].className = 'tab' + (t == tab ? ' on' : ''); load(); return; }
@@ -1603,6 +1632,7 @@
     if (id == 'sideFolders') { call('SetRun', 'sideFolders', e.checked ? '1' : '0'); load(); return; }
     if (id == 'pdfOneFile' || id == 'sheetsAuto' || id == 'register') { call('SetRun', id, e.checked ? '1' : '0'); load(); return; }
     if (id == 'client') { call('SetRun', 'client', e.value); load(); return; }
+    if (id == 'repAuto') { call('ReportAuto', e.checked ? '1' : '0'); return; }
   };
 
   // Пересчёт раскладки на лету, пока печатают цифры
