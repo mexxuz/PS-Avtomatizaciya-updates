@@ -1,9 +1,9 @@
-version=1.8.0
-note=Новая панель: сверху «Макет» с общими шагами и ваше оборудование — в каждом только своё. Новое: календарь, лазерная резка, фрезеровка и объёмные буквы, белила и лак одной кнопкой. УФ: белила и лак ложатся и под номера, PDF стал в десятки раз легче.
-file=VarPrint.gms|e806e84af3370b67b3e717583614efb4a6a353e8e2b11c402d9ec1b5bfd91abb
-file=index.html|a948b2ae3ef3584e41ab7fc63143dc8cf168a7845cffcd61aa37f346115ec05f
-file=VarPrint_merge.exe|6ea4b778bd861f9c3aa21d68d56fbc1f7e99f5caa1a4cf58d9a4f2bf5263d851
-file=VarPrint_nest.exe|94c5bbe74311299d0bdbdc1a1d23e42fdc29dd0bef5609d00e10f742f0be7dbc
+version=1.8.1
+note=Без ключа бесплатно: нумерация до 50 номеров, раскладка на лист и вывод — всё в «Макете». Новое в «Заказе»: лист согласования клиенту и задание в печать для цеха. За ключом можно написать кнопкой в Telegram или на почту. Исправлено: при выводе в PDF и TIFF нижние объекты больше не закрывают верхние.
+file=VarPrint.gms|35178c1aa233b7bd4599f3bc1bf0d50e869fc308d76bbd7831df6aaa81853fef
+file=index.html|212943c1b7f1c8168cba47ee40311928f185bb64cddb433ac10919c7a1bb9300
+file=VarPrint_merge.exe|cf76872953fc54390eea7246a0bc36f70fddc62c5790462ab861c23511732833
+file=VarPrint_nest.exe|46e83feef1bfc65904c95229adf34cfa550d82794ac84694a7db9cc30c0d7177
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=_Fk9oycz_Wtv3juAZfHrKf_10OL0-xDSPHhhV_0WdnpXgew9D0JNJrPByN5TymsCrbCit6Wf0PHVsB827vykqg
+sig=2ogbEau8Fo2-pU3Wn9bStwh1hMkm5BTZbzZqDUJnNBe_AJ89t3dB98e0vjEEIkTet1A67jBQ_ydvn7I_8aGoJA

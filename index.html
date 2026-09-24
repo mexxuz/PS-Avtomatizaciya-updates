@@ -327,8 +327,17 @@
   .tourhi { outline: 2px solid #4a86c5; outline-offset: 1px; }
   .lockbox { border: 1px solid #5a4a22; background: #2a2418; border-radius: 4px; padding: 8px 10px; margin: 8px 0; }
   .lockbox b { color: #e8c67a; }
+  /* «Номера» без ключа: плашка с пределами — своя, её не снимает проверка закрытых страниц */
+  .freebox { border: 1px solid #5a4a22; background: #2a2418; border-radius: 4px; padding: 8px 10px; margin: 8px 0; }
+  .freebox b { color: #e8c67a; }
+  .lockbox.flash, .freebox.flash { border-color: #e8c67a; box-shadow: 0 0 0 1px #e8c67a; }
   .page.locked > *:not(.lockbox) { opacity: .35; }
-  .btn.lockedbtn, .seg .btn.lockedbtn { color: #8a8d93; }
+  .card.filelocked { opacity: .35; pointer-events: none; }
+  .lockedarea { opacity: .35; pointer-events: none; }
+  .sec-h.lockedbtn { color: #8a8d93; }
+  .btn.lockedbtn, .seg .btn.lockedbtn, .sub.lockedbtn { color: #6f7378; }
+  .btn.lockedbtn small, .seg .btn.lockedbtn small { color: #5f6368; }
+  .btn.lockedbtn .lkb { color: #9a9ea5; }
   .tab .lk { color: #e8c67a; font-size: 11px; position: absolute; top: 3px; right: 6px; }
   input[type=text]:focus, textarea:focus { border-color: #4a86c5; }
   input[type=text]:disabled { color: #6f7378; border-color: #3c3c3c; }
@@ -445,8 +454,21 @@
   .calsecsw { margin: 10px 0 6px; }
   .calsecsw a, .calsecsw a + a { padding: 4px 2px; font-size: 11px; }
   .calsec .lth:first-child { margin-top: 8px; }
+  .cbtns { display: flex; margin-top: 8px; }
+  .cbtns .btn { -ms-flex: 1 1 0%; flex: 1 1 0%; width: 10px; min-width: 0; height: 28px; padding: 0 6px; }
+  .cbtns .btn + .btn { margin-left: 6px; }
+  .ccode { margin-top: 7px; font-size: 11px; color: #9a9ea5; }
+  .ccode b { color: #e2e5e9; letter-spacing: .03em; }
   .inkcnt { margin-left: auto; padding-left: 8px; color: #8a8d93; font-size: 11px; white-space: nowrap; }
-  .stp .st .lk { position: absolute; top: 0; left: 50%; margin-left: 6px; font-size: 9px; background: inherit; }
+  /* закрытое ключом — серым */
+  .eq.off > svg, .eq.off .lb { opacity: .35; }
+  .stp .st.off > svg, .stp .st.off .lb { opacity: .38; }
+  .stp .st.off.on > svg, .stp .st.off.on .lb { opacity: .6; }
+  .stp .st.off .lk { color: #c3c7cd; }
+  /* пунктов больше шести — подписи мельче, чтобы не обрезались */
+  .stp.many .st .lb { font-size: 9px; letter-spacing: -.4px; }
+  .stp .st .lk { position: absolute; top: 1px; left: 50%; margin-left: 7px; line-height: 0; background: inherit; }
+  .stp .st .lk svg.lki { width: 10px; height: 10px; margin: 0; }
   .eqsub { padding: 1px 12px 0; color: #8a8d93; font-size: 11px; }
   .eqhead { flex-wrap: wrap; }
   .eqtools { margin-left: auto; font-size: 11px; white-space: nowrap; background: inherit; }
@@ -461,14 +483,21 @@
   .eq:hover { background: #333333; }
   .eq.on { background: #1d4470; color: #fff; }
   .eq svg { display: block; width: 18px; height: 18px; margin: 0 auto; background: inherit; }
-  .eq .lk { position: absolute; top: 0; right: 1px; font-size: 8px; line-height: 10px; color: #e8c67a; background: inherit; }
+  .eq .lk { position: absolute; top: 2px; right: 3px; line-height: 0; color: #c3c7cd; background: inherit; }
+  .eq .lk svg.lki { width: 10px; height: 10px; }
+  .eq.off .lk svg.lki { opacity: 1; }
+  svg.lki { display: inline-block; vertical-align: -1px; }
+  .lkb { display: inline-block; line-height: 0; margin-right: 5px; }
+  .lkb svg.lki { width: 11px; height: 11px; }
+  .seg .btn .lkb { display: block; margin: 0 auto 2px; }
+  .eqhead .eqlk svg.lki { width: 10px; height: 10px; margin-right: 3px; }
   .eqsep { -ms-flex: 0 0 auto; flex: 0 0 auto; width: 1px; background: #5c5c5c; margin: 3px 5px 3px 3px; }
   .eqpick .grp { color: #9a9ea5; margin: 6px 0 2px; }
   .eq.more { -ms-flex: 0 0 auto; flex: 0 0 auto; width: 16px; margin-right: 0; color: #7d8187; font-weight: 700; font-size: 14px; line-height: 18px; }
   .eqhead { display: flex; align-items: baseline; padding: 2px 10px 0; }
   .eqhead b { color: #e2e5e9; font-weight: 700; background: inherit; }
-  .eqhead .eqlk { margin-left: 6px; color: #e8c67a; font-size: 11px; background: inherit; }
-  .eqhead .eqlk a { color: #e8c67a; }
+  .eqhead .eqlk { margin-left: 6px; color: #8a8d93; font-size: 11px; background: inherit; }
+  .eqhead .eqlk a { color: #8a8d93; }
   .eqsteps { display: flex; flex-wrap: wrap; padding: 3px 8px 6px; border-bottom: 1px solid #525252; }
   .stc { border: 1px solid #4a4a4a; background: #2d2d2d; color: #aeb2b8; border-radius: 10px; padding: 2px 8px 2px 6px; margin: 2px 4px 2px 0;
          font-size: 11px; cursor: pointer; white-space: nowrap; }
@@ -547,8 +576,8 @@
     <div class="list" id="fields"></div>
     <div class="btns">
       <button class="btn main" data-act="add" data-kind="text" style="flex:2">Номер или текст</button>
-      <button class="btn" data-act="add" data-kind="code">Код</button>
-      <button class="btn" data-act="add" data-kind="pic">Картинка</button>
+      <button class="btn" data-act="add" data-kind="code" data-mod="D">Код</button>
+      <button class="btn" data-act="add" data-kind="pic" data-mod="D">Картинка</button>
     </div>
     <div class="note">Сначала выделите на карте надпись, которая должна меняться, потом нажмите кнопку.</div>
     <div id="editor"></div>
@@ -689,8 +718,8 @@
       <div class="info" id="cOut"></div>
     </div>
     <div id="sheetOnly" class="card adv"><h4>Оборот и метки</h4>
-    <label class="chk" id="wtRow" data-eq="offset"><input type="checkbox" id="workTurn">Свой оборот (офсет)</label>
-    <div class="ex under" id="wtNote" data-eq="offset">Лица и обороты на одном листе: лица — на левой половине, обороты — на правой. Печатают одну сторону, переворачивают лист слева направо и печатают теми же пластинами. Пластин вдвое меньше, с листа — два комплекта. Для номеров не годится: они повторятся.</div>
+    <label class="chk" id="wtRow" data-eq="offset" data-lockarea="O"><input type="checkbox" id="workTurn">Свой оборот (офсет)</label>
+    <div class="ex under" id="wtNote" data-eq="offset" data-lockarea="O">Лица и обороты на одном листе: лица — на левой половине, обороты — на правой. Печатают одну сторону, переворачивают лист слева направо и печатают теми же пластинами. Пластин вдвое меньше, с листа — два комплекта. Для номеров не годится: они повторятся.</div>
     <div id="mirBox">
     <label class="chk"><input type="checkbox" id="mirror">Оборот зеркально</label>
     <div class="ex under">Включите, если после лица переворачиваете весь лист или пачку листов (офсет). Если на УФ-столе переворачиваете каждую карту на своём месте — не включайте: оборот встанет в те же ячейки и тем же поворотом, что и лицо.</div>
@@ -707,7 +736,7 @@
     </div>
     </div>
     <div class="sec-h" data-mod="O" id="fOffsetH" data-eq="offset"><span class="caret"></span>Офсет: клапан, шкала, приводка</div>
-    <div class="fold-body" id="fOffset" data-eq="offset">
+    <div class="fold-body" id="fOffset" data-eq="offset" data-lockarea="O">
       <div class="ex">Для подготовки листа к офсету. На УФ-стол и готовые заготовки не нужно.</div>
       <div class="row"><span class="k">Печатник</span><select id="printer" class="wide"></select></div>
       <label class="chk"><input type="checkbox" id="plate">Поставить лист на пластину печатника</label>
@@ -736,11 +765,11 @@
   <div class="page" id="p2">
 
     <div class="subtabs">
-      <button class="sub on" data-act="sub" data-group="gPrint" data-sub="sOut" data-lock="D">Вывод</button>
+      <button class="sub on" data-act="sub" data-group="gPrint" data-sub="sOut">Вывод</button>
       <button class="sub" data-act="sub" data-group="gPrint" data-sub="sInk" data-lock="UW">Белила и лак</button>
       <button class="sub" data-act="sub" data-group="gPrint" data-sub="sAcct" data-lock="D">Брак и учёт</button>
     </div>
-    <div class="subpage on" data-group="gPrint" id="sOut" data-lock="D">
+    <div class="subpage on" data-group="gPrint" id="sOut">
     <div id="outHint"></div>
     <div class="info" id="outInfo"></div>
     <div class="card" id="prnCard" data-eq="uv wide"><h4>Принтер</h4>
@@ -912,7 +941,13 @@
     </div>
     <div class="subpage" data-group="gCheck" id="sOrder">
     <div class="card"><h4>Заказ</h4>
-      <button class="btn full" data-act="proof">Превью для согласования</button>
+      <button class="btn main full" data-act="approval">Лист согласования клиенту</button>
+      <div class="ex">По образцу карты — одна страница: лицо и оборот с линией реза, где лягут белила и лак, размер, тираж, номера «с — по» и строка «Согласовано». Картинка и PDF — в папку «… — на согласование», картинку можно сразу отправить клиенту.</div>
+      <button class="btn full" data-act="jobsheet" style="margin-top:8px">Задание в печать</button>
+      <div class="ex">По раскладке — для оператора: что печатать, на каком принтере, порядок (шаблон стола, лицо, оборот) и таблица листов с номерами и квадратиками для отметок. PDF рядом с раскладкой — распечатайте и отдайте в цех.</div>
+    </div>
+    <div class="card adv"><h4>Ещё</h4>
+      <button class="btn full" data-act="proof">Превью каждой страницы</button>
       <div class="ex">Картинка каждой страницы: красная линия — край после резки, внизу — формат и вылет. Папка «… — на согласование» рядом с макетом, откроется сама. Отправьте клиенту.</div>
       <button class="btn full" data-act="package">Собрать заказ в папку</button>
       <div class="ex">Папка «… — в печать» рядом с макетом: копия макета, PDF для типографии, превью, картинки по ссылкам, файлы шрифтов и «Паспорт заказа» — формат, итоги проверки, чего не хватает.</div>
@@ -1230,6 +1265,9 @@
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function say(t) {
     var m = $('msg'); if (!t) { m.style.display = 'none'; return; } m.style.display = 'block'; m.innerText = t;
+    // «нет в ключе» от макроса: без повтора кода компьютера и контактов — они в плашке или кнопками
+    var cut = String(t).search(/\s*Код (этого )?компьютера:/);
+    if (cut > 0 && S && S.lic && S.lic.contact) lockMsg(String(t).substring(0, cut));
     try { if (host) host.GMSManager.RunMacro('VarPrint', 'Bridge.LogLine', 'показано: ' + String(t).replace(/[\r\n]+/g, ' / ').substring(0, 400)); } catch (x) { }
   }
 
@@ -1238,7 +1276,7 @@
   // Бегущая полоса: показывается при нажатии кнопки, убирается, когда макрос ответил.
   // Кнопки, которые ничего не считают, её не держат: если за полсекунды вызова не было — убрать.
   var busyEl = null, busyUsed = false;
-  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
+  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
   function busyShow(btn) {
     busyHide();
     var w = document.createElement('div'); w.className = 'busy'; w.innerHTML = '<span></span>';
@@ -1331,15 +1369,44 @@
     return one ? 'Часть «' + modName(id) + '» не входит в ваш ключ.' : 'Нужна одна из частей: ' + modName(id) + ' — их нет в вашем ключе.';
   }
   function lockNote(id) {
-    return '<div class="lockbox"><b>🔒 ' + esc(lockWhy(id)) + '</b><div class="ex">Посмотреть и настроить можно, запустить — нет. Бесплатное работает как обычно. ' +
-      'Чтобы включить, напишите за ключом и передайте код компьютера: <b>' + esc(S.lic.code) + '</b>. ' +
-      'Часть включится новым ключом — переустанавливать ничего не нужно.</div>' +
-      (S.lic.contact ? '<div class="ex">Куда писать: <b>' + esc(S.lic.contact) + '</b></div>' : '') + '</div>';
+    return '<div class="lockbox"><b>🔒 ' + esc(lockWhy(id)) + '</b><div class="ex keep">Посмотреть и настроить можно, запустить — нет. Бесплатное работает как обычно. ' +
+      'Часть включится новым ключом — переустанавливать ничего не нужно.</div>' + contactBtns(modName(id)) + '</div>';
   }
-  function lockSay(id) {
-    say(lockWhy(id) + ' Код компьютера: ' + S.lic.code +
-        (S.lic.contact ? '. Напишите за ключом: ' + S.lic.contact : '. Напишите за ключом') +
-        '. Часть включится новым ключом, переустанавливать ничего не нужно.');
+  // Связь с разработчиком кнопками: Telegram и почта — с готовым сообщением и кодом компьютера, телефон — скопировать
+  function contacts() {
+    var c = (S && S.lic && S.lic.contact) || '', m;
+    var r = { phone: '', tg: '', mail: '' };
+    m = c.match(/\+?\d[\d\s()\-]{7,}\d/); if (m) r.phone = m[0];
+    m = c.match(/telegram\s*@([A-Za-z0-9_]{3,})/i); if (m) r.tg = m[1];
+    m = c.match(/[\w.+\-]+@[\w\-]+\.[\w.]+/); if (m) r.mail = m[0];
+    return r;
+  }
+  function keyMsg(part) {
+    return 'Здравствуйте! Нужен ключ PS • Автоматизация' + (part ? ', часть «' + part + '»' : '') + '. Код компьютера: ' + ((S && S.lic && S.lic.code) || '') + '.';
+  }
+  function contactBtns(part) {
+    var c = contacts(), h = '', pv = esc(part || '');
+    if (!c.tg && !c.mail && !c.phone) return '';
+    h += '<div class="cbtns">';
+    if (c.tg) h += '<button class="btn main" data-act="ctg" data-v="' + pv + '" title="Сообщение с кодом компьютера скопируется — вставьте его в чат">Telegram</button>';
+    if (c.mail) h += '<button class="btn" data-act="cmail" data-v="' + pv + '" title="Письмо с кодом компьютера">Почта</button>';
+    if (c.phone) h += '<button class="btn" data-act="cphone" title="' + esc(c.phone) + '">Телефон</button>';
+    h += '</div><div class="ccode">Код компьютера: <b>' + esc((S && S.lic && S.lic.code) || '') + '</b> · <a class="lnk" data-act="ccode">скопировать</a></div>';
+    return h;
+  }
+  function copyText(t) { try { return !!window.clipboardData.setData('Text', t); } catch (x) { return false; } }
+  function lockSay(id) { lockMsg(lockWhy(id)); }
+  // Коротко внизу: что закрыто. Плашка с кнопками связи на странице видна — показать на неё; нет — кнопки прямо здесь
+  function lockMsg(t) {
+    var m = $('msg'), all = document.querySelectorAll('.lockbox, .freebox'), box = null, i;
+    t = String(t).replace(/\s+$/, ''); if (!/[.!]$/.test(t)) t += '.';
+    for (i = 0; i < all.length; i++) if (all[i].offsetParent && all[i].querySelector('.cbtns')) { box = all[i]; break; }
+    m.style.display = 'block';
+    if (box) {
+      m.innerText = t + ' Написать за ключом — кнопками в жёлтой плашке выше.';
+      try { box.scrollIntoView(); } catch (x) { }
+      if (box.className.indexOf('flash') < 0) { box.className += ' flash'; setTimeout(function () { box.className = box.className.replace(' flash', ''); }, 1500); }
+    } else { m.innerHTML = esc(t) + contactBtns(''); bind(); }
   }
 
   // ---------- оборудование: значки сверху и шаги работы под ними ----------
@@ -1359,33 +1426,35 @@
   var CHECK = function (pf) { return { n: 'Проверка', tab: 3, sub: 'sCheck', pf: pf, mod: '' }; };
   var EQ = [
     { id: 'all', m: '', s: 'Макет', n: 'Макет', note: 'общее для любого оборудования', steps: [CHECK(''), { n: 'Правки', tab: 3, sub: 'sTools' },
-      { n: 'Номера', tab: 0, mod: 'D' }, { n: 'Превью и заказ', tab: 3, sub: 'sOrder' }, { n: 'Брак', tab: 2, sub: 'sAcct', mod: 'D', adv: true }] },
+      { n: 'Номера', tab: 0, mod: '' },
+      { n: 'Раскладка', s: 'На лист', tab: 1, modes: ['sheet'], mode: 'sheet', mod: '', onlyFree: true }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '', onlyFree: true },
+      { n: 'Превью и заказ', tab: 3, sub: 'sOrder' }, { n: 'Брак', tab: 2, sub: 'sAcct', mod: 'D', adv: true }] },
     { id: 'digi', m: 'C', s: 'Цифра', n: 'Цифровая печать', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut' },
+      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' },
       { n: 'PDF для типографии', tab: 3, sub: 'sPdf', pf: 'digital', mod: '' }] },
     { id: 'offset', m: 'O', s: 'Офсет', n: 'Офсетная печать', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut' },
+      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' },
       { n: 'PDF для типографии', tab: 3, sub: 'sPdf', pf: 'offset', mod: '' }] },
     { id: 'uv', m: 'U', s: 'УФ', n: 'УФ-планшет', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['sheet', 'nest'], mode: 'sheet', mod: '' }, { n: 'Белила и лак', tab: 2, sub: 'sInk' },
-      { n: 'Вывод', tab: 2, sub: 'sOut' }] },
+      { n: 'Раскладка', tab: 1, modes: ['sheet', 'nest'], mode: 'sheet', mod: '' }, { n: 'Белила и лак', tab: 2, sub: 'sInk', mod: 'UW' },
+      { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' }] },
     { id: 'wide', m: 'W', s: 'Рулон', n: 'Рулонная печать', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['roll', 'sheet', 'nest'], mode: 'roll' }, { n: 'Вылет', tab: 4, sub: 'sBleed' },
-      { n: 'Люверсы', tab: 4, sub: 'sEye' }, { n: 'Белила и лак', tab: 2, sub: 'sInk' }] },
+      { n: 'Раскладка', tab: 1, modes: ['roll', 'sheet', 'nest'], mode: 'roll', mod: '' }, { n: 'Вылет', tab: 4, sub: 'sBleed', mod: 'WP' },
+      { n: 'Люверсы', tab: 4, sub: 'sEye' }, { n: 'Белила и лак', tab: 2, sub: 'sInk', mod: 'UW' }] },
     { id: 'plot', m: 'P', s: 'Плоттер', n: 'Плоттерная резка', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['roll', 'nest', 'sheet'], mode: 'roll' }, { n: 'Вылет', tab: 4, sub: 'sBleed' },
-      { n: 'Файл для плоттера', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost' }] },
+      { n: 'Раскладка', tab: 1, modes: ['roll', 'nest', 'sheet'], mode: 'roll', mod: '' }, { n: 'Вылет', tab: 4, sub: 'sBleed', mod: 'WP' },
+      { n: 'Файл для плоттера', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
     { id: 'mill', m: 'M', s: 'Фрезер', n: 'Фрезеровка', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest' }, { n: 'Объёмные буквы', tab: 4, sub: 'sLetters' },
-      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost' }] },
+      { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest', mod: 'UWPML' }, { n: 'Объёмные буквы', tab: 4, sub: 'sLetters' },
+      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
     { id: 'laser', m: 'L', s: 'Лазер', n: 'Лазерная резка', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest' }, { n: 'Стык в стык и порядок реза', tab: 4, sub: 'sLaser' },
-      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost' }] },
+      { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest', mod: 'UWPML' }, { n: 'Стык в стык и порядок реза', tab: 4, sub: 'sLaser' },
+      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
     { id: 'cal', m: 'K', s: 'Календарь', n: 'Календарь', steps: [{ n: 'Тип и даты', tab: 5, sub: 'sCalType' }, { n: 'Праздники', tab: 5, sub: 'sCalLang' },
       { n: 'Стиль', tab: 5, sub: 'sCalStyle' }, { n: 'Собрать', tab: 5, sub: 'sCalBuild' }] }
   ];
   // пункты оборудования: значок и короткая подпись для ряда под оборудованием
-  var STI = { 'Проверка': ['check', 'Проверка'], 'Правки': ['tools', 'Правки'], 'Номера': ['num', 'Номера'], 'Превью и заказ': ['order', 'Превью'],
+  var STI = { 'Проверка': ['check', 'Проверка'], 'Правки': ['tools', 'Правки'], 'Номера': ['num', 'Номера'], 'Превью и заказ': ['order', 'Заказ'],
     'Брак': ['acct', 'Брак'], 'Раскладка': ['lay', 'Раскладка'], 'Вывод': ['out', 'Вывод'], 'PDF для типографии': ['pdf', 'PDF'],
     'Белила и лак': ['ink', 'Белила, лак'], 'Вылет': ['bleed', 'Вылет'], 'Люверсы': ['eye', 'Люверсы'], 'Файл для плоттера': ['file', 'Файл'],
     'Файл для станка': ['file', 'Файл'], 'Цена': ['cost', 'Цена'], 'Объёмные буквы': ['letters', 'Буквы'], 'Стык в стык и порядок реза': ['joint', 'Стык, порядок'],
@@ -1394,7 +1463,7 @@
     check: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/><path d="m8.3 11 1.9 1.9 3.5-3.5"/>',
     tools: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
     num: '<path d="M10 4 8 20M16 4l-2 16M5 9h15M4 15h15"/>',
-    order: '<path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/>',
+    order: '<rect x="5" y="4" width="14" height="17" rx="1.5"/><path d="M9 4V2.8h6V4M8.5 10h7M8.5 13.5h7M8.5 17h4"/>',
     acct: '<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4v4.5H9"/>',
     lay: '<rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 9.2h17M3.5 14.8h17M9.2 3.5v17M14.8 3.5v17"/>',
     out: '<path d="M7 8V3.5h10V8"/><rect x="3.5" y="8" width="17" height="8" rx="1"/><path d="M7 13h10v7.5H7z"/>',
@@ -1436,9 +1505,28 @@
     for (i = 0; i < E.steps.length; i++) { st = E.steps[i]; if (fits(st)) return i; }
     return -1;
   }
+  // Замок оборудования: 0 — всё открыто; 1 — часть пунктов по ключу (бесплатное внутри работает); 2 — закрыто всё.
+  // На значке замок — только когда закрыто всё: иначе кажется, что не работает и бесплатное
+  function eqLocked(E) {
+    var vs = visSteps(E), n = 0, i, md;
+    for (i = 0; i < vs.length; i++) { md = stepMod(E, E.steps[vs[i]]); if (md && !hasMod(md)) n++; }
+    if (!n) return (E.m && !hasMod(E.m)) ? 1 : 0;
+    return n == vs.length ? 2 : 1;
+  }
   // шаги, видимые в этом режиме: редкие (adv) — только в расширенном
-  function visSteps(E) { var r = []; for (var i = 0; i < E.steps.length; i++) if (!(E.steps[i].adv && uiMode == 'simple')) r.push(i); return r; }
-  function stepMod(E, st) { return st.mod != null ? st.mod : E.m; }
+  function visSteps(E) {
+    var r = [], fm = freeMode();
+    for (var i = 0; i < E.steps.length; i++) if (!(E.steps[i].adv && uiMode == 'simple') && !(E.steps[i].onlyFree && !fm)) r.push(i);
+    return r;
+  }
+  // Пробный период кончился, оборудования в ключе нет: всё бесплатное — в «Макете» (там и раскладка с выводом),
+  // а оборудование закрыто целиком — без оговорок «это внутри работает»
+  var LOCK_SVG = '<svg class="lki" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  function freeMode() { return !!(S && S.lic && S.lic.mods && !(S.lic.trial > 0) && !hasMod('UWPCOML')); }
+  function stepMod(E, st) {
+    if (E.id != 'all' && E.m && freeMode()) return E.m;
+    return st.mod != null ? st.mod : E.m;
+  }
   // changed — оборудование только что выбрано: его основной режим раскладки и вид печати для проверки
   function eqGo(i, changed) {
     var E = eqOf(eqCur), st = E.steps[i]; if (!st) return;
@@ -1465,9 +1553,9 @@
       if (E.id == 'cal' || (i > 0 && EQ[i - 1].id == 'all')) h += '<div class="eqsep"></div>';
       if (inArr(hid, E.id) && E.id != eqCur) continue;
       // подписи под значками — когда их немного и слова влезают
-      h += '<div class="eq' + (E.id == eqCur ? ' on' : '') + '" data-act="eq" data-v="' + E.id + '" title="' + esc(E.n) + '">' + eqSvg(E.id) +
+      h += '<div class="eq' + (E.id == eqCur ? ' on' : '') + (eqLocked(E) == 2 ? ' off' : '') + '" data-act="eq" data-v="' + E.id + '" title="' + esc(E.n) + '">' + eqSvg(E.id) +
            (vis <= 6 ? '<span class="lb">' + esc(E.s) + '</span>' : '') +
-           (E.m && !hasMod(E.m) ? '<span class="lk">🔒</span>' : '') + '</div>';
+           (eqLocked(E) == 2 ? '<span class="lk">' + LOCK_SVG + '</span>' : '') + '</div>';
     }
     if (eqFirst) {
       // первый запуск: вместо шагов — вопрос про оборудование
@@ -1487,20 +1575,23 @@
     }
     $('tabs').innerHTML = h;
     var act = eqActive(), g = '<div class="eqhead"><b>' + esc(A.n) + '</b>';
-    if (A.m && !hasMod(A.m)) g += '<span class="eqlk">🔒 <a class="lnk" data-act="eqlock">' + (S.lic && !S.lic.key ? 'пробный период закончился' : 'нет в ключе') + '</a></span>';
+    var lkA = eqLocked(A);
+    if (lkA == 2) g += '<span class="eqlk">' + LOCK_SVG + '<a class="lnk" data-act="eqlock">по ключу</a></span>';
+    else if (lkA == 1 && A.m) g += '<span class="eqlk">' + LOCK_SVG + '<a class="lnk" data-act="eqlock">кое-что по ключу</a></span>';
     g += '</div>' + (A.note ? '<div class="eqsub">' + esc(A.note) + '</div>' : '');
     var vis = visSteps(A), sr = '';
     if (vis.length > 1) for (var vi = 0; vi < vis.length; vi++) {
       i = vis[vi];
       var st = A.steps[i], md = stepMod(A, st), dn = '', si = STI[st.n] || ['out', st.n];
+      if (st.s) si = [si[0], st.s];
       if (S && S.doc && st.tab == 0 && S.fields && fieldsReady()) dn = '✓';
       if (S && S.doc && st.tab == 1 && !S.doc.sample) dn = '✓';
-      sr += '<div class="st' + (i == act ? ' on' : '') + '" data-act="eqstep" data-i="' + i + '" title="' + esc(st.n) + '">' +
+      sr += '<div class="st' + (i == act ? ' on' : '') + (md && !hasMod(md) ? ' off' : '') + '" data-act="eqstep" data-i="' + i + '" title="' + esc(st.n) + '">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' + STIC[si[0]] + '</svg>' +
             '<span class="lb">' + esc(si[1]) + '</span>' + (dn ? '<span class="dn">' + dn + '</span>' : '') +
-            (md && !hasMod(md) ? '<span class="lk">🔒</span>' : '') + '</div>';
+            (md && !hasMod(md) ? '<span class="lk">' + LOCK_SVG + '</span>' : '') + '</div>';
     }
-    $('eqHead').innerHTML = g + (sr ? '<div class="stp">' + sr + '</div>' : '');
+    $('eqHead').innerHTML = g + (sr ? '<div class="stp' + (vis.length > 6 ? ' many' : '') + '">' + sr + '</div>' : '');
     $('stepNav').innerHTML = '';
     renderSvc();
   }
@@ -1726,7 +1817,7 @@
 
   var licForce = false;
   function plural(n, a, b, c) { n = Math.abs(n) % 100; var d = n % 10; return n > 10 && n < 20 ? c : (d == 1 ? a : (d > 1 && d < 5 ? b : c)); }
-  var FREE_TEXT = 'проверка макета, правка текста, простая раскладка на лист, превью для клиента, справочник';
+  var FREE_TEXT = 'проверка макета, правка текста, простая раскладка на лист, превью для клиента, нумерация до 50 номеров, справочник';
   function renderLic() {
     var L = S.lic || { ok: true, key: true }, show = !L.ok || licForce;
     $('lic').className = 'page' + (show ? ' on' : '');
@@ -1750,7 +1841,7 @@
       }
       mh += '<div class="ex">Части можно брать по одной или набором. Закрытые включаются новым ключом — переустанавливать ничего не нужно.</div>';
     }
-    if (L.contact) mh += '<div class="note" style="margin-top:8px">Куда писать за ключом:</div><div class="ex"><b>' + esc(L.contact) + '</b></div>';
+    if (L.contact) mh += '<div class="note" style="margin-top:8px">Написать за ключом:</div>' + contactBtns('');
     $('licMods').innerHTML = mh;
     var b = $('licBar');
     if (!show && L.key && L.days <= L.warn) {
@@ -1839,7 +1930,7 @@
       { st: 'Проверка', sel: '[data-act="pfcheck"]', text: 'Проверьте макет перед печатью: выберите вид печати и нажмите «Проверить».' },
       { st: 'Правки', sel: '[data-act="textclean"]', text: 'Мелкие правки: пробелы, тире, кавычки — во всём тексте сразу.' },
       { st: 'Номера', sel: '[data-act="add"][data-kind="text"]', text: 'Нужны номера или имена на каждой карте — выделите надпись и нажмите кнопку. Не нужны — «Дальше».' },
-      { st: 'Превью и заказ', sel: '[data-act="proof"]', text: 'Превью для согласования с клиентом. Это конец инструкции.' }]
+      { st: 'Превью и заказ', sel: '[data-act="approval"]', text: 'Лист согласования клиенту — одна картинка, её можно сразу отправить. Это конец инструкции.' }]
   };
   function tourList() { return TOURS[eqCur] || TOURS.all; }
   function tourStepIdx(t) { var E = eqOf(eqCur); for (var i = 0; i < E.steps.length; i++) if (E.steps[i].n == t.st) return i; return -1; }
@@ -2008,16 +2099,27 @@
   }
 
   // Замки: вкладки и кнопки частей, которых нет в ключе
-  var TABMOD = ['D', '', '', '', '', 'K'];
+  var TABMOD = ['', '', '', '', '', 'K'];
   function renderLocks() {
     if (!renderLocks.subs) { renderLocks.subs = true; restoreSubs(); }
     var i, pg, el, all, md;
+    // «Номера» без ключа — для мелких задач: сверху плашка с пределами
+    var fb = $('freeData');
+    if (!hasMod('D')) {
+      if (!fb) $('p0').insertAdjacentHTML('afterbegin', '<div class="freebox" id="freeData"><b>Без ключа — нумерация для мелких задач</b>' +
+        '<div class="ex keep">Одно поле с номером по порядку, до 50 номеров в заказе. Файл клиента, штрихкоды, QR, картинки и второе поле — по ключу.</div>' +
+        contactBtns(modName('D')) + '</div>');
+    } else if (fb) fb.parentNode.removeChild(fb);
+    // Бесплатное кончилось и оборудования в ключе нет: бесплатное — в «Макете», а внутри оборудования
+    // закрыта любая страница (та же раскладка, открытая из «Макета», — рабочая)
+    var E0 = eqOf(eqCur), eqL = (freeMode() && eqCur != 'all' && E0.m && !hasMod(E0.m)) ? E0.m : '';
     for (i = 0; i < TABMOD.length; i++) {
       pg = $('p' + i);
       if (!pg) continue;
-      var box = pg.getElementsByClassName('lockbox')[0];
-      if (TABMOD[i] && !hasMod(TABMOD[i])) {
-        if (!box) pg.insertAdjacentHTML('afterbegin', lockNote(TABMOD[i]));
+      var need = TABMOD[i] || eqL, box = pg.getElementsByClassName('pagelock')[0];
+      if (need && !hasMod(need)) {
+        if (box && box.getAttribute('data-m') != need) { box.parentNode.removeChild(box); box = null; }
+        if (!box) pg.insertAdjacentHTML('afterbegin', lockNote(need).replace('<div class="lockbox">', '<div class="lockbox pagelock" data-m="' + need + '">'));
         pg.className += (pg.className.indexOf('locked') < 0 ? ' locked' : '');
       } else {
         if (box) box.parentNode.removeChild(box);
@@ -2029,7 +2131,7 @@
     for (i = 0; i < all.length; i++) {
       md = all[i].getAttribute('data-lock');
       var sb = all[i].getElementsByClassName('lockbox')[0];
-      if (!hasMod(md)) {
+      if (!hasMod(md) && !eqL) {
         if (!sb) all[i].insertAdjacentHTML('afterbegin', lockNote(md));
         if (all[i].className.indexOf('locked') < 0) all[i].className += ' locked';
       } else {
@@ -2040,8 +2142,13 @@
     all = document.querySelectorAll('.sub[data-lock]');
     for (i = 0; i < all.length; i++) {
       var slk = all[i].getElementsByClassName('lk')[0];
-      if (!hasMod(all[i].getAttribute('data-lock'))) { if (!slk) all[i].insertAdjacentHTML('beforeend', ' <span class="lk">🔒</span>'); }
-      else if (slk) slk.parentNode.removeChild(slk);
+      if (slk) slk.parentNode.removeChild(slk);
+      all[i].className = all[i].className.replace(' lockedbtn', '') + (hasMod(all[i].getAttribute('data-lock')) ? '' : ' lockedbtn');
+    }
+    // целые разделы и строки по ключу (офсет: клапан, шкала, свой оборот) — приглушены и не нажимаются
+    all = document.querySelectorAll('[data-lockarea]');
+    for (i = 0; i < all.length; i++) {
+      all[i].className = all[i].className.replace(' lockedarea', '') + (hasMod(all[i].getAttribute('data-lockarea')) ? '' : ' lockedarea');
     }
     // отдельные кнопки внутри вкладок
     all = document.querySelectorAll('[data-mod]');
@@ -2049,10 +2156,13 @@
       md = all[i].getAttribute('data-mod');
       if (!hasMod(md)) {
         if (all[i].className.indexOf('lockedbtn') < 0) all[i].className += ' lockedbtn';
-        if (all[i].innerHTML.indexOf('🔒') < 0) all[i].insertAdjacentHTML('afterbegin', '🔒 ');
+        all[i].innerHTML = all[i].innerHTML.replace('🔒 ', '');
+        if (!all[i].getElementsByClassName('lkb').length) all[i].insertAdjacentHTML('afterbegin', '<span class="lkb">' + LOCK_SVG + '</span>');
+        if (!all[i].title) all[i].title = 'По ключу';
       } else {
         all[i].className = all[i].className.replace(' lockedbtn', '');
         all[i].innerHTML = all[i].innerHTML.replace('🔒 ', '');
+        var lkb = all[i].getElementsByClassName('lkb')[0]; if (lkb) lkb.parentNode.removeChild(lkb);
       }
     }
   }
@@ -2137,7 +2247,7 @@
     {
       h += '<div class="note">' + (isPic ? 'Имена файлов картинок:' : 'Откуда брать значения:') + '</div>';
       h += '<div class="seg"><button class="btn' + (f.source == 0 ? ' sel' : '') + '" data-act="src" data-v="0">По порядку<small>1, 2, 3 … или с любого числа</small></button>' +
-           '<button class="btn' + (f.source == 1 ? ' sel' : '') + '" data-act="src" data-v="1">Из файла клиента<small>Excel, CSV или TXT</small></button></div>';
+           '<button class="btn' + (f.source == 1 ? ' sel' : '') + '" data-act="src" data-v="1" data-mod="D">Из файла клиента<small>Excel, CSV или TXT</small></button></div>';
       if (f.source == 0) {
         h += '<div class="card"><h4>Нумерация</h4>';
         h += '<div class="row"><span class="k">Первый номер</span>' + inp('numStart', num(f.numStart)) + '</div>';
@@ -2149,7 +2259,11 @@
         h += '<div class="ex adv">Например, «CODE » перед номером → <b>CODE 0007</b></div></div>';
       } else {
         var fn = f.filePath ? f.filePath.substring(f.filePath.lastIndexOf('\\') + 1) : '';
-        h += '<div class="card"><h4>Файл клиента</h4>';
+        // без ключа файл клиента не работает — блок приглушён, сверху — что сделать; настройки не сбрасываются
+        var fileLocked = !hasMod('D');
+        if (fileLocked) h += '<div class="freebox" style="margin-top:10px"><b>🔒 Номера из файла клиента — по ключу</b><div class="ex keep">Без ключа переключите поле на «По порядку»: до 50 номеров в заказе. ' +
+          'Файл и настройки ниже сохранятся — с ключом заработают сразу.</div></div>';
+        h += '<div class="card' + (fileLocked ? ' filelocked' : '') + '"><h4>Файл клиента</h4>';
         // Файл выбран — имя и два маленьких значка: заменить, отвязать. Не выбран — большая кнопка
         h += fn ? '<div class="fname"><span class="fn">' + esc(fn) + '</span>' +
              '<a class="fx fr" data-act="pickfile" title="Заменить файл клиента на другой"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M3 6h6l2 2h10v11H3z"/><path d="M9 13.5h6M13 11.5l2 2-2 2"/></svg></a>' +
@@ -3181,7 +3295,7 @@
     all: { lead: 'Макет: то, что одинаково для любого оборудования, — проверка, правки, номера, превью для клиента. Проверка, правки и превью работают без ключа.', st: {
       'Проверка': ['Проверка макета перед печатью под любой вид печати. Бесплатно.', 'card', { bleed: 3, safe: 5 }],
       'Правки': ['Чистка текста, «выделить такие же», замена цвета, направляющие. Бесплатно.', 'txt', { s: 'Скидка 10 %, до конца месяца' }],
-      'Превью и заказ': ['Превью для клиента — бесплатно; папка «в печать» и проверка папки макетов.', '', null],
+      'Превью и заказ': ['Лист согласования клиенту — лицо, оборот, белила и лак, номера и строка «Согласовано»; задание в печать для оператора — порядок и листы с номерами. Бесплатно.', '', null],
       'Номера': ['Номер, код или картинка на каждой карте — часть «Нумерация и данные».', 'vcard', { kind: 'all' }],
       'Брак': ['Испорченные карты — по номерам: перепечатаются только они. Журнал номеров предупредит, если номера уже печатались.', '', null] } }
   };
@@ -5519,6 +5633,21 @@
     if (ac == 'prnnew') { prnFromFields(); var np = JSON.parse(JSON.stringify(prnList[prnCur])); np.n = 'Новый принтер ' + (prnList.length + 1); prnList.push(np); prnCur = prnList.length - 1; prnFillSel(); folds.fPrn = false; applyFolds(); $('prnName').focus(); say('Задайте название и настройки нового принтера и нажмите «Сохранить».'); return; }
     if (ac == 'prndel') { if (prnList.length < 2) return; var dn = prnList[prnCur].n; prnList.splice(prnCur, 1); prnCur = 0; prnFillSel(); prnApply(); load(); say('Принтер «' + dn + '» удалён.'); return; }
     if (ac == 'help') { helpToggle(e.getAttribute('data-k')); return; }
+    if (ac == 'ctg' || ac == 'cmail') {
+      var cc = contacts(), msg = keyMsg(e.getAttribute('data-v') || ''), rr;
+      if (ac == 'ctg') {
+        var cp = copyText(msg);
+        rr = call('OpenLink', 'https://t.me/' + cc.tg);
+        say(rr == 'ok' ? (cp ? 'Открываю Telegram. Сообщение с кодом компьютера скопировано — вставьте его в чат (Ctrl+V).' : 'Открываю Telegram. Напишите: ' + msg)
+                       : 'Telegram не открылся. Напишите @' + cc.tg + ': ' + msg);
+      } else {
+        rr = call('OpenLink', 'mailto:' + cc.mail + '?subject=' + encodeURIComponent('Ключ PS • Автоматизация') + '&body=' + encodeURIComponent(msg));
+        say(rr == 'ok' ? 'Открываю почту — письмо с кодом компьютера уже написано.' : 'Почта не открылась. Напишите на ' + cc.mail + ': ' + msg);
+      }
+      return;
+    }
+    if (ac == 'cphone') { var ph = contacts().phone; say(copyText(ph) ? 'Номер скопирован: ' + ph : 'Номер: ' + ph); return; }
+    if (ac == 'ccode') { var mc = (S && S.lic && S.lic.code) || ''; say(copyText(mc) ? 'Код компьютера скопирован: ' + mc : 'Код компьютера: ' + mc); return; }
     if (ac == 'calsec') { calSec = e.getAttribute('data-v'); try { LS.setItem('calSec', calSec); } catch (x) { } calSecShow(); return; }
     if (ac == 'svc') { svcShow($('svcBar').className.indexOf('open') < 0); return; }
     if (ac == 'helpcat') { svcShow(false); helpShow(e.getAttribute('data-v') || eqCur); return; }
@@ -5596,6 +5725,8 @@
     }
     if (ac == 'pfcheck') { say('Проверяю…'); setTimeout(function () { pfRun(); say(''); }, 30); return; }
     if (ac == 'pfpdf') { say('Проверяю и сохраняю PDF…'); setTimeout(function () { var pr = call('PFExport', $('pfProfile').value, $('pfBleed').value, $('pfCrop').checked ? '1' : '0'); say(pr); }, 30); return; }
+    if (ac == 'approval') { say('Делаю лист согласования…'); setTimeout(function () { say(call('OrderApproval', $('pfBleed').value)); }, 30); return; }
+    if (ac == 'jobsheet') { say('Делаю задание в печать…'); setTimeout(function () { say(call('OrderJob')); }, 30); return; }
     if (ac == 'proof') { say('Делаю превью…'); setTimeout(function () { say(call('ProofRun', $('pfBleed').value)); }, 30); return; }
     if (ac == 'package') { say('Собираю заказ: макет, PDF, превью, шрифты… Это займёт минуту-другую.'); setTimeout(function () { say(call('PackageRun', $('pfProfile').value, $('pfBleed').value)); }, 30); return; }
     if (ac == 'batch') { setTimeout(function () { var br = call('BatchRun', $('pfProfile').value, $('pfBleed').value, $('batchPdf').checked ? '1' : '0'); if (br) say(br); }, 30); return; }
@@ -5697,7 +5828,7 @@
     }
     if (a == 'sendreport') { say('Отправляю отчёт…'); setTimeout(function () { say(call('ReportSend')); }, 30); return; }
     if (a == 'updcheck') { say('Смотрю, есть ли обновление…'); setTimeout(function () { say(call('UpdateCheck')); }, 30); return; }
-    if (a == 'src') { call('SetField', cur, 'source', e.getAttribute('data-v')); load(); return; }
+    if (a == 'src') { var sr = call('SetField', cur, 'source', e.getAttribute('data-v')); load(); if (sr && sr != 'ok') say(sr); return; }
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; if (e.getAttribute('data-sub')) showSub(e.getAttribute('data-sub'));
       if (e.getAttribute('data-mode')) { impMode = e.getAttribute('data-mode'); try { LS.setItem('impMode', impMode); } catch (x) { } }
       // шаг выбранного оборудования, куда ведёт ссылка, — если он есть
