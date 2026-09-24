@@ -1,8 +1,9 @@
-version=1.7.4
-note=Отчёты о проблемах и сообщения со снимком окна уходят разработчику через интернет.
-file=VarPrint.gms|fa7e3b44b3c193385f935866f5fb16ab132dc3256d9b6cddae1120c59e33605b
-file=index.html|e8280412769300ed1aa9b4868ea142e4ec34c71584809f4249185a9239f27716
-file=VarPrint_merge.exe|fcd25ee4e4866f2073ace1cfc0069fce3896cdc9eec4e03a940008049451c246
+version=1.8.0
+note=Новая панель: сверху «Макет» с общими шагами и ваше оборудование — в каждом только своё. Новое: календарь, лазерная резка, фрезеровка и объёмные буквы, белила и лак одной кнопкой. УФ: белила и лак ложатся и под номера, PDF стал в десятки раз легче.
+file=VarPrint.gms|e806e84af3370b67b3e717583614efb4a6a353e8e2b11c402d9ec1b5bfd91abb
+file=index.html|a948b2ae3ef3584e41ab7fc63143dc8cf168a7845cffcd61aa37f346115ec05f
+file=VarPrint_merge.exe|6ea4b778bd861f9c3aa21d68d56fbc1f7e99f5caa1a4cf58d9a4f2bf5263d851
+file=VarPrint_nest.exe|94c5bbe74311299d0bdbdc1a1d23e42fdc29dd0bef5609d00e10f742f0be7dbc
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=NsFj9dSBB7FU6DnG57_Xo0sgS8mJZ7sGB7wNqUSMDY1MUWzT1lXfkbLQnRfW-d3ZlzgWBCLFAplq3sNM21VsEA
+sig=_Fk9oycz_Wtv3juAZfHrKf_10OL0-xDSPHhhV_0WdnpXgew9D0JNJrPByN5TymsCrbCit6Wf0PHVsB827vykqg
