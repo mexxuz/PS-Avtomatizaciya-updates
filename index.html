@@ -141,6 +141,8 @@
   .calprev { background: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 4px; padding: 6px; margin-bottom: 10px; text-align: center; }
   .calq { display: inline-block; width: 14px; height: 14px; line-height: 14px; border-radius: 7px; background: #3a3f47; color: #cfd3d8; font-size: 10px; font-weight: bold; text-align: center; margin-left: 5px; cursor: pointer; text-decoration: none; vertical-align: 1px; flex: none; }
   .calq:hover { background: #4a5260; color: #fff; }
+  .nw { white-space: nowrap; }
+  .row[data-help] .k, .row.hq .k { min-width: 104px; }
   .calq.on { background: #3d7fd0; color: #fff; }
   .chkq { display: flex; align-items: center; }
   .chkq .chk { flex: 0 1 auto; }
@@ -170,7 +172,7 @@
   table.latab { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
   table.latab th { text-align: left; color: #9a9ea5; font-weight: normal; border-bottom: 1px solid #444; padding: 2px 3px; }
   table.latab td { border-bottom: 1px solid #333; padding: 2px 3px; color: #d5d9de; }
-  .calprev.pin { position: fixed; left: 8px; right: 22px; bottom: 42px; z-index: 40; margin: 0; box-shadow: 0 -2px 10px rgba(0,0,0,.6); }
+  .calprev.pin { position: fixed; left: 10px; right: 10px; bottom: 42px; z-index: 40; margin: 0; box-shadow: 0 -2px 10px rgba(0,0,0,.6); }
   .calprev svg { display: block; margin: 0 auto; box-shadow: 0 1px 4px rgba(0,0,0,.5); }
   .calprev .chk { text-align: left; margin-top: 6px; }
   .calprevnav { display: flex; align-items: center; margin-bottom: 6px; }
@@ -195,6 +197,7 @@
   /* бегущая полоса по верхнему краю панели, пока макрос считает. Панель в это время заморожена:
      внутри прокручиваемой части ничего не перерисовывается, а полоса, закреплённая поверх, движется */
   @keyframes busyrun { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+  .topfix { position: fixed; left: 0; right: 0; top: 0; z-index: 50; background: #262626; border-bottom: 1px solid #333; }
   .busy { position: fixed; left: 0; right: 0; top: 0; height: 4px; background: #2a2a2a; overflow: hidden; z-index: 99; }
   .busy span { display: block; height: 4px; width: 30%; background: #3d7fd0; animation: busyrun 1.3s linear infinite; }
   /* объёмные буквы: три блока, у каждого свои кнопки */
@@ -349,6 +352,15 @@
   select:hover { background-color: #454545; border-color: #454545; }
   select:focus { border-color: #4a86c5; outline: none; }
   select option { background: #262626; color: #caced4; }
+  /* Свой выпадающий список. Движок панели (IE11) раскрывает родной так, что выбранный пункт встаёт поверх
+     поля — список уезжает вверх на строку выше. Свой — всегда вниз от поля, как у CorelDRAW */
+  .ddpop { position: absolute; z-index: 90; background: #2e2e2e; border: 1px solid #525252; box-shadow: 0 3px 8px rgba(0,0,0,.45);
+           max-height: 260px; overflow-y: auto; overflow-x: hidden; padding: 2px 0; box-sizing: border-box; }
+  .ddpop div { padding: 3px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; color: #caced4; background: #2e2e2e; }
+  .ddpop div.on { background: #3c3c3c; }
+  .ddpop div.it:hover { background: #1d4470; color: #fff; }
+  .ddpop div.grp { color: #8a8d93; padding-top: 5px; }
+  .ddpop div.dis { color: #6f7378; }
   /* галочки и кружки: тёмный квадратик */
   input[type=checkbox]::-ms-check, input[type=radio]::-ms-check { background: #404040; border: 1px solid #5c5c5c; color: #ffffff; }
   input[type=checkbox]::-ms-check { border-radius: 2px; }
@@ -449,6 +461,15 @@
   .stp .st .lb { display: block; font-size: 10.5px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: inherit; }
   .stp .st.on { color: #fff; border-bottom-color: #4a86c5; cursor: default; }
   .stp .st .dn { position: absolute; top: 1px; right: 50%; margin-right: -19px; color: #7fc97f; font-size: 10px; background: inherit; }
+  .stp .st .dn.warn { color: #e0a030; font-weight: bold; }
+  /* готовность резки на «Файле»: строка — отметка, что, ссылка на шаг */
+  .cfready { margin: 2px 0 8px; }
+  .cfready .r { display: flex; align-items: baseline; padding: 3px 0; border-bottom: 1px solid #333; }
+  .cfready .r:last-child { border-bottom: 0; }
+  .cfready .m { width: 16px; flex: none; font-weight: bold; }
+  .cfready .m.ok { color: #7fc97f; } .cfready .m.warn { color: #e0a030; }
+  .cfready .t { flex: 1; }
+  .cfready .lnk { flex: none; margin-left: 6px; }
   /* под рядом пунктов уже есть черта — у первого блока страницы своей не нужно */
   .page > .card:first-child, .subpage > .card:first-child { border-top: 0; padding-top: 4px; }
   .calsecsw { margin: 10px 0 6px; }
@@ -467,6 +488,21 @@
   .stp .st.off .lk { color: #c3c7cd; }
   /* пунктов больше шести — подписи мельче, чтобы не обрезались */
   .stp.many .st .lb { font-size: 9px; letter-spacing: -.4px; }
+  .mchide { display: none !important; }
+  /* точка старта — как опорная точка в CorelDRAW: девять точек квадратиком */
+  /* точка старта — значок CorelDRAW «AnchorLocation» (из его справки, Help\Shared_Graphics\object-origin.svg):
+     колечки три на три, по краю перемычки, выбранное залито. Рисунок — в pt9Ui, поверх — прозрачные места для щелчка */
+  .pt9 { display: inline-block; position: relative; width: 24px; height: 24px; margin: 3px 2px; line-height: 0; vertical-align: middle; color: #caced4; }
+  /* CorelDRAW даёт фон всем элементам панели — места для щелчка закрывали колечки, оставались одни точки */
+  .pt9 svg { position: absolute; left: 0; top: 0; width: 24px; height: 24px; background: transparent; }
+  .pt9 a { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; cursor: pointer; background: transparent; }
+  .pt9 a:nth-of-type(3n+1) { left: 3px; } .pt9 a:nth-of-type(3n+2) { left: 12px; } .pt9 a:nth-of-type(3n) { left: 21px; }
+  .pt9 a:nth-of-type(-n+3) { top: 3px; } .pt9 a:nth-of-type(n+4) { top: 12px; } .pt9 a:nth-of-type(n+7) { top: 21px; }
+  .pt9:hover { color: #e2e5e9; }
+  .ptv { flex: 1 1 58%; display: flex; align-items: center; min-width: 0; }
+  .ptv .x { margin-left: 8px; }
+  .modesw.machsw { margin: 8px 10px 2px; }
+  .modesw.machsw a, .modesw.machsw a + a { padding: 3px 0; font-size: 11.5px; }
   .stp .st .lk { position: absolute; top: 1px; left: 50%; margin-left: 7px; line-height: 0; background: inherit; }
   .stp .st .lk svg.lki { width: 10px; height: 10px; margin: 0; }
   .eqsub { padding: 1px 12px 0; color: #8a8d93; font-size: 11px; }
@@ -551,7 +587,14 @@
 </style>
 </head>
 <body>
-  <div class="doc" id="doc">Загрузка…</div>
+  <!-- Шапка: имя файла и значки оборудования — на месте при прокрутке. Старый движок панели не знает
+       «прилипания» (sticky), поэтому шапка закреплена, а под ней пустой отступ её высоты (topPad) -->
+  <div class="topfix" id="topFix">
+    <div class="doc" id="doc">Загрузка…</div>
+    <!-- Оборудование: значки сверху, под ними — шаги работы выбранного. Рисуется в renderEq() -->
+    <div class="eqbar" id="tabs"></div>
+  </div>
+  <div id="topPad"></div>
   <div class="licbar" id="licBar"></div>
   <!-- Активация: код компьютера и ключ -->
   <div class="page" id="lic">
@@ -565,8 +608,6 @@
     <button class="btn main full" data-act="licgo">Активировать</button>
     <div id="licBack" style="display:none;margin-top:8px"><a class="lnk" data-act="licback">Вернуться к работе</a></div>
   </div>
-  <!-- Оборудование: значки сверху, под ними — шаги работы выбранного. Рисуется в renderEq() -->
-  <div class="eqbar" id="tabs"></div>
   <div id="eqHead"></div>
 
   <!-- 1. Данные -->
@@ -600,11 +641,11 @@
       </div>
     </div>
     <div class="ex adv" id="modeNote" style="margin:0 0 6px"></div>
-    <div id="nestBox" class="card" style="display:none"><h4>Укладка по форме</h4>
+    <div id="nestBox" class="card" style="display:none"><h4 id="nsTitle">Укладка по форме</h4>
       <div id="nsSteps">
         <div class="step"><span class="num">1</span>Нарисуйте или откройте детали. Каждая деталь — один объект; если она из нескольких кусков — сгруппируйте.</div>
         <div class="step"><span class="num">2</span>Выделите на листе деталь (или сразу несколько) и нажмите «Добавить в укладку». Можно добавлять по одной.</div>
-        <div class="step"><span class="num">3</span>Впишите, сколько штук каждой, задайте материал и нажмите «Уложить».</div>
+        <div class="step"><span class="num">3</span>Впишите, сколько штук каждой, задайте материал и нажмите «Уложить» — в готовой укладке «Переразложить».</div>
       </div>
       <div id="nsAddBox">
         <div class="selnow" id="nsSelNow">Сейчас на листе ничего не выделено.</div>
@@ -623,6 +664,24 @@
       <div class="ex">Высота 0 — рулон: длина считается сама, сколько понадобится.</div>
       <div class="row adv"><span class="k">Поле от края</span><input type="text" id="nsMargin"></div>
       <div class="row"><span class="k">Зазор между деталями</span><input type="text" id="nsGap"></div>
+      <div class="eqonly" data-eq="uv">
+        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt2"></span></span></div>
+        <div class="ex under">С какого угла стола начать укладку. Та же точка, что у раскладки «На лист».</div>
+      </div>
+      <div class="eqonly" data-eq="cut">
+        <div class="lth" style="margin-top:12px">Как укладывать</div>
+        <div class="row"><span class="k">Способ</span><select id="nsMethod" class="wide" onchange="nsBtnLabel()"><option value="shape">по форме — плотно, в окна</option><option value="box">габаритами — рядами</option><option value="grid">сеткой — блоками</option></select></div>
+        <div class="row"><span class="k">Заполнять</span><select id="nsFill" class="wide"><option value="rows">рядами</option><option value="cols">колонками</option></select></div>
+        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="nsStartTxt"></span></span></div>
+        <div class="ex under">По форме — фигурные детали, мелкие ложатся в окна крупных. Габаритами и сеткой — прямоугольники и близкие к ним: зазор ровно заданный, у лазера 0 — стык в стык, одинаковые детали (и повёрнутые) — одним блоком. Габаритами блок тянется рядами под свободное место, сеткой — ближе к квадрату, удобно снимать и считать. Колонками — только габаритами и сеткой. Точка старта — откуда заполняется лист и откуда начнётся рез.</div>
+        <div class="ex" data-machine="mill">Фрезер: зазор — диаметр фрезы.</div>
+        <label class="chk"><input type="checkbox" id="nsStrips">Полосы — первыми, поперёк листа</label>
+        <div class="ex under">Полосы — длинные прямоугольники (в 5 раз длиннее ширины). Встают первыми у точки старта, пока лист цельный.</div>
+        <label class="chk"><input type="checkbox" id="nsStripCut" checked>Полосы во весь лист — укоротить до полей</label>
+        <div class="ex under">Полоса во всю ширину листа упирается в его край — держаться ей не за что. Укороченная на поля держится концами за лист, пока её режут.</div>
+        <label class="chk"><input type="checkbox" id="nsStripLines" checked>Полосы — линиями реза</label>
+        <div class="ex under">Вместо прямоугольников — линии между полосами, как рисуют фрезеровщики: одна линия режет сразу две соседние полосы, змейкой.</div>
+      </div>
       <div class="row adv"><span class="k">Повороты</span><select id="nsRot" class="wide"><option value="4">на четверть</option><option value="8">по 45°</option><option value="2">только вверх ногами</option><option value="1">без поворота</option><option value="24">по 15°</option></select></div>
       <div class="ex adv">Без поворота — когда у материала есть направление: древесина, ворс, направленный рисунок.</div>
       <div class="fold-body adv" id="fNestMore">
@@ -646,9 +705,12 @@
       <div class="ex">Первый раз спросит, куда сохранить, дальше будет заменять тот же файл. Поменять количество потом — откройте готовую укладку: список там уже будет с числами.</div>
       <div class="xref">
         <div class="xh">Дальше</div>
-        <button class="btn full" data-act="goto" data-to="4" data-sub="sLetters" data-eq="mill">Объёмные буквы: борта, задник, выборка →</button>
-        <button class="btn full" data-act="goto" data-to="4" data-sub="sLaser" data-eq="laser">Лазер: общий рез и порядок реза →</button>
-        <button class="btn full" data-act="goto" data-to="4" data-sub="sCost" data-eq="plot mill laser">Стоимость резки по длине и врезкам →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sLetters" data-eq="cut">Объёмные буквы: борта, задник, выборка →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sCutCheck" data-eq="cut">Проверить контуры →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sLaser" data-eq="cut">Порядок реза →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sCutFile" data-eq="cut">Файл для станка →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sCutFile" data-eq="plot">Файл для плоттера →</button>
+        <button class="btn full" data-act="goto" data-to="4" data-sub="sCost" data-eq="plot cut">Стоимость резки по длине и врезкам →</button>
       </div>
     </div>
     <div id="bookBox" style="display:none" class="card"><h4>Брошюра на скрепку</h4>
@@ -689,7 +751,11 @@
       <div class="row adv"><span class="k">Скругление углов</span><input type="text" id="radius"></div>
     </div>
     <div class="card" id="cardPlace"><h4>Как расставить карты, мм</h4>
-      <div class="row"><span class="k">Зазор между картами: ↔ × ↕</span><input type="text" id="gapX"><span class="x">×</span><input type="text" id="gapY"></div>
+      <div class="row"><span class="k">Зазор ↔ × ↕</span><input type="text" id="gapX"><span class="x">×</span><input type="text" id="gapY"></div>
+      <div class="eqonly" data-eq="uv">
+        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt"></span></span></div>
+        <div class="ex under">С какого угла стола начать: туда прижмётся блок карт, там встанет карта 1 — с неё пойдут номера.</div>
+      </div>
       <div class="row adv"><span class="k">Отступ от края листа</span><input type="text" id="margin"></div>
       <label class="chk adv"><input type="checkbox" id="marginSides">разный по сторонам</label>
       <div class="adv" id="sidesBox" style="display:none">
@@ -698,7 +764,7 @@
       </div>
       <div class="fold-body adv" id="fPlaceMore">
       <div class="row"><span class="k">Карты</span><select id="orient"><option value="0">как больше влезет</option><option value="1">лёжа (горизонтально)</option><option value="2">стоя (боком)</option></select></div>
-      <div class="row" id="alignRow"><span class="k">Прижать блок</span><select id="alignV"><option value="1">вниз</option><option value="0">по центру</option><option value="2">вверх</option></select><span class="x"></span><select id="alignH"><option value="0">по центру</option><option value="1">влево</option><option value="2">вправо</option></select></div>
+      <div class="row" id="alignRow"><span class="k">Прижать блок</span><span class="x" title="по вертикали">↕</span><select id="alignV" title="по вертикали"><option value="1">вниз</option><option value="0">по центру</option><option value="2">вверх</option></select><span class="x" title="по горизонтали">↔</span><select id="alignH" title="по горизонтали"><option value="0">по центру</option><option value="1">влево</option><option value="2">вправо</option></select></div>
       <div id="colsBox"><div class="row"><span class="k">Колонок × рядов</span><input type="text" id="cols" placeholder="авто"><span class="x">×</span><input type="text" id="rows" placeholder="авто"></div>
       <div class="ex">Оставьте «авто» — поместится сколько влезет. Число — чтобы ограничить, например 2 ряда для теста.</div></div>
       </div>
@@ -737,7 +803,7 @@
     </div>
     <div class="sec-h" data-mod="O" id="fOffsetH" data-eq="offset"><span class="caret"></span>Офсет: клапан, шкала, приводка</div>
     <div class="fold-body" id="fOffset" data-eq="offset" data-lockarea="O">
-      <div class="ex">Для подготовки листа к офсету. На УФ-стол и готовые заготовки не нужно.</div>
+      <div class="ex">Для подготовки листа к офсету.</div>
       <div class="row"><span class="k">Печатник</span><select id="printer" class="wide"></select></div>
       <label class="chk"><input type="checkbox" id="plate">Поставить лист на пластину печатника</label>
       <div id="plateBox" style="display:none">
@@ -777,7 +843,7 @@
       <div class="lamode adv" id="prnInfo"></div>
       <div class="sec-h adv"><span class="caret"></span>Настройки принтера</div>
       <div class="fold-body adv" id="fPrn">
-        <div class="row"><span class="k">Название</span><input type="text" id="prnName" class="calwide"></div>
+        <div class="row"><span class="k">Название</span><input type="text" id="prnName" class="wide"></div>
         <div class="row"><span class="k">Файлы для печати</span><select id="prnFmt" class="wide"><option value="tiff">TIFF — растр, спецкраски каналами</option><option value="pdf">PDF — вектор, спецкраски плашками</option></select></div>
         <div class="row" id="prnDpiRow"><span class="k">Разрешение, dpi</span><input type="text" id="tiffDpi"></div>
         <div class="row"><span class="k">Поворот файла для RIP</span><select id="tiffRotate"><option value="0">нет</option><option value="90">90° по часовой</option><option value="-90">90° против часовой</option></select></div>
@@ -813,7 +879,7 @@
         <button class="btn" data-act="run" data-mode="preview" data-scope="trial">Показать на экране</button>
         <button class="btn main" data-act="run" data-mode="tiff" data-scope="trial" data-mod="UW" id="trialOut">TIFF пробного…</button>
       </div>
-      <div class="ex" data-eq="uv wide">«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем TIFF пробного листа — откройте его в Фотошопе или в программе печати.</div>
+      <div class="ex" data-eq="uv wide" id="trialNote">«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем TIFF пробного листа — откройте его в Фотошопе или в программе печати.</div>
       <div class="ex eqonly" data-eq="digi offset">«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем PDF пробного листа — откройте и посмотрите перед всем заказом.</div>
     </div>
 
@@ -825,10 +891,10 @@
       <div class="ex adv" id="orderOutNote">На каждый лист два файла: «Лицо» и «Оборот» (или только нужная сторона — ниже). Фон в CMYK, белила — канал W. CorelDRAW будет занят, остановить — «Стоп» в окошке.</div>
       <div class="btns">
         <button class="btn adv" data-act="run" data-mode="pdf" data-scope="order" id="orderAlt">PDF…</button>
-        <button class="btn" data-act="run" data-mode="print" data-scope="order">Печать…</button>
+        <button class="btn" data-act="run" data-mode="print" data-scope="order" data-eq="digi uv wide">Печать…</button>
       </div>
-      <div class="ex" data-eq="uv wide">«PDF…» — все листы с подставленными номерами в PDF: для типографии, цифровой печати или проверки. «Печать…» — сразу на принтер, сначала откроется окно выбора принтера.</div>
-      <div class="ex eqonly" data-eq="digi offset">«Печать…» — сразу на принтер: сначала откроется окно выбора принтера.</div>
+      <div class="ex" data-eq="uv wide" id="orderAltNote">«PDF…» — все листы с подставленными номерами в PDF: для типографии, цифровой печати или проверки. «Печать…» — сразу на принтер, сначала откроется окно выбора принтера.</div>
+      <div class="ex eqonly" data-eq="digi">«Печать…» — сразу на принтер: сначала откроется окно выбора принтера.</div>
       <label class="chk adv"><input type="checkbox" id="pdfOneFile">PDF одним файлом</label>
       <div class="adv" id="sidesBox2">
         <div class="row"><span class="k">Стороны</span><select id="outSides" class="wide" style="min-width:0"><option value="0">лица и обороты</option><option value="1">только лица</option><option value="2">только обороты</option></select></div>
@@ -906,7 +972,9 @@
     </div>
     <div class="subpage" data-group="gCheck" id="sPdf">
     <div class="card" data-eq="offset digi">
-      <div class="ex">Под это оборудование: офсет — PDF/X-1a (его принимает любая типография), цифра и УФ — PDF/X-4, широкоформат — облегчённый. Цвет CMYK, шрифты внутри, вылет с отмеченным форматом по резу. Перед сохранением макет проверится.</div>
+      <div class="ex" data-eq="all">Под это оборудование: офсет — PDF/X-1a (его принимает любая типография), цифра и УФ — PDF/X-4, широкоформат — облегчённый. Цвет CMYK, шрифты внутри, вылет с отмеченным форматом по резу. Перед сохранением макет проверится.</div>
+      <div class="ex eqonly" data-eq="offset">Для офсета — PDF/X-1a: его принимает любая типография. Цвет CMYK, шрифты внутри, вылет с отмеченным форматом по резу. Перед сохранением макет проверится.</div>
+      <div class="ex eqonly" data-eq="digi">Для цифровой печати — PDF/X-4: прозрачности остаются как есть. Цвет CMYK, шрифты внутри, вылет с отмеченным форматом по резу. Перед сохранением макет проверится.</div>
       <label class="chk adv"><input type="checkbox" id="pfCrop">Метки реза в PDF</label>
       <div class="ex under adv">Обычно типографии просят без меток — ставят свои при спуске полос. Раскладка с листами выводится как есть.</div>
       <button class="btn main full" data-act="pfpdf">Сохранить PDF…</button>
@@ -927,9 +995,9 @@
       <div class="ex">Выделите один объект — образец, и программа выделит все похожие на странице, в том числе внутри групп. Дальше меняйте их все сразу.</div>
       <button class="btn full" data-act="samesel">Выделить похожие</button>
       <div class="sub-h adv">Заменить цвет во всём документе</div>
-      <div class="ex adv">Выделите объект того цвета, который надо заменить, и нажмите «Взять цвет». Потом поправьте числа — это проценты краски — и замените.</div>
+      <div class="ex adv">Выделите объект того цвета, который надо заменить, и нажмите «Взять цвет из выделенного». Потом поправьте числа — это проценты краски — и замените.</div>
       <button class="btn full adv" data-act="pickcolor">Взять цвет из выделенного</button>
-      <div class="row adv"><span class="k">На цвет, %</span><input type="text" id="swC" placeholder="C"><span class="x">·</span><input type="text" id="swM" placeholder="M"><span class="x">·</span><input type="text" id="swY" placeholder="Y"><span class="x">·</span><input type="text" id="swK" placeholder="K"></div>
+      <div class="row adv"><span class="k">На цвет, %</span><input type="text" id="swC" placeholder="C" style="width:34px"><span class="x">·</span><input type="text" id="swM" placeholder="M" style="width:34px"><span class="x">·</span><input type="text" id="swY" placeholder="Y" style="width:34px"><span class="x">·</span><input type="text" id="swK" placeholder="K" style="width:34px"></div>
       <label class="chk adv"><input type="checkbox" id="swOut">Менять и цвет обводки</label>
       <button class="btn full adv" data-act="swapcolor">Заменить во всём документе</button>
       <div class="sub-h">Направляющие по полям</div>
@@ -982,7 +1050,7 @@
       <div class="ex">Метки под люверсы по периметру баннера: по углам всегда, между ними — ровным шагом. Ложатся на отдельный слой, который по умолчанию не печатается.</div>
       <div class="row"><span class="k">Расставить</span><select id="eyeTarget" class="wide"><option value="0">по странице</option><option value="1">по выделенному</option></select></div>
       <div class="row"><span class="k">Стороны</span><select id="eyeSides" class="wide"><option value="0">все четыре</option><option value="1">верх и низ</option><option value="2">левая и правая</option><option value="3">только верх</option></select></div>
-      <div class="row"><span class="k">Отверстие × отступ</span><input type="text" id="eyeHole"><span class="x">×</span><input type="text" id="eyeEdge"></div>
+      <div class="row"><span class="k">Отверстие × отступ, мм</span><input type="text" id="eyeHole"><span class="x">×</span><input type="text" id="eyeEdge"></div>
       <div class="row"><span class="k">Шаг не реже, мм</span><input type="text" id="eyeStep"></div>
       <div class="ex">Шаг подгоняется под длину стороны: между люверсами не останется куска вдвое длиннее остальных.</div>
       <div class="row adv"><span class="k">Подгиб, мм</span><input type="text" id="eyeHem"></div>
@@ -1006,21 +1074,21 @@
       <div class="ex under adv" id="ltInNote">Пустая высота — 40 % от внешнего.</div>
       <div class="row"><span class="k">Лист для полос, мм</span><input type="text" id="ltSA"><span class="x">×</span><input type="text" id="ltSB"></div>
       <div class="row adv"><span class="k">Поле от края листа, мм</span><input type="text" id="ltMargin"></div>
-      <div class="row adv"><span class="k">Фреза (между полосами), мм</span><input type="text" id="ltKerf"></div>
+      <div class="row adv"><span class="k">Рез между полосами, мм</span><input type="text" id="ltKerf"></div>
       <div class="row adv"><span class="k">Запас на стыки, %</span><input type="text" id="ltRes"></div>
       <div class="ex" id="ltInfo"></div>
-      <button class="btn main full" data-act="ltstrips" data-mod="M">Разложить полосы на листы</button>
-      <div class="ex">Страницы с полосами для фрезера — в конце документа. Там же итог: метры, полосы, листы.</div>
+      <button class="btn main full" data-act="ltstrips" data-mod="ML">Разложить полосы на листы</button>
+      <div class="ex">Страницы с полосами бортов — в конце документа. Там же итог: метры, полосы, листы.</div>
       </div>
 
       <div class="ltsec" id="ltSec2"><div class="lth"><span class="num">2</span>Задник и выборка на лице</div>
       <div class="row"><span class="k">Зазор задника, мм</span><input type="text" id="ltGapB"></div>
-      <div class="btnpair"><button class="btn" data-act="ltdraw" data-what="back" data-mode="1" data-mod="M">Нарисовать задник</button><button class="btn" data-act="ltdraw" data-what="back" data-mode="2" data-mod="M">Убрать</button></div>
+      <div class="btnpair"><button class="btn" data-act="ltdraw" data-what="back" data-mode="1" data-mod="ML">Нарисовать задник</button><button class="btn" data-act="ltdraw" data-what="back" data-mode="2" data-mod="ML">Убрать</button></div>
       <div class="ex">Меньше буквы на толщину внешнего борта и зазор.</div>
       <div class="row"><span class="k">Зазор выборки, мм</span><input type="text" id="ltGapF"></div>
-      <div class="btnpair"><button class="btn" data-act="ltdraw" data-what="reb" data-mode="1" data-mod="M">Нарисовать выборку</button><button class="btn" data-act="ltdraw" data-what="reb" data-mode="2" data-mod="M">Убрать</button></div>
+      <div class="btnpair"><button class="btn" data-act="ltdraw" data-what="reb" data-mode="1" data-mod="ML">Нарисовать выборку</button><button class="btn" data-act="ltdraw" data-what="reb" data-mode="2" data-mod="ML">Убрать</button></div>
       <div class="ex">Уступ под борт на обороте лица: толщина внешнего борта и зазор от края.</div>
-      <div class="btnpair"><button class="btn" data-act="ltnest" data-mod="M" id="ltNestBtn">Разложить задники на листы</button></div>
+      <div class="btnpair"><button class="btn" data-act="ltnest" data-mod="ML" id="ltNestBtn">Разложить задники на листы</button></div>
       <div id="ltProg" style="display:none">
         <div class="nsbar"><span id="ltBar"></span></div>
         <div class="ex" id="ltProgTxt"></div>
@@ -1031,7 +1099,7 @@
 
       <div class="ltsec" id="ltSec3"><div class="lth"><span class="num">3</span>Косяки шрифта</div>
       <div class="ex">Петли на стыках штрихов отмечаются красными кружками.</div>
-      <button class="btn full" data-act="ltfix" data-mod="M">Исправить косяки в макете</button>
+      <button class="btn full" data-act="ltfix" data-mod="ML">Исправить косяки в макете</button>
       </div>
 
       <div class="ltres" id="ltOut" style="display:none"></div>
@@ -1039,10 +1107,10 @@
     </div>
     <div class="subpage" data-group="gCut" id="sCost">
     <div class="card"><h4>Стоимость резки</h4>
-      <div class="xback">Сначала разложить детали на лист? <a class="lnk" data-act="goto" data-to="1" data-mode="nest">Раскладка · По форме</a></div>
+      <div class="xback" id="ctBack">Сначала разложить детали на лист? <a class="lnk" data-act="goto" data-to="1" data-mode="nest">Раскладка →</a></div>
       <div class="ex">Выделите, что режется, — или ничего, тогда весь лист. Посчитает длину реза и врезки (каждый контур — одна врезка), время и цену. Отдельно по цвету линий: так видно, где рез, а где гравировка.</div>
-      <div id="ctLaBox" class="eqonly" data-eq="laser">
-        <div class="lth">Материал — из вашей таблицы лазера</div>
+      <div id="ctLaBox" class="eqonly" data-eq="cut" data-machine="laser">
+        <div class="lth">Материал — режимы из вашей таблицы</div>
         <div class="row"><span class="k">Материал</span><select id="ctMat" class="wide"></select></div>
         <div class="row"><span class="k">Толщина</span><select id="ctTh" class="wide"></select></div>
         <div class="lamode" id="ctLaInfo"></div>
@@ -1057,9 +1125,23 @@
       <div class="ltres" id="ctOut" style="display:none"></div>
     </div>
     </div>
+    <div class="subpage" data-group="gCut" id="sCutCheck">
+    <div class="card"><h4>Проверка контуров для резки</h4>
+      <div class="ex">Находит то, из-за чего портится рез: дубли под линиями, соринки, разрывы, линии из кусков, детали и буквы внахлёст, двойные линии. Пометки — на непечатаемом слое «Резка: пометки». Дубли и целые соринки сразу уходят на слой «Резка: лишнее» розовым. Остальное меняется только кнопкой «Исправить», каждое исправление отменяется Ctrl+Z.</div>
+      <div class="row"><span class="k">Где</span><select id="ccScope" class="wide"><option value="page">всю страницу</option><option value="sel">выделенное</option></select></div>
+      <div class="row adv"><span class="k">Склеивать разрывы до, мм</span><input type="text" id="ccGap"></div>
+      <div class="row adv"><span class="k">Соринки меньше, мм</span><input type="text" id="ccTiny"></div>
+      <div class="row adv"><span class="k">Допуск совпадения, мм</span><input type="text" id="ccTol"></div>
+      <button class="btn main full" data-act="ccrun" data-mod="ML">Проверить контуры</button>
+      <div class="info" id="ccSum" style="display:none"></div>
+      <div id="ccList"></div>
+      <button class="btn full" data-act="ccfix" data-key="all" data-mod="ML" id="ccFixAll" style="display:none">Исправить всё, что исправляется</button>
+    </div>
+    </div>
     <div class="subpage" data-group="gCut" id="sCutFile">
     <div class="card"><h4 id="cfTitle">Файл для станка</h4>
       <div class="ex" id="cfWhat"></div>
+      <div class="cfready eqonly" data-eq="cut" id="cfReady"></div>
       <div class="row"><span class="k">Формат</span><select id="cfFmt" class="wide"></select></div>
       <div id="cfMarksBox">
         <label class="chk"><input type="checkbox" id="cfMarks" checked>Добавить метки плоттера</label>
@@ -1070,19 +1152,21 @@
     </div>
     </div>
     <div class="subpage" data-group="gCut" id="sLaser">
-    <div class="card"><h4>Лазер CO2: стык в стык и порядок реза</h4>
-      <div class="ex">У лазера нет зазора на фрезу: детали можно ставить вплотную, и общий край двух деталей режется один раз. Здесь — раскладка без зазоров, удаление двойных линий и порядок реза, чтобы голова не скакала по полю.</div>
-      <div class="ltsec"><div class="lth"><span class="num">1</span>Разложить стык в стык</div>
+    <div class="card"><h4>Порядок реза</h4>
+      <div class="ex" data-machine="laser">У лазера нет зазора на фрезу: детали можно ставить вплотную, и общий край двух деталей режется один раз. Здесь — раскладка без зазоров, удаление двойных линий и порядок реза, чтобы голова не скакала по полю.</div>
+      <input type="hidden" id="laTool">
+      <div class="ex">Разложить детали — пунктом «Раскладка»: там способ (по форме, габаритами, сеткой), точка старта и полосы. Здесь — сам рез: сторона, порядок, врезка.</div>
+      <div class="ltsec" style="display:none"><div class="lth"><span class="num">1</span>Разложить стык в стык</div>
       <div class="ex">Выделите детали: каждый объект или группа — одна деталь, её габарит встаёт вплотную к соседним. Для пластин, коробок, бирок — у прямых краёв будет общий рез. Фигурные детали — через <a class="lnk" data-act="goto" data-to="1" data-mode="nest">Раскладка · По форме</a>.</div>
       <div class="row"><span class="k">Лист, мм</span><input type="text" id="laW"><span class="x">×</span><input type="text" id="laH"></div>
       <div class="row adv"><span class="k">Поле от края, мм</span><input type="text" id="laMargin"></div>
       <div class="row"><span class="k">Зазор, мм</span><input type="text" id="laGap"></div>
       <div class="row adv"><span class="k">Комплектов</span><input type="text" id="laKits"></div>
       <label class="chk adv"><input type="checkbox" id="laRot" checked>Можно поворачивать на 90°</label>
-      <button class="btn main full" data-act="lapack" data-mod="L">Разложить стык в стык</button>
+      <button class="btn main full" data-act="lapack" data-mod="ML">Разложить стык в стык</button>
       <div class="ex">Листы — новыми страницами в конце документа.</div>
       </div>
-      <div class="ltsec"><div class="lth">Материал — режимы из вашей таблицы</div>
+      <div class="ltsec" data-machine="laser"><div class="lth">Материал — режимы из вашей таблицы</div>
       <div class="row"><span class="k">Материал</span><select id="laMat" class="wide"></select></div>
       <div class="row"><span class="k">Толщина</span><select id="laTh" class="wide"></select></div>
       <div class="lamode" id="laModeInfo"></div>
@@ -1090,23 +1174,37 @@
       <div class="btnpair adv"><button class="btn" data-act="latableread" title="Прочитать таблицу режимов из открытого в CorelDRAW файла: надписи «скорость / мощность / время сек» по материалам и толщинам">Взять таблицу из открытого файла</button><button class="btn" data-act="latableshow" id="laTableBtn">Показать таблицу</button></div>
       <div id="laTableBox" style="display:none"></div>
       </div>
-      <div class="ltsec"><div class="lth"><span class="num">2</span>Оптимизировать резку</div>
+      <div class="ltsec"><div class="lth" data-machine="laser">Оптимизировать резку</div>
       <div class="ex">Выделите детали — или ничего, тогда вся страница. Детали уйдут на скрытый слой, вместо них — линии реза по порядку.</div>
-      <label class="chk adv"><input type="checkbox" id="laDedupe" checked>Общие края резать один раз</label>
+      <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="laStartTxt"></span></span></div>
+      <div class="row"><span class="k">Порядок</span><select id="laOrder" class="wide"><option value="rows">рядами от точки старта</option><option value="cols">колонками от точки старта</option><option value="near">к ближайшей детали</option><option value="small">сначала мелкие детали</option><option value="color">по слоям (цветам)</option></select></div>
+      <div class="ex under">Рядами, колонками, к ближайшей и «сначала мелкие» — деталь за деталью: у каждой окна раньше контура. По слоям — сначала все окна и общие линии, потом внешние края.</div>
+      <div class="row"><span class="k">Смещение</span><select id="laOffset" class="wide"><option value="none">нет — режет по линии</option><option value="prog">делает эта программа</option><option value="machine">делает программа станка</option></select></div>
+      <div class="row" data-machine="laser" id="laKerfRow"><span class="k">Ширина реза, мм</span><input type="text" id="laKerf"></div>
+      <div class="row" data-machine="mill" id="laToolRow"><span class="k">Фреза, мм</span><span class="x" id="laToolTxt"></span><a class="lnk" data-act="goto" data-to="1" data-mode="nest" style="margin-left:6px" title="Диаметр фрезы — это зазор между деталями в «Раскладке»">— зазор в «Раскладке» →</a></div>
+      <div class="row" id="laSideOutRow"><span class="k">Наружные контуры</span><select id="laSideOut" class="wide"><option value="out">снаружи — деталь в размер</option><option value="in">внутри — отверстие в размер</option><option value="on">по линии</option></select></div>
+      <div class="row" id="laSideHoleRow"><span class="k">Окна</span><select id="laSideHole" class="wide"><option value="in">внутри — окно в размер</option><option value="out">снаружи</option><option value="on">по линии</option></select></div>
+      <div class="ex under">Эта программа: в файле путь центра (фрезер — на радиус фрезы, лазер — на половину ширины реза), у соседей через зазор — одна общая линия, в программе станка всё «по линии». Программа станка: в файле контуры как нарисованы, по слоям «снаружи», «внутри», «по линии» — сторону и фрезу задаёт фрезеровщик.</div>
+      <div class="row"><span class="k">Врезка</span><select id="laEntry" class="wide"><option value="near">в ближайшей точке</option><option value="corner">на углу</option><option value="mid">посреди стороны</option></select></div>
+      <div class="row"><span class="k">Заход, мм</span><input type="text" id="laLead"></div>
+      <div class="ex under">0 — без захода. Заход — короткий подвод к точке врезки со стороны отхода: у детали — снаружи, у окна — изнутри; след врезки остаётся на отходе. Если рядом другая деталь — без захода.</div>
+      <label class="chk adv"><input type="checkbox" id="laDedupe" checked><span data-machine="laser">Общие края резать один раз</span><span data-machine="mill">Общий рез: у соседей через фрезу — одна линия</span></label>
+      <label class="chk" data-machine="mill"><input type="checkbox" id="laHold" checked>Полосы держатся за лист: концы у поля не прорезать</label>
       <label class="chk adv"><input type="checkbox" id="laJoin" checked>Склеить куски в непрерывные линии</label>
       <label class="chk adv"><input type="checkbox" id="laInner" checked>Сначала окна и общие линии, внешний край — последним</label>
       <div class="fold-body adv" id="fLaMore">
-      <div class="row"><span class="k">Голова начинает</span><select id="laHead" class="wide"><option value="tl">слева вверху</option><option value="tr">справа вверху</option><option value="bl">слева внизу</option><option value="br">справа внизу</option></select></div>
-      <label class="chk"><input type="checkbox" id="laColors" checked>Внутреннее и внешний край — разными цветами</label>
-      <div class="row" id="laColRow"><span class="k">Цвета, RGB</span><input type="text" id="laColIn" style="width:70px"><span class="x">·</span><input type="text" id="laColOut" style="width:70px"></div>
+      <input type="hidden" id="laHead">
+      <label class="chk" data-machine="laser"><input type="checkbox" id="laColors" checked>Внутреннее и внешний край — разными цветами</label>
+      <div class="row" id="laColRow" data-machine="laser"><span class="k">Цвета, RGB</span><input type="text" id="laColIn" style="width:70px"><span class="x">·</span><input type="text" id="laColOut" style="width:70px"></div>
       <label class="chk"><input type="checkbox" id="laMoves" checked>Показать холостые ходы и номера</label>
       <div class="row"><span class="k">Допуск совпадения, мм</span><input type="text" id="laTol"></div>
       </div>
-      <button class="btn main full" data-act="laopt" data-mod="L">Оптимизировать резку</button>
+      <button class="btn main full" data-act="laopt" data-mod="ML">Оптимизировать резку</button>
       <button class="btn full" data-act="laundo">Вернуть как было</button>
       <div class="ltres" id="laOut" style="display:none"></div>
       </div>
-      <div class="ex">В RDWorks: линии — на слое «Лазер: рез», нижняя режется первой. Слой первого цвета (внутреннее) поставьте раньше второго (внешний край), а автоматическую оптимизацию пути выключите — иначе программа перемешает порядок.</div>
+      <div class="ex" data-machine="mill">Линии реза — на слое «Лазер: рез» (он так называется и у фрезера). Зелёные — «по линии», без смещения (путь центра фрезы или линии полос). Синие — фигурные детали, «снаружи»; красные — окна, «внутри». Сначала окна, потом зелёные, потом синие — чтобы деталь не сдвинулась.</div>
+      <div class="ex" data-machine="laser">В RDWorks: линии — на слое «Лазер: рез», нижняя режется первой. Слой первого цвета (внутреннее) поставьте раньше второго (внешний край), а автоматическую оптимизацию пути выключите — иначе программа перемешает порядок.</div>
     </div>
     </div>
   </div>
@@ -1201,7 +1299,7 @@
       <button class="btn full main" data-act="problem">Сообщить о проблеме</button>
       <div class="ex keep">Уйдёт ваше описание, снимок окна и отчёт о том, что нажимали. Макеты и файлы клиентов не отправляются.</div>
       <button class="btn full" data-act="sendreport" style="margin-top:6px">Отправить только отчёт</button>
-      <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях самому</label>
+      <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях автоматически</label>
       <div class="ex under keep">Уходит только текст отчёта: что нажимали, что ответил макрос, версия и код компьютера. Макеты, номера и файлы клиентов не отправляются. Нет связи — отчёт подождёт и уйдёт позже.</div>
     </div>
     </div>
@@ -1271,12 +1369,12 @@
     try { if (host) host.GMSManager.RunMacro('VarPrint', 'Bridge.LogLine', 'показано: ' + String(t).replace(/[\r\n]+/g, ' / ').substring(0, 400)); } catch (x) { }
   }
 
-  var QUIET = { DocKey: 1, State: 1, ImposeInfo: 1, SelInfo: 1, NestSelBrief: 1, NestCheck: 1, NestProgress: 1, LettersInfo: 1, Columns: 1, Plan: 1, LogLine: 1, Report: 1 };
+  var QUIET = { UiTheme: 1, DocKey: 1, State: 1, ImposeInfo: 1, SelInfo: 1, NestSelBrief: 1, NestCheck: 1, NestProgress: 1, LettersInfo: 1, Columns: 1, Plan: 1, LogLine: 1, Report: 1 };
   function short(t) { t = String(t).replace(/[\r\n]+/g, ' / '); return t.length > 300 ? t.substring(0, 300) + '…' : t; }
   // Бегущая полоса: показывается при нажатии кнопки, убирается, когда макрос ответил.
   // Кнопки, которые ничего не считают, её не держат: если за полсекунды вызова не было — убрать.
   var busyEl = null, busyUsed = false;
-  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
+  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
   function busyShow(btn) {
     busyHide();
     var w = document.createElement('div'); w.className = 'busy'; w.innerHTML = '<span></span>';
@@ -1404,7 +1502,7 @@
     m.style.display = 'block';
     if (box) {
       m.innerText = t + ' Написать за ключом — кнопками в жёлтой плашке выше.';
-      try { box.scrollIntoView(); } catch (x) { }
+      intoView(box);
       if (box.className.indexOf('flash') < 0) { box.className += ' flash'; setTimeout(function () { box.className = box.className.replace(' flash', ''); }, 1500); }
     } else { m.innerHTML = esc(t) + contactBtns(''); bind(); }
   }
@@ -1420,6 +1518,7 @@
     offset: '<circle cx="8" cy="8" r="4.5"/><circle cx="16" cy="16" r="4.5"/><path d="M8 8h.01M16 16h.01"/>',
     mill: '<path d="M9 3h6v5H9z"/><path d="M10 8v8l2 5 2-5V8"/><path d="m10 10.5 4 2M10 13.5l4 2"/>',
     laser: '<path d="M9 3h6v6H9z"/><path d="M12 9v9"/><path d="M3 21h18"/><path d="m8 16-2 2M16 16l2 2"/>',
+    cut: '<path d="M8.5 3h7v5h-7z"/><path d="M12 8v6"/><path d="m10 16 2-2 2 2"/><path d="M3 20h7.5M13.5 20H21"/><path d="M3 17.5v2.5M21 17.5v2.5"/>',
     cal: '<rect x="3" y="5" width="18" height="16" rx="1.5"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M7.5 14h1M11.5 14h1M15.5 14h1M7.5 17.5h1M11.5 17.5h1"/>',
     all: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="m9 14 2 2 4-4"/>'
   };
@@ -1444,12 +1543,9 @@
     { id: 'plot', m: 'P', s: 'Плоттер', n: 'Плоттерная резка', steps: [
       { n: 'Раскладка', tab: 1, modes: ['roll', 'nest', 'sheet'], mode: 'roll', mod: '' }, { n: 'Вылет', tab: 4, sub: 'sBleed', mod: 'WP' },
       { n: 'Файл для плоттера', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
-    { id: 'mill', m: 'M', s: 'Фрезер', n: 'Фрезеровка', steps: [
+    { id: 'cut', m: 'ML', s: 'Резка', n: 'Резка на станке', steps: [
       { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest', mod: 'UWPML' }, { n: 'Объёмные буквы', tab: 4, sub: 'sLetters' },
-      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
-    { id: 'laser', m: 'L', s: 'Лазер', n: 'Лазерная резка', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['nest'], mode: 'nest', mod: 'UWPML' }, { n: 'Стык в стык и порядок реза', tab: 4, sub: 'sLaser' },
-      { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
+      { n: 'Контуры', tab: 4, sub: 'sCutCheck' }, { n: 'Порядок реза', tab: 4, sub: 'sLaser' }, { n: 'Файл для станка', tab: 4, sub: 'sCutFile' }, { n: 'Цена', tab: 4, sub: 'sCost', mod: 'PML' }] },
     { id: 'cal', m: 'K', s: 'Календарь', n: 'Календарь', steps: [{ n: 'Тип и даты', tab: 5, sub: 'sCalType' }, { n: 'Праздники', tab: 5, sub: 'sCalLang' },
       { n: 'Стиль', tab: 5, sub: 'sCalStyle' }, { n: 'Собрать', tab: 5, sub: 'sCalBuild' }] }
   ];
@@ -1457,7 +1553,7 @@
   var STI = { 'Проверка': ['check', 'Проверка'], 'Правки': ['tools', 'Правки'], 'Номера': ['num', 'Номера'], 'Превью и заказ': ['order', 'Заказ'],
     'Брак': ['acct', 'Брак'], 'Раскладка': ['lay', 'Раскладка'], 'Вывод': ['out', 'Вывод'], 'PDF для типографии': ['pdf', 'PDF'],
     'Белила и лак': ['ink', 'Белила, лак'], 'Вылет': ['bleed', 'Вылет'], 'Люверсы': ['eye', 'Люверсы'], 'Файл для плоттера': ['file', 'Файл'],
-    'Файл для станка': ['file', 'Файл'], 'Цена': ['cost', 'Цена'], 'Объёмные буквы': ['letters', 'Буквы'], 'Стык в стык и порядок реза': ['joint', 'Стык, порядок'],
+    'Файл для станка': ['file', 'Файл'], 'Цена': ['cost', 'Цена'], 'Объёмные буквы': ['letters', 'Буквы'], 'Порядок реза': ['joint', 'Порядок'], 'Контуры': ['contour', 'Контуры'],
     'Тип и даты': ['caltype', 'Тип, даты'], 'Праздники': ['hol', 'Праздники'], 'Стиль': ['style', 'Стиль'], 'Собрать': ['build', 'Собрать'] };
   var STIC = {
     check: '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/><path d="m8.3 11 1.9 1.9 3.5-3.5"/>',
@@ -1472,13 +1568,14 @@
     bleed: '<rect x="7.5" y="7.5" width="9" height="9"/><path d="M3.5 7V3.5H7M17 3.5h3.5V7M20.5 17v3.5H17M7 20.5H3.5V17"/>',
     eye: '<rect x="3" y="5.5" width="18" height="13" rx="1"/><circle cx="6.8" cy="9.2" r="1.3"/><circle cx="17.2" cy="9.2" r="1.3"/><circle cx="6.8" cy="14.8" r="1.3"/><circle cx="17.2" cy="14.8" r="1.3"/>',
     file: '<path d="M12 4v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M5 20h14"/>',
-    cost: '<path d="M9 20V4h5a4 4 0 0 1 0 8H7"/><path d="M7 16h8"/>',
+    cost: '<path d="M12 3v18"/><path d="M16.5 7.3c-.8-1.3-2.4-2.1-4.5-2.1-2.6 0-4.3 1.3-4.3 3.2 0 4.3 9 2.4 9 6.8 0 2-1.9 3.4-4.7 3.4-2.2 0-3.9-.9-4.7-2.4"/>',
     letters: '<path d="M5 20 11 4h2l6 16"/><path d="M8 14h8"/>',
     caltype: '<rect x="3.5" y="5" width="17" height="15.5" rx="1.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     hol: '<path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z"/>',
     style: '<path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.2 0 1.8-.8 1.8-1.7 0-1.2-1-1.6-1-2.6 0-.9.7-1.5 1.7-1.5h2.2a3.8 3.8 0 0 0 3.8-3.9C20.5 6.9 16.7 3.5 12 3.5z"/><circle cx="8" cy="11" r="1.1"/><circle cx="11" cy="7.5" r="1.1"/><circle cx="15.5" cy="8.5" r="1.1"/>',
     build: '<path d="M12 3.5 20 8v8l-8 4.5L4 16V8z"/><path d="m4 8 8 4.5L20 8M12 12.5v8"/>',
-    joint: '<rect x="3" y="6.5" width="9" height="11"/><rect x="12" y="6.5" width="9" height="11"/>'
+    joint: '<rect x="3" y="6.5" width="9" height="11"/><rect x="12" y="6.5" width="9" height="11"/>',
+    contour: '<path d="M10 4H6.5A2.5 2.5 0 0 0 4 6.5v11A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5V14"/><path d="M14 4h3.5A2.5 2.5 0 0 1 20 6.5V10"/><path d="m9 12 2.2 2.2L15.5 10"/>'
   };
   var PFOF = { digi: 'digital', offset: 'offset', uv: 'uv', wide: 'wide' };
   var eqCur = 'all', eqStep = 0, terse = false, eqFirst = false, eqFirstSel = [], uiMode = 'simple';
@@ -1491,9 +1588,20 @@
     document.body.className = document.body.className.replace(/\s*\b(terse|simple)\b/g, '') + (uiMode == 'simple' ? ' simple' : '') + (terse ? ' terse' : '');
   }
   uiClasses();
-  try { eqCur = LS.getItem('vpEq') || 'all'; eqStep = +(LS.getItem('vpEqStep_' + eqCur) || 0); } catch (x) { }
+  var cutMachine = 'laser';
+  try { cutMachine = LS.getItem('cutMachine') || 'laser'; } catch (x) { }
+  try { eqCur = LS.getItem('vpEq') || 'all'; } catch (x) { }
+  // лазер и фрезер были отдельными значками — теперь один «Резка», станок запоминается
+  if (eqCur == 'mill' || eqCur == 'laser') { cutMachine = eqCur; eqCur = 'cut'; try { LS.setItem('vpEq', 'cut'); LS.setItem('cutMachine', cutMachine); } catch (x) { } }
+  try { eqStep = +(LS.getItem('vpEqStep_' + eqCur) || 0); } catch (x) { }
   function eqOf(id) { for (var i = 0; i < EQ.length; i++) if (EQ[i].id == id) return EQ[i]; return EQ[EQ.length - 1]; }
-  function eqHidden() { var h = ''; try { h = LS.getItem('vpEqHide') || ''; } catch (x) { } return h ? h.split(',') : []; }
+  function eqHidden() {
+    var h = ''; try { h = LS.getItem('vpEqHide') || ''; } catch (x) { }
+    var r = h ? h.split(',') : [];
+    // прежние значки лазера и фрезера: спрятаны оба — спрятана и «Резка»
+    if (inArr(r, 'mill') && inArr(r, 'laser')) r.push('cut');
+    return r;
+  }
   function eqSvg(id, cls) { return '<svg' + (cls ? ' class="' + cls + '"' : '') + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' + EQI[id] + '</svg>'; }
   function modeKey() { return impMode == 'sample' || impMode == 'sel' ? 'sheet' : impMode; }
   function subOn(id) { var e = $(id); return !!e && /\bon\b/.test(e.className); }
@@ -1544,7 +1652,129 @@
     if (!pf && changed && eqCur == 'all') try { pf = PFOF[LS.getItem('vpEqLast') || ''] || ''; } catch (x) { }
     if (pf && $('pfProfile').value != pf) { $('pfProfile').value = pf; try { pfDefaults(); } catch (x) { } }
   }
+  // ---------- Светлая тема CorelDRAW ----------
+  // Панель нарисована тёмной. Светлый вариант строится из тёмного при загрузке: серые тона
+  // переворачиваются (тёмный фон — светлым, светлый текст — тёмным), синие выделения остаются,
+  // светлые цветные надписи темнеют, тёмные цветные плашки светлеют. Правила — с приставкой html.light
+  var uiTheme = 'dark', themeAt = 0, lightBuilt = false;
+  function ltParse(v) {
+    var m;
+    v = String(v || '').replace(/\s+/g, '').toLowerCase();
+    if ((m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/.exec(v))) return [parseInt(m[1] + m[1], 16), parseInt(m[2] + m[2], 16), parseInt(m[3] + m[3], 16), 1];
+    if ((m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/.exec(v))) return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16), 1];
+    if ((m = /^rgba?\((\d+),(\d+),(\d+)(?:,([\d.]+))?\)$/.exec(v))) return [+m[1], +m[2], +m[3], m[4] == null ? 1 : +m[4]];
+    if (v == 'white') return [255, 255, 255, 1];
+    if (v == 'black') return [0, 0, 0, 1];
+    return null;
+  }
+  function ltHsl(c) {
+    var r = c[0] / 255, g = c[1] / 255, b = c[2] / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, s = 0, h = 0, d = mx - mn;
+    if (d > 0) {
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      h = mx == r ? (g - b) / d + (g < b ? 6 : 0) : (mx == g ? (b - r) / d + 2 : (r - g) / d + 4);
+      h /= 6;
+    }
+    return [h, s, l];
+  }
+  function ltRgb(h, s, l) {
+    function f(p, q, t) { if (t < 0) t += 1; if (t > 1) t -= 1; return t < 1 / 6 ? p + (q - p) * 6 * t : (t < 0.5 ? q : (t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p)); }
+    if (s == 0) return [l * 255, l * 255, l * 255];
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+    return [f(p, q, h + 1 / 3) * 255, f(p, q, h) * 255, f(p, q, h - 1 / 3) * 255];
+  }
+  function ltAccent(c) { var x = ltHsl(c); return x[1] >= 0.3 && x[2] >= 0.2 && x[2] <= 0.62; }
+  function ltBlue(c) { var x = ltHsl(c); return ltAccent(c) && x[0] >= 0.5 && x[0] <= 0.72; }
+  // Тона светлой темы — сняты с панели «Свойства» CorelDRAW: фон F3F4F6, списки E5E7EB, поля белые,
+  // рамки D1D5DB, текст 2E3238, выделение — светло-голубое ACC8E5 с тёмными значками.
+  // kind: 0 — фон, 1 — текст или линия; input — поле ввода (у CorelDRAW белое)
+  function ltMap(c, kind, input) {
+    var x = ltHsl(c), o, y, v;
+    if (Math.max(c[0], c[1], c[2]) - Math.min(c[0], c[1], c[2]) < 24) {
+      // серый — каналы почти равны (у светлых по насыщенности не понять: #e2e5e9 выходит «цветным»)
+      y = 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2];
+      if (kind == 0) v = input && y < 50 ? 255 : (y <= 128 ? 243 + (38 - y) * 0.6 : 281 - y);
+      else v = 300 - 1.2 * y;
+      v = Math.max(24, Math.min(255, v));
+      o = [v, v + 1, v + 3];
+    } else if (ltBlue(c)) {
+      // синие выделения — светло-голубыми, как у CorelDRAW; надписи синим (ссылки) — как есть
+      if (kind == 1 && x[2] > 0.35) o = c;
+      else o = ltRgb(0.586, 0.53, Math.max(0.6, Math.min(0.82, 0.79 - (x[2] - 0.28) * 0.5 - (kind == 1 ? 0.08 : 0))));
+    } else if (ltAccent(c)) o = c;
+    else if (x[2] > 0.62) o = kind == 1 ? ltRgb(x[0], x[1], x[2] - 0.35) : c;
+    else o = ltRgb(x[0], x[1], Math.min(0.95, 0.92 - x[2] * 0.5));
+    var r = Math.max(0, Math.min(255, Math.round(o[0]))), g = Math.max(0, Math.min(255, Math.round(o[1]))), b = Math.max(0, Math.min(255, Math.round(o[2])));
+    return c[3] < 1 ? 'rgba(' + r + ',' + g + ',' + b + ',' + c[3] + ')' : 'rgb(' + r + ',' + g + ',' + b + ')';
+  }
+  var LT_PROPS = [['color', 'color', 1], ['backgroundColor', 'background-color', 0], ['borderTopColor', 'border-top-color', 1], ['borderRightColor', 'border-right-color', 1],
+    ['borderBottomColor', 'border-bottom-color', 1], ['borderLeftColor', 'border-left-color', 1], ['outlineColor', 'outline-color', 1],
+    ['scrollbarFaceColor', 'scrollbar-face-color', 0], ['scrollbarTrackColor', 'scrollbar-track-color', 0], ['scrollbarArrowColor', 'scrollbar-arrow-color', 1],
+    ['scrollbarShadowColor', 'scrollbar-shadow-color', 0], ['scrollbarHighlightColor', 'scrollbar-highlight-color', 0], ['scrollbar3dLightColor', 'scrollbar-3dlight-color', 0],
+    ['scrollbarDarkShadowColor', 'scrollbar-darkshadow-color', 0]];
+  // светлая пара для набора свойств; текст на синем выделении того же правила — тёмный, как у CorelDRAW,
+  // и явно: иначе общее правило (html.light .eq) перебьёт цвет выбранного (.eq.on)
+  function ltStyle(st, input) {
+    var out = '', i, v, c, bg = ltParse(st.backgroundColor), onBlue = bg && ltBlue(bg), onAccent = bg && ltAccent(bg);
+    for (i = 0; i < LT_PROPS.length; i++) {
+      try { v = st[LT_PROPS[i][0]]; } catch (x) { v = ''; }
+      c = ltParse(v); if (!c) continue;
+      if (LT_PROPS[i][0] == 'color' && onBlue) { out += 'color:rgb(46,50,56);'; continue; }
+      if (LT_PROPS[i][0] == 'color' && onAccent) { out += 'color:' + v + ';'; continue; }
+      out += LT_PROPS[i][1] + ':' + ltMap(c, LT_PROPS[i][2], input) + ';';
+    }
+    return out;
+  }
+  function ltSel(s) { s = s.replace(/^\s+|\s+$/g, ''); return /^html\b/.test(s) ? s.replace(/^html/, 'html.light') : 'html.light ' + s; }
+  function ltRules(rules, out) {
+    for (var j = 0; j < rules.length; j++) {
+      var r = rules[j], inner = [];
+      if (r.media && r.cssRules) { ltRules(r.cssRules, inner); if (inner.length) out.push('@media ' + r.media.mediaText + '{' + inner.join('') + '}'); continue; }
+      if (!r.selectorText || !r.style) continue;
+      var txt = ltStyle(r.style, false); if (!txt) continue;
+      var txtIn = ltStyle(r.style, true), parts = r.selectorText.split(','), pa = [], pi = [];
+      for (var k = 0; k < parts.length; k++) (/\b(input|textarea)\b/i.test(parts[k]) && txtIn != txt ? pi : pa).push(ltSel(parts[k]));
+      if (pa.length) out.push(pa.join(',') + '{' + txt + '}');
+      if (pi.length) out.push(pi.join(',') + '{' + txtIn + '}');
+    }
+  }
+  function lightCss() {
+    if (lightBuilt) return; lightBuilt = true;
+    var out = [], ss = document.styleSheets;
+    for (var i = 0; i < ss.length; i++) { var rs = null; try { rs = ss[i].cssRules || ss[i].rules; } catch (x) { } if (rs) ltRules(rs, out); }
+    var el = document.createElement('style'); el.id = 'lightCss';
+    el.appendChild(document.createTextNode(out.join('\n')));
+    document.getElementsByTagName('head')[0].appendChild(el);
+  }
+  // цвета, вписанные прямо в элементы (плашки, подсказки) — тоже в светлую пару, один раз на элемент
+  function ltInline(e) {
+    if (uiTheme != 'light' || e.ltDone || !e.style || !e.getAttribute) return;
+    var a = e.getAttribute('style'); if (!a || !/#|rgb|white|black/i.test(a)) return;
+    e.ltDone = true;
+    var txt = ltStyle(e.style, /^(INPUT|TEXTAREA)$/.test(e.tagName)); if (txt) e.style.cssText += ';' + txt;
+  }
+  function themeSet(th) {
+    uiTheme = th;
+    if (th == 'light') { lightCss(); if (!/\blight\b/.test(document.documentElement.className)) document.documentElement.className += ' light'; }
+  }
+  // тема поменялась на ходу — панель перезапускается: так проще, чем перекрашивать уже нарисованное
+  function themeApply(th) {
+    if (th != 'light' && th != 'dark') return;
+    try { LS.setItem('vpTheme', th); } catch (x) { }
+    if (th != uiTheme) location.reload();
+  }
+  // спрашивать CorelDRAW не чаще раза в 10 с — по наведению мыши на панель
+  function themeCheck(force) {
+    var now = +new Date(); if (!force && now - themeAt < 10000) return;
+    themeAt = now;
+    var th = ''; try { th = String(call('UiTheme') || ''); } catch (x) { }
+    themeApply(th);
+  }
+  function topPad() { var f = $('topFix'); if (f) $('topPad').style.height = f.offsetHeight + 'px'; }
+  // высота шапки меняется: имя файла, перенос значков, ширина панели — пересчёт без обращения к CorelDRAW
+  window.addEventListener('resize', topPad); setInterval(topPad, 700);
+  function intoView(el) { try { el.scrollIntoView(); window.scrollBy(0, -($('topFix').offsetHeight + 6)); } catch (x) { } }
   function renderEq() {
+    if (eqCur == 'cut') cutStatus();
     var h = '', i, E, hid = eqHidden(), A = eqOf(eqCur), vis = 0;
     for (i = 0; i < EQ.length; i++) if (!inArr(hid, EQ[i].id) || EQ[i].id == eqCur) vis++;
     for (i = 0; i < EQ.length; i++) {
@@ -1586,12 +1816,20 @@
       if (st.s) si = [si[0], st.s];
       if (S && S.doc && st.tab == 0 && S.fields && fieldsReady()) dn = '✓';
       if (S && S.doc && st.tab == 1 && !S.doc.sample) dn = '✓';
+      // резка: контуры проверены / порядок сделан — по состоянию страницы
+      if (eqCur == 'cut' && cutSt) {
+        if (st.sub == 'sCutCheck') dn = cutSt.check == 'ok' || cutSt.check == 'warns' ? '✓' : (cutSt.check != 'none' ? '!' : '');
+        if (st.sub == 'sLaser') dn = +cutSt.lines > 0 ? '✓' : '';
+      }
       sr += '<div class="st' + (i == act ? ' on' : '') + (md && !hasMod(md) ? ' off' : '') + '" data-act="eqstep" data-i="' + i + '" title="' + esc(st.n) + '">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' + STIC[si[0]] + '</svg>' +
-            '<span class="lb">' + esc(si[1]) + '</span>' + (dn ? '<span class="dn">' + dn + '</span>' : '') +
+            '<span class="lb">' + esc(si[1]) + '</span>' + (dn ? '<span class="dn' + (dn == '!' ? ' warn' : '') + '">' + dn + '</span>' : '') +
             (md && !hasMod(md) ? '<span class="lk">' + LOCK_SVG + '</span>' : '') + '</div>';
     }
-    $('eqHead').innerHTML = g + (sr ? '<div class="stp' + (vis.length > 6 ? ' many' : '') + '">' + sr + '</div>' : '');
+    // станок «Резки» — над пунктами: от него зависит, что в пунктах
+    var mh = eqCur != 'cut' ? '' : '<div class="modesw machsw"><a data-act="machine" data-v="laser"' + (cutMachine == 'laser' ? ' class="on"' : '') + '>Лазер</a>' +
+      '<a data-act="machine" data-v="mill"' + (cutMachine == 'mill' ? ' class="on"' : '') + '>Фрезер</a></div>';
+    $('eqHead').innerHTML = g + mh + (sr ? '<div class="stp' + (vis.length > 6 ? ' many' : '') + '">' + sr + '</div>' : '');
     $('stepNav').innerHTML = '';
     renderSvc();
   }
@@ -1627,27 +1865,72 @@
   // спрятать то, что не нужно выбранному оборудованию: блоки с data-eq и лишние режимы раскладки
   function hideEl(e, on) { if (!e) return; var c = e.className.replace(/\s*\beqhide\b/g, ''); e.className = on ? c + ' eqhide' : c; }
   function applyEq() {
+    var dno = document.querySelector('#doc .dnote');
+    if (dno) dno.style.display = eqCur == 'cut' || eqCur == 'cal' ? 'none' : '';
+    nsBtnLabel();
     var all = document.querySelectorAll('[data-eq]'), i;
+    hideEl($('alignRow'), eqCur == 'uv');
     for (i = 0; i < all.length; i++) hideEl(all[i], eqCur == 'all' ? /\beqonly\b/.test(all[i].className) : !inArr(all[i].getAttribute('data-eq').split(' '), eqCur));
+    // лазер или фрезер: «стык в стык» и таблица режимов — только у лазера
+    all = document.querySelectorAll('[data-machine]');
+    for (i = 0; i < all.length; i++) {
+      var off = eqCur == 'cut' && all[i].getAttribute('data-machine') != cutMachine;
+      all[i].className = all[i].className.replace(/\s*\bmchide\b/g, '') + (off ? ' mchide' : '');
+    }
+    nsSync(); pt9Ui();
     var A = eqOf(eqCur), ai = eqActive(), st = ai >= 0 ? A.steps[ai] : null, ms = null;
     if (!st && tab == 1) for (i = 0; i < A.steps.length; i++) if (A.steps[i].tab == 1) { st = A.steps[i]; break; }
     if (st && st.tab == 1) ms = st.modes;
     var M = { sheet: 'modeSheet', nest: 'modeNest', roll: 'modeRoll', book: 'modeBook' };
     for (var k in M) hideEl($(M[k]), !!ms && !inArr(ms, k));
     hideEl($('modesRow'), !!ms && ms.length < 2); hideEl($('modesNote'), !!ms && ms.length < 2);
-    presetFill(); outEq(); cfUi(); if (eqCur == 'laser' && tab == 4 && subOn('sCost')) ctLaSync();
+    presetFill(); outEq(); cfUi(); ccFill(); if (eqCur == 'cut' && cutMachine == 'laser' && tab == 4 && subOn('sCost')) ctLaSync();
   }
   // Файл для станка: что берём и в каком формате — по оборудованию
-  function cfWhat() { return eqCur == 'laser' ? 'laser' : (eqCur == 'mill' ? 'mill' : 'plot'); }
+  function cfWhat() { return eqCur == 'cut' ? cutMachine : 'plot'; }
   var CF = {
     plot: { t: 'Файл для плоттера', w: 'Контур реза отдельным файлом — для программы плоттера. Берётся слой «CutContour» и всё, что обведено плашкой CutContour; нет такого — выделенное. Только эта страница; начало координат — левый нижний угол.',
-            f: [['plt', 'PLT (HPGL) — понимает почти любой плоттер'], ['dxf', 'DXF'], ['ai', 'AI (Illustrator)']] },
+            f: [['plt', 'PLT (HPGL)'], ['dxf', 'DXF'], ['ai', 'AI (Illustrator)']] },
     laser: { t: 'Файл для станка', w: 'Линии реза одним файлом — для RDWorks или LightBurn, в порядке реза. Берётся слой «Лазер: рез» — он появляется после «Оптимизировать резку»; нет его — выделенное. Только эта страница.',
              f: [['dxf', 'DXF — RDWorks, LightBurn'], ['ai', 'AI (Illustrator)'], ['plt', 'PLT (HPGL)']] },
     mill: { t: 'Файл для станка', w: 'Детали для программы фрезера: выделенное, а если ничего не выделено — всё на странице. Только эта страница; начало координат — левый нижний угол.',
             f: [['dxf', 'DXF — ArtCAM, Aspire, UCancam'], ['ai', 'AI (Illustrator)'], ['plt', 'PLT (HPGL)']] } };
   var cfBuilt = '';
+  // Готовность резки этой страницы: детали, проверка контуров, порядок реза — сводка на «Файле»
+  // и отметки у шагов. Спрашивается у макроса не чаще раза в полторы секунды
+  var cutSt = null, cutStAt = 0;
+  function cutStatus(force) {
+    if (eqCur != 'cut') return;
+    var now = +new Date(); if (!force && now - cutStAt < 1500) return;
+    cutStAt = now;
+    var r = String(call('CutStatus') || ''), a = r.split('|'), o = {}, i, k;
+    for (i = 0; i < a.length; i++) { k = a[i].indexOf('='); if (k > 0) o[a[i].slice(0, k)] = a[i].slice(k + 1); }
+    cutSt = o.check ? o : null;
+    cfReadyUi();
+  }
+  function cfReadyUi() {
+    var box = $('cfReady'); if (!box) return;
+    if (!cutSt || eqCur != 'cut') { box.innerHTML = ''; return; }
+    var s = cutSt, h = '', n = +s.parts || 0;
+    function row(ok, t, sub, lnk) {
+      h += '<div class="r"><span class="m ' + (ok ? 'ok">✓' : 'warn">!') + '</span><span class="t">' + t + '</span>' +
+        (lnk ? '<a class="lnk" data-act="goto" data-to="4" data-sub="' + sub + '">' + lnk + ' →</a>' : '') + '</div>';
+    }
+    row(n > 0, n > 0 ? 'Объектов для резки на странице: ' + n : 'На странице нет объектов для резки', '', '');
+    var c = s.check;
+    if (c == 'ok') row(true, 'Контуры проверены — замечаний нет', 'sCutCheck', '');
+    else if (c == 'warns') row(true, 'Контуры проверены — пометок: ' + s.warn + ' (двойные или незамкнутые линии)', 'sCutCheck', 'Контуры');
+    else if (c == 'issues') row(false, 'Контуры проверены — не исправлено: ' + s.fix, 'sCutCheck', 'Контуры');
+    else if (c == 'stale') row(false, 'Детали менялись после проверки контуров', 'sCutCheck', 'Проверить снова');
+    else if (c == 'sel') row(false, 'Контуры проверены только у выделенного', 'sCutCheck', 'Контуры');
+    else row(false, 'Контуры не проверены', 'sCutCheck', 'Проверить');
+    if (+s.lines > 0) row(true, 'Порядок реза сделан: линий ' + s.lines + ', старт — ' + PT9N[PT9N[s.start] ? s.start : cutStart()], 'sLaser', '');
+    else row(false, 'Порядок реза не сделан — в файл пойдут детали как нарисованы', 'sLaser', 'Порядок');
+    box.innerHTML = h;
+    bind();
+  }
   function cfUi() {
+    cutStatus(); cfReadyUi();
     var w = cfWhat(), C = CF[w];
     if (cfBuilt != w) {
       cfBuilt = w;
@@ -1689,7 +1972,7 @@
     for (var i = 0; i < PRESETS.length; i++)
       if (eqCur == 'all' || inArr(PRESETS[i][2].split(' '), eqCur)) { o += '<option value="' + PRESETS[i][0] + '">' + esc(PRESETS[i][1]) + '</option>'; n++; }
     s.innerHTML = o; s.value = v; if (s.value != v) s.value = '';
-    hideEl($('presetRow'), n == 0); hideEl($('presetNote'), n == 0);
+    hideEl($('presetRow'), n == 0); hideEl($('presetNote'), n == 0 || (eqCur != 'digi' && eqCur != 'all'));
   }
   // Цифра и офсет выводят в PDF или сразу на принтер: профиль УФ-принтера им не нужен
   function outPdfEq() { return eqCur == 'digi' || eqCur == 'offset'; }
@@ -1697,7 +1980,7 @@
   function outEq() {
     if (outPdfEq()) {
       outForced = true;
-      $('trialOut').setAttribute('data-mode', 'pdf'); $('trialOut').removeAttribute('data-mod'); $('trialOut').lastChild.nodeValue = 'PDF пробного…';
+      $('trialOut').setAttribute('data-mode', 'pdf'); $('trialOut').removeAttribute('data-mod'); $('trialOut').lastChild.nodeValue = 'PDF пробного листа…';
       $('orderOut').setAttribute('data-mode', 'pdf'); $('orderOut').removeAttribute('data-mod'); $('orderOut').lastChild.nodeValue = 'PDF всего заказа…';
       hideEl($('orderAlt'), true); hideEl($('rpTiff'), true); $('rpPdf').className = 'btn main';
       $('orderOutNote').innerText = 'Все листы с подставленными номерами — по файлу на лист или одним файлом (галочка ниже). CorelDRAW будет занят, остановить — «Стоп» в окошке.';
@@ -1740,6 +2023,9 @@
     'pickfolder': 'Папка с картинками для этого поля.',
     'pfcheck': 'Проверить открытый документ перед печатью. Ничего не меняет.',
     'pfshow': 'Выделить в документе объекты с этой проблемой.',
+    'ccrun': 'Проверить контуры для резки. Дубли и целые соринки уйдут на слой «Резка: лишнее», остальное только отмечается.',
+    'ccshow': 'Выделить в документе объекты с этой проблемой.',
+    'ccfix': 'Исправить. Отменяется Ctrl+Z.',
     'pffix': 'Исправить эту проблему. Отменяется одним Ctrl+Z.',
     'pfpdf': 'PDF для типографии под выбранный вид печати, с вылетами. Перед сохранением макет проверится.',
     'proof': 'Картинки страниц для клиента: красная линия — край после резки.',
@@ -1781,7 +2067,7 @@
   var ICONS = {num: '<path d="M9 4 7 20M17 4l-2 16M4 9h16M3 15h16"/>', layout: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M12 3v18M3 12h18"/>', print: '<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="1"/><path d="M6 14h12v7H6z"/>', check: '<path d="M12 3 4 6v6c0 4.5 3.4 8 8 9 4.6-1 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/>', image: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.3"/>', pdf: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13h6M9 17h6"/>', eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>', wand: '<path d="m4 20 11-11M15 3v3M13.5 4.5h3M20 8v3M18.5 9.5h3M18 15v2M17 16h2"/>', folder: '<path d="M3 6h6l2 2h10v11H3z"/>', pack: '<path d="M3 6h6l2 2h10v11H3z"/><path d="M12 11v5M9.5 13.5 12 16l2.5-2.5"/>', refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>', plus: '<path d="M12 5v14M5 12h14"/>', qr: '<rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><path d="M14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"/>', marks: '<path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/>', search: '<circle cx="11" cy="11" r="6"/><path d="m16 16 5 5"/>', drop: '<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>', copy: '<rect x="8" y="8" width="12" height="12" rx="1"/><path d="M16 8V4H4v12h4"/>', key: '<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3"/>', arrowL: '<path d="M15 5 8 12l7 7"/>', arrowR: '<path d="m9 5 7 7-7 7"/>', swap: '<path d="M7 7h13l-3-3M17 17H4l3 3"/>', flag: '<path d="M5 21V4h11l-2 4 2 4H5"/>'};
   var BTNICON = { 'add|text': 'plus', 'add|code': 'qr', 'add|pic': 'image', 'show': 'eye', 'selsize': 'marks', 'impose': 'layout',
     'template': 'marks', 'run|preview|trial': 'eye', 'run|tiff|trial': 'image', 'run|tiff|order': 'image', 'run|pdf|order': 'pdf', 'run|print|order': 'print',
-    'white': 'drop', 'pickfile': 'folder', 'pfcheck': 'search', 'pfshow': 'eye', 'pffix': 'wand', 'pfpdf': 'pdf', 'proof': 'image',
+    'white': 'drop', 'pickfile': 'folder', 'pfcheck': 'search', 'pfshow': 'eye', 'pffix': 'wand', 'ccrun': 'search', 'ccshow': 'eye', 'ccfix': 'wand', 'pfpdf': 'pdf', 'proof': 'image',
     'package': 'pack', 'batch': 'folder', 'refresh': 'refresh', 'liccopy': 'copy', 'licgo': 'key', 'goto|0': 'arrowL', 'goto|1': 'arrowL', 'goto|2': 'arrowR',
     'underlay': 'drop', 'varnish': 'drop', 'inkassign': 'drop', 'inkcreate': 'plus', 'tour': 'eye', 'sendreport': 'flag', 'problem': 'flag', 'checkdata': 'search', 'rpfind': 'search', 'reprint|preview': 'eye', 'reprint|tiff': 'image', 'reprint|pdf': 'pdf', 'journal': 'folder' };
   function iconFor(e) {
@@ -1801,14 +2087,21 @@
     var all = document.getElementsByTagName('*'), i, e;
     for (i = 0; i < all.length; i++) {
       e = all[i];
+      ltInline(e);
       addIcon(e);
       if (!e.title) { var tp = e.getAttribute('data-tab') != null ? TABTIPS[+e.getAttribute('data-tab')] : tipOf(e); if (tp) e.title = tp; }
     }
     for (i = 0; i < all.length; i++) {
       e = all[i];
       if (e.getAttribute('data-act') || e.getAttribute('data-field') || e.getAttribute('data-tab')) e.onclick = (function (x) { return function () { onClickEl(x); return false; }; })(e);
+      // список — свой выпадающий вместо родного (см. ddOpen)
+      if (e.tagName == 'SELECT' && !e.ddOn) {
+        e.ddOn = true;
+        e.onmousedown = (function (x) { return function (ev) { ddOpen(x); ev = ev || window.event; if (ev && ev.preventDefault) ev.preventDefault(); return false; }; })(e);
+      }
       if (e.tagName == 'INPUT' || e.tagName == 'SELECT') {
-        e.onchange = (function (x) { return function () { onChangeEl(x); }; })(e);
+        // выбрали в списке — отпустить его, чтобы опрос документа снова шёл (см. selActive)
+        e.onchange = (function (x) { return function () { onChangeEl(x); if (x.tagName == 'SELECT') try { x.blur(); } catch (y) { } }; })(e);
         if (e.type == 'checkbox' || e.type == 'radio') e.onclick = (function (x) { return function () { onChangeEl(x); }; })(e);
         if (e.type == 'text') e.onkeyup = (function (x) { return function () { onKeyEl(x); }; })(e);
       }
@@ -1910,18 +2203,14 @@
       { st: 'Раскладка', sel: '#fOffsetH', text: 'Клапан, шкала, кресты, пластина печатника — откройте раздел «Офсет».' },
       { st: 'Раскладка', sel: '[data-act="impose"]', done: LAY_DONE, text: 'Разложите на лист.' },
       { st: 'PDF для типографии', sel: '[data-act="pfpdf"]', text: 'PDF/X-1a для типографии. Папка «в печать» с превью и паспортом заказа — в «Макете». Это конец инструкции.' }],
-    mill: [
+    cut: [
       { st: 'Раскладка', sel: '#nsAdd', text: 'Выделите детали и добавьте в укладку. Каждая деталь — один объект или группа.' },
-      { st: 'Раскладка', sel: '#nsW', text: 'Лист материала и зазор — на диаметр фрезы.' },
+      { st: 'Раскладка', sel: '#nsW', text: 'Лист материала и зазор: для лазера — 0,5–1 мм, для фрезера — на диаметр фрезы.' },
       { st: 'Раскладка', sel: '#nsBtn', text: 'Уложить — детали лягут по настоящему контуру.' },
-      { st: 'Объёмные буквы', sel: '[data-act="ltstrips"]', text: 'Для объёмных букв: борта полосами на лист, задник и выборка.' },
-      { st: 'Файл для станка', sel: '#cfBtn', text: 'Сохраните детали в DXF для программы фрезера. Это конец инструкции.' }],
-    laser: [
-      { st: 'Стык в стык и порядок реза', sel: '[data-act="lapack"]', text: 'Выделите прямоугольные детали — разложит вплотную, общий край потом режется один раз. Фигурные — через «Раскладка».' },
-      { st: 'Стык в стык и порядок реза', sel: '#laMat', text: 'Материал и толщина — режимы из вашей таблицы: по ним посчитается время.' },
-      { st: 'Стык в стык и порядок реза', sel: '[data-act="laopt"]', text: 'Оптимизировать резку: двойные линии уберутся, порядок — окна раньше внешнего края.' },
-      { st: 'Файл для станка', sel: '#cfBtn', text: 'Сохраните линии реза для RDWorks или LightBurn.' },
-      { st: 'Цена', sel: '[data-act="ctrun"]', text: 'Цена резки — скорость из таблицы уже подставлена. Это конец инструкции.' }],
+      { st: 'Контуры', sel: '[data-act="ccrun"]', text: 'Проверьте контуры: дубли, соринки, разрывы и куски найдутся и исправятся кнопкой.' },
+      { st: 'Порядок реза', sel: '[data-act="laopt"]', text: 'Оптимизировать резку: двойные линии уберутся, окна режутся раньше внешнего края, голова не скачет.' },
+      { st: 'Файл для станка', sel: '#cfBtn', text: 'Сохраните линии реза для программы станка: RDWorks, LightBurn или программы фрезера.' },
+      { st: 'Цена', sel: '[data-act="ctrun"]', text: 'Цена резки по длине и врезкам. Это конец инструкции.' }],
     cal: [
       { st: 'Тип и даты', sel: '#calContent', text: 'Выберите тип календаря и даты — превью меняется сразу.' },
       { st: 'Стиль', sel: '#calStyle', text: 'Готовый стиль — ниже его можно поправить и сохранить как свой.' },
@@ -1994,7 +2283,7 @@
     try { el = document.querySelector(st.sel); } catch (x) { }
     if (el) {
       el.className += ' tourhi';
-      try { el.scrollIntoView(); } catch (x) { }
+      intoView(el);
     }
   }
 
@@ -2022,7 +2311,7 @@
     var dn = S.doc.name.replace(/\.cdr$/i, '');
     $('doc').innerHTML = '<svg class="dic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round">' +
       (S.doc.sample ? '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M6.5 14.5h6"/>' : '<rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M9 3.5v17M15 3.5v17M3.5 9h17M3.5 15h17"/>') +
-      '</svg><b>' + esc(dn) + '</b>' + (S.doc.sample ? '' : '<span class="dnote">' + S.run.places + ' на лист</span>');
+      '</svg><b>' + esc(dn) + '</b>' + (S.doc.sample || !(S.run.places > 0) ? '' : '<span class="dnote">' + S.run.places + ' на лист</span>');
     $('doc').title = (S.doc.sample ? 'Образец карты: ' : 'Раскладка: ') + S.doc.name + (S.doc.sample ? '' : ' — ' + S.run.places + ' на лист');
     renderFields(); renderEditor(); renderImpose(); renderOutput(); renderPF(); renderInks(); renderLocks(); renderEq(); applyEq(); renderVer(); renderTour(); bind();
   }
@@ -2035,11 +2324,11 @@
     var sh = '<h4>Белила и лак</h4>';
     if (!K.on) sh += '<label class="chk"><input type="checkbox" data-ink="on">Печатать белила и лак</label><div class="ex keep">Сейчас выключено: в печать идут только цветные краски.</div>';
     sh += '<button class="btn full main" data-act="inkboth">Добавить белила и лак к выделенному</button>' +
-          '<div class="btnpair eq2"><button class="btn" data-act="inkcopy" data-i="1">только белила</button><button class="btn" data-act="inkcopy" data-i="2">только лак</button></div>' +
+          '<div class="btnpair eq2"><button class="btn" data-act="inkcopy" data-i="1" title="Добавить к выделенному только белила, без лака">только белила</button><button class="btn" data-act="inkcopy" data-i="2" title="Добавить к выделенному только лак, без белил">только лак</button></div>' +
           '<div class="ex">Поверх выделенного ложатся копии: белила под цветным чуть ужаты, под белым и лак — точно по форме.</div>';
     for (var si = 0; si < K.list.length; si++) {
       var sk = K.list[si];
-      sh += '<label class="chk"><input type="checkbox" data-ink="use' + sk.i + '"' + (sk.use ? ' checked' : '') + '>Печатать ' + esc(sk.title.toLowerCase()) +
+      sh += '<label class="chk"' + (sk.count > 0 ? '' : ' style="opacity:.6"') + '><input type="checkbox" data-ink="use' + sk.i + '"' + (sk.use ? ' checked' : '') + '>Печатать ' + esc(sk.title.toLowerCase()) +
             '<span class="inkcnt">' + (sk.count > 0 ? 'на этой стороне: ' + sk.count : 'на этой стороне нет') + '</span></label>';
     }
     sh += '<div class="ex">Не нужна краска на этом заказе — снимите галочку: копии останутся в макете, но печататься не будут.</div>';
@@ -2189,7 +2478,7 @@
     var h = '';
     if (!S.fields.length) {
       $('howto').innerHTML = '<div class="card"><h4>Как сделать нумерацию</h4>' +
-        '<div class="step"><b>1</b><span>На карте выделите номер-образец, например «100 000 000».</span></div>' +
+        '<div class="step"><b>1</b><span>На карте выделите номер-образец, например «100&nbsp;000&nbsp;000».</span></div>' +
         '<div class="step"><b>2</b><span>Нажмите «+ Номер или текст» ниже.</span></div>' +
         '<div class="step"><b>3</b><span>Укажите, откуда брать номера: по порядку или из файла клиента.</span></div>' +
         '<div class="step"><b>4</b><span>Если меняется ещё что-то (номер на обороте), повторите для него.</span></div></div>';
@@ -2410,6 +2699,7 @@
       $('nsGap').value = num(NE.gap); $('nsRot').value = String(NE.rot || 4); $('nsQual').value = NE.qual || 'good';
       $('nsMore').checked = NE.more !== false; $('nsMirror').checked = !!NE.mirror; $('nsDxf').checked = !!NE.dxf;
       $('nsInHoles').checked = NE.inHoles !== false; $('nsSpeed').value = NE.speed ? num(NE.speed) : '';
+      nsKey = 'common'; nsSync();
     }
     // на УФ-планшете печатают по готовым заготовкам — резать нечего
     $('cutLbl').innerText = eqCur == 'uv' ? (sel ? 'Размер макета' : 'Размер карты') : (sel ? 'Макет по резу' : 'Карта по резу');
@@ -2421,7 +2711,7 @@
     $('backDX').value = num(S.imp.backDX || 0); $('backDY').value = num(S.imp.backDY || 0);
     $('presetRow').style.display = roll ? 'none' : ''; $('presetNote').style.display = roll ? 'none' : '';
     $('workTurn').checked = S.imp.workTurn; $('wtRow').style.display = sel ? 'none' : ''; $('mirBox').style.display = sel ? 'none' : ''; $('wtNote').style.display = sel ? 'none' : '';
-    $('mirror').checked = S.imp.mirror; $('guides').checked = S.imp.guides; $('orient').value = String(S.imp.orient); $('alignH').value = String(S.imp.alignH); $('alignV').value = String(S.imp.alignV);
+    $('mirror').checked = S.imp.mirror; $('guides').checked = S.imp.guides; $('orient').value = String(S.imp.orient); $('alignH').value = String(S.imp.alignH); $('alignV').value = String(S.imp.alignV); uvAlignSync();
     $('markLen').value = num(S.imp.markLen); $('markW').value = num(S.imp.markW); $('markGap').value = num(S.imp.markGap);
     $('impHint').innerHTML = S.doc.sample
       ? '<div class="card"><span class="big">Открыт образец карты.</span><div class="ex">Из него макрос сделает отдельный файл — лист с картами. Сам образец не меняется.</div></div>'
@@ -2472,6 +2762,39 @@
     bind();
   }
 
+  // ---------- проверка контуров для резки ----------
+  var CC = ['ccGap', 'ccTiny', 'ccTol'], CCDEF = { ccGap: '0.5', ccTiny: '0.3', ccTol: '0.05' };
+  function ccFill() {
+    for (var i = 0; i < CC.length; i++) if (!$(CC[i]).value) { var v = ''; try { v = LS.getItem(CC[i]) || ''; } catch (x) { } $(CC[i]).value = v || CCDEF[CC[i]]; }
+  }
+  function ccParams() {
+    var p = ['ccScope=' + $('ccScope').value];
+    for (var i = 0; i < CC.length; i++) { p.push(CC[i] + '=' + $(CC[i]).value); try { LS.setItem(CC[i], $(CC[i]).value); } catch (x) { } }
+    return p.join('|');
+  }
+  function ccRun() {
+    ccFill();
+    say('Проверяю контуры…');
+    setTimeout(function () { var r = String(call('CutCheckRun', ccParams()) || ''); say(''); ccRender(r); }, 30);
+  }
+  // Итог проверки: первая строка — сводка, дальше «ключ|уровень|заголовок|исправимо|пояснение|сколько»
+  function ccRender(r) {
+    var lines = r.split('\n'), h = '', fixable = 0;
+    cutStatus(true); renderEq();
+    $('ccSum').style.display = ''; $('ccSum').innerText = lines[0];
+    for (var i = 1; i < lines.length; i++) {
+      var a = lines[i].split('|');
+      if (a.length < 6) continue;
+      if (a[3] == '1') fixable++;
+      h += '<div class="pf l' + a[1] + '"><span class="n">' + a[5] + ' шт.</span><b>' + esc(a[2]) + '</b><div class="ex">' + esc(a[4]) + '</div>' +
+        '<div class="btns"><button class="btn" data-act="ccshow" data-key="' + a[0] + '">Показать</button>' +
+        (a[3] == '1' ? '<button class="btn" data-act="ccfix" data-key="' + a[0] + '">Исправить</button>' : '') + '</div></div>';
+    }
+    $('ccList').innerHTML = h;
+    $('ccFixAll').style.display = fixable > 1 ? '' : 'none';
+    bind();
+  }
+
   var EYE = ['eyeTarget', 'eyeSides', 'eyeHole', 'eyeEdge', 'eyeStep', 'eyeHem'];
 
   var lastNestDoc = '', lastResDoc = '';
@@ -2490,6 +2813,8 @@
   function nestLoad() {
     nestDoc = S && S.doc ? S.doc.name : '';
     nestRes = !!(S && S.nestRes);
+    // уже в готовой укладке — «сначала разложить» ни к чему
+    if ($('ctBack')) $('ctBack').style.display = nestRes ? 'none' : '';
     nestRows = [];
     var stored = [];
     try { stored = JSON.parse(LS.getItem(nestKey()) || '[]') || []; } catch (x) { stored = []; }
@@ -2540,7 +2865,7 @@
     $('nsClear').style.display = nestRows.length ? '' : 'none';
     $('nsTools').style.display = nestRows.length ? '' : 'none';
     $('nsResNote').style.display = nestRes ? '' : 'none';
-    $('nsBtn').innerText = nestRes ? 'Переразложить в этом файле' : 'Уложить по форме…';
+    nsBtnLabel();
     nestPoll();
     nestCalc();
   }
@@ -2563,21 +2888,75 @@
   // как только на неё наведут. Отпечаток лёгкий: имя файла, число страниц, активная страница,
   // сколько объектов и слоёв на ней (удалили лак — счётчик у галочки обновится).
   var lastDocKey = null;
+  // Раскрытый список в панели CorelDRAW выпадает за её край: панель решает, что мышь ушла и вернулась,
+  // и опрос CorelDRAW в эту секунду захлопывает список — выбор не срабатывал. Пока список в работе, не опрашиваем
+  function selActive() { if (ddEl) return true; var a = document.activeElement; return !!(a && a.tagName == 'SELECT'); }
+
+  // ---------- Свой выпадающий список ----------
+  // Родной список старого движка встаёт выбранным пунктом поверх поля и налезает на строку выше.
+  // Щелчок по любому списку открывает свой: вниз от поля (не влезает вниз, а сверху места больше — вверх),
+  // выбранный пункт подсвечен. Данные и обработчики — у самого списка: выбор ставит его значение и шлёт
+  // «изменено», как при обычном выборе. Клавиатура по-прежнему работает с родным списком
+  var ddEl = null, ddSel = null;
+  function ddClose() { if (ddEl && ddEl.parentNode) ddEl.parentNode.removeChild(ddEl); ddEl = null; ddSel = null; }
+  function ddPick(sel, i) {
+    if (sel.selectedIndex == i) return;
+    sel.selectedIndex = i;
+    var ev = document.createEvent('HTMLEvents'); ev.initEvent('change', true, false); sel.dispatchEvent(ev);
+  }
+  function ddOpen(sel) {
+    if (ddSel == sel) { ddClose(); return; }
+    ddClose();
+    if (sel.disabled || !sel.options.length) return;
+    var h = '', kids = sel.children, i, j;
+    function add(o) {
+      h += '<div data-i="' + o.index + '" class="it' + (o.index == sel.selectedIndex ? ' on' : '') + (o.disabled ? ' dis' : '') + '">' + esc(o.text) + '</div>';
+    }
+    for (i = 0; i < kids.length; i++) {
+      if (kids[i].tagName == 'OPTGROUP') { h += '<div class="grp">' + esc(kids[i].label) + '</div>'; for (j = 0; j < kids[i].children.length; j++) add(kids[i].children[j]); }
+      else if (kids[i].tagName == 'OPTION') add(kids[i]);
+    }
+    var r = sel.getBoundingClientRect(), de = document.documentElement,
+        sx = window.pageXOffset || de.scrollLeft, sy = window.pageYOffset || de.scrollTop, vw = de.clientWidth, vh = de.clientHeight;
+    var d = document.createElement('div'); d.className = 'ddpop'; d.innerHTML = h;
+    d.style.minWidth = Math.round(r.width) + 'px'; d.style.maxWidth = Math.max(120, vw - 8) + 'px';
+    d.style.left = '0px'; d.style.top = '0px';
+    document.body.appendChild(d);
+    var tf = $('topFix'), topH = tf ? tf.offsetHeight : 0, below = vh - r.bottom - 42, above = r.top - topH - 4;
+    var ph = d.offsetHeight, up = ph > below && above > below, room = up ? above : below;
+    if (ph > room) { d.style.maxHeight = Math.max(80, room) + 'px'; ph = d.offsetHeight; }
+    var left = r.left; if (left + d.offsetWidth > vw - 4) left = Math.max(4, vw - 4 - d.offsetWidth);
+    d.style.left = Math.round(left + sx) + 'px';
+    d.style.top = Math.round((up ? r.top - ph : r.bottom) + sy) + 'px';
+    ddEl = d; ddSel = sel;
+    var on = d.querySelector('.on'); if (on && on.offsetTop + on.offsetHeight > d.clientHeight) d.scrollTop = on.offsetTop - 20;
+    d.onmousedown = function (ev) {
+      ev = ev || window.event; var tg = ev.target || ev.srcElement;
+      if (tg && tg.getAttribute && tg.getAttribute('data-i') != null && !/\bdis\b/.test(tg.className)) { var s = ddSel; ddClose(); ddPick(s, +tg.getAttribute('data-i')); }
+      if (ev.preventDefault) ev.preventDefault();
+      return false;
+    };
+  }
+  // щелчок мимо, прокрутка, Esc, другая ширина панели — закрыть
+  document.addEventListener('mousedown', function (e) { if (ddEl && !ddEl.contains(e.target) && e.target != ddSel) ddClose(); }, true);
+  window.addEventListener('scroll', function () { if (ddEl) ddClose(); });
+  window.addEventListener('resize', function () { if (ddEl) ddClose(); });
+  document.addEventListener('keydown', function (e) { if (ddEl && (e.keyCode == 27 || e.keyCode == 9)) ddClose(); });
   function docWatch() {
-    if (!host || calBusy || (typeof nestTimer != 'undefined' && nestTimer)) return;
+    if (!host || calBusy || selActive() || (typeof nestTimer != 'undefined' && nestTimer)) return;
     var k = call('DocKey');
     if (lastDocKey !== null && k !== lastDocKey) load();
     lastDocKey = k;
   }
   // Заход мыши в окне CorelDRAW ловится не всегда (мышь уже стояла над панелью, отмена Ctrl+Z) —
   // поэтому ещё и первое движение над панелью, и повтор раз в 2,4 с, пока мышь здесь
-  function panelEnter() { if (panelHover) return; panelHover = true; docWatch(); nestPoll(); nestCheck(); }
+  function panelEnter() { if (panelHover || selActive()) return; panelHover = true; docWatch(); nestPoll(); nestCheck(); themeCheck(); }
   document.documentElement.onmouseenter = panelEnter;
   document.addEventListener('mousemove', panelEnter);
   window.addEventListener('focus', function () { docWatch(); });
   document.documentElement.onmouseleave = function () { panelHover = false; };
   document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && !e.toElement) panelHover = false; });
-  setInterval(function () { if (!panelHover) return; nestPoll(); ++nestTick; if (nestTick % 2 == 0) docWatch(); if (nestTick % 3 == 0) nestCheck(); }, 1200);
+  setInterval(function () { if (!panelHover || selActive()) return; nestPoll(); ++nestTick; if (nestTick % 2 == 0) docWatch(); if (nestTick % 3 == 0) nestCheck(); }, 1200);
 
   function nestCheck() {
     if (!(tab == 1 && impMode == 'nest') || !nestRows.length) return;
@@ -2666,6 +3045,33 @@
   }
 
   var NS = ['nsW', 'nsH', 'nsMargin', 'nsGap', 'nsRot', 'nsQual', 'nsSpeed'];
+  function nsBtnLabel() {
+    $('nsTitle').innerText = eqCur == 'cut' && $('nsMethod').value != 'shape' ? 'Укладка на лист' : 'Укладка по форме';
+    $('nsBtn').innerText = nestRes ? 'Переразложить в этом файле' :
+      (eqCur == 'cut' && $('nsMethod').value != 'shape' ? 'Уложить…' : 'Уложить по форме…');
+  }
+  // У фрезера свой материал укладки: лист 1220 × 2440, поле 10, зазор — на фрезу 3 мм; у остального — общий
+  var NS_M = ['nsW', 'nsH', 'nsMargin', 'nsGap', 'nsMethod', 'nsFill'], NS_MDEF = { mill: { nsW: 1220, nsH: 2440, nsMargin: 10, nsGap: 3, nsMethod: 'box', nsFill: 'rows' } }, nsKey = 'common';
+  function nsMachSave(k) {
+    if (!$('nsW').value) return;
+    var o = {}, i; for (i = 0; i < NS_M.length; i++) o[NS_M[i]] = $(NS_M[i]).value;
+    o.nsStrips = $('nsStrips').checked ? 1 : 0;
+    try { LS.setItem('nsSet_' + k, JSON.stringify(o)); } catch (x) { }
+  }
+  function nsSync() {
+    if (!$('nsW').value) return;
+    var k = eqCur == 'cut' ? cutMachine : 'common';
+    if (k == nsKey) return;
+    nsMachSave(nsKey);
+    var o = null, i, d = NS_MDEF[k], v;
+    try { o = JSON.parse(LS.getItem('nsSet_' + k) || 'null'); } catch (x) { }
+    // своего набора ещё нет — у фрезера его значения по умолчанию, у остальных — общий набор
+    if (!o && !d) { try { o = JSON.parse(LS.getItem('nsSet_common') || 'null'); } catch (x) { } }
+    o = o || {}; d = d || {};
+    for (i = 0; i < NS_M.length; i++) { v = o[NS_M[i]] != null && o[NS_M[i]] !== '' ? o[NS_M[i]] : d[NS_M[i]]; if (v != null && v !== '') $(NS_M[i]).value = v; }
+    $('nsStrips').checked = o.nsStrips != null ? o.nsStrips == 1 : k == 'mill';
+    nsKey = k;
+  }
 
   function nestParams() {
     var p = [];
@@ -2674,6 +3080,13 @@
     p.push('nsMore=' + ($('nsMore').checked ? 1 : 0));
     p.push('nsMirror=' + ($('nsMirror').checked ? 1 : 0));
     p.push('nsDxf=' + ($('nsDxf').checked ? 1 : 0));
+    var mill = eqCur == 'cut' && cutMachine == 'mill';
+    p.push('nsMill=' + (mill ? 1 : 0), 'nsStripCut=' + ($('nsStripCut').checked ? 1 : 0), 'nsStripLines=' + ($('nsStripLines').checked ? 1 : 0));
+    // способ, заполнение, точка старта и полосы — у резки на станке; остальным — по форме, как было
+    if (eqCur == 'cut') p.push('nsMethod=' + $('nsMethod').value, 'nsFill=' + $('nsFill').value, 'nsStart=' + cutStart(), 'nsStrips=' + ($('nsStrips').checked ? 1 : 0));
+    else p.push('nsStrips=0');
+    if (eqCur == 'uv') p.push('nsStart=' + cutStart());
+    nsMachSave(nsKey);
     return p.join('|');
   }
 
@@ -3282,16 +3695,13 @@
       'Раскладка': ['«Лист» — карты на печатный лист; клапан, шкала, кресты и пластина — в разделе «Офсет». «Брошюра» — развороты для фальцовки.', 'plate', {}],
       'Вывод': ['PDF с номерами — по файлу на лист или одним файлом.', 'order', { sheets: 2 }],
       'PDF для типографии': ['PDF/X-1a — его принимает любая типография. Перед сохранением макет проверится.', '', null] } },
-    mill: { lead: 'Фрезеровка: детали из листа, объёмные буквы. Укладка по форме, борта и задники букв, файл для станка и цена.', st: {
-      'Раскладка': ['Детали по настоящему контуру вкладываются друг в друга, мелкие — в окна крупных. Зазор — на диаметр фрезы.', 'nest', {}],
+    cut: { lead: 'Резка на станке — лазер CO2 или фрезер: укладка деталей по форме, объёмные буквы, порядок реза, файл для станка и цена. Станок выбирается переключателем «Лазер · Фрезер».', st: {
+      'Раскладка': ['Фигурные детали по настоящему контуру вкладываются друг в друга, мелкие — в окна крупных. Зазор — на луч или на диаметр фрезы.', 'nest', {}],
       'Объёмные буквы': ['Борта полосами на лист, задник и выборка на лице, исправление косяков шрифта.', 'letter', { what: 'back', gap: 3 }],
-      'Файл для станка': ['Детали в DXF для программы фрезера: выделенное или вся страница.', '', null],
-      'Цена': ['Длина реза и врезки — в деньги и минуты.', 'cost', { pierce: 1 }] } },
-    laser: { lead: 'Лазерная резка CO2: детали стык в стык, общий край — один раз, порядок реза без скачков, режимы из вашей таблицы, файл для RDWorks и цена.', st: {
-      'Раскладка': ['Фигурные детали по настоящему контуру — вкладываются друг в друга.', 'nest', {}],
-      'Стык в стык и порядок реза': ['Пластины и бирки вплотную, общий край режется один раз. «Оптимизировать резку» убирает двойные линии и ставит порядок: окна раньше внешнего края, голова не скачет.', 'laser', { moves: 1 }],
-      'Файл для станка': ['Линии реза в порядке реза — DXF для RDWorks или LightBurn. Автоматическую оптимизацию пути там выключите.', '', null],
-      'Цена': ['Материал из вашей таблицы — скорость подставится сама.', 'cost', { pierce: 1 }] } },
+      'Контуры': ['Проверка перед резом: дубли под линиями, соринки, разрывы, линии из кусков, детали и буквы внахлёст, двойные линии. Что можно — исправляется кнопкой.', '', null],
+      'Порядок реза': ['Двойные линии убираются, куски склеиваются, окна режутся раньше внешнего края, голова не скачет. У лазера — ещё детали стык в стык с общим краем и режимы из вашей таблицы.', 'laser', { moves: 1 }],
+      'Файл для станка': ['Линии реза в DXF — для RDWorks, LightBurn или программы фрезера.', '', null],
+      'Цена': ['Длина реза и врезки — в деньги и минуты; у лазера скорость из вашей таблицы.', 'cost', { pierce: 1 }] } },
     all: { lead: 'Макет: то, что одинаково для любого оборудования, — проверка, правки, номера, превью для клиента. Проверка, правки и превью работают без ключа.', st: {
       'Проверка': ['Проверка макета перед печатью под любой вид печати. Бесплатно.', 'card', { bleed: 3, safe: 5 }],
       'Правки': ['Чистка текста, «выделить такие же», замена цвета, направляющие. Бесплатно.', 'txt', { s: 'Скидка 10 %, до конца месяца' }],
@@ -3306,7 +3716,7 @@
     ['lay-nest', 'Укладка по форме', ['nestBox']], ['lay-roll', 'Раскладка на рулон', ['rollBox', 'selBox', 'cardSheet', 'cardPlace']],
     ['lay-book', 'Брошюра', ['bookBox']], ['ink', 'Белила и лак', ['sInk']], ['out', 'Вывод', ['sOut']], ['acct', 'Брак и учёт', ['sAcct']],
     ['bleed', 'Вылет по форме', ['sBleed']], ['eye', 'Люверсы', ['sEye']], ['letters', 'Объёмные буквы', ['sLetters']],
-    ['laser', 'Лазер: стык в стык и порядок реза', ['sLaser']], ['cutfile', 'Файл для станка', ['sCutFile']], ['cost', 'Цена резки', ['sCost']]];
+    ['cutcheck', 'Проверка контуров', ['sCutCheck']], ['laser', 'Порядок реза', ['sLaser']], ['cutfile', 'Файл для станка', ['sCutFile']], ['cost', 'Цена резки', ['sCost']]];
   // Поля номера видны в панели только у выбранного поля — в справочнике они описаны здесь
   var HNUM = [
     ['Номер или текст', 'Выделите на карте надпись и нажмите «Номер или текст» — она станет полем: на каждой карте своё значение.', 'vcard', { kind: 'text' }],
@@ -3317,7 +3727,7 @@
     ['Маска', '# — одна цифра: маска «### ### ###» делает из 100000000 → 100 000 000.', '', null],
     ['Показать на карте', 'Подставит первое значение в макет — проверить глазами шрифт, место и все ли цифры влезли.', 'vcard', { kind: 'all' }]];
   var SUBAREA = { sCheck: 'check', sPdf: 'pdf', sTools: 'tools', sOrder: 'order', sInk: 'ink', sOut: 'out', sAcct: 'acct', sBleed: 'bleed', sEye: 'eye',
-                  sLetters: 'letters', sLaser: 'laser', sCutFile: 'cutfile', sCost: 'cost' };
+                  sLetters: 'letters', sCutCheck: 'cutcheck', sLaser: 'laser', sCutFile: 'cutfile', sCost: 'cost' };
   function stepAreas(st) {
     if (st.tab == 0) return ['num'];
     if (st.tab == 1) { var r = []; for (var i = 0; i < st.modes.length; i++) r.push('lay-' + st.modes[i]); return r; }
@@ -3353,8 +3763,11 @@
       var row = helpRow(el); if (!row || row.getAttribute('data-help')) continue;
       row.setAttribute('data-help', k);
       var q = '<a class="calq" data-act="help" data-k="' + k + '" title="Что это — с примером">?</a>';
-      var kk = row.querySelector('.k');
-      if (kk) kk.insertAdjacentHTML('beforeend', q); else row.insertAdjacentHTML('beforeend', q);
+      var kk = row.querySelector('.k'), tn = kk ? kk.lastChild : null, mw;
+      // последнее слово подписи и «?» — вместе, чтобы значок не уезжал на отдельную строку
+      if (tn && tn.nodeType == 3 && (mw = /^([\s\S]*?)(\S+)\s*$/.exec(tn.nodeValue))) {
+        tn.nodeValue = mw[1]; kk.insertAdjacentHTML('beforeend', '<span class="nw">' + esc(mw[2]) + q + '</span>');
+      } else if (kk) kk.insertAdjacentHTML('beforeend', q); else row.insertAdjacentHTML('beforeend', q);
       if (!row.title) row.title = HELP[k].s;
       row.insertAdjacentHTML('afterend', '<div class="calhelp" id="hh_' + k + '" style="display:none"></div>');
     }
@@ -4261,7 +4674,7 @@
   var CAL_KIND = {
     '1': { note: 'Страница на месяц: сверху место под картинку, снизу месяц. Можно обложку с годом.', s: { mt: 12, mb: 10, ml: 10, mr: 10, imgPart: 50, imgPos: 'top', spring: 0 } },
     '2': { note: 'Блоки квартального: набор из 14 страниц (декабрь, 12 месяцев, январь) — его печатают на все три блока. Или три блока по 12 страниц, прошлый и следующий месяц бледнее.', s: { mt: 6, mb: 6, ml: 8, mr: 8, imgPart: 0, spring: 0 } },
-    '3': { note: 'Как перекидной, но настольный: страница на месяц, над ним место под картинку. Сверху 15 мм под пружину.', s: { mt: 4, mb: 6, ml: 8, mr: 8, imgPart: 32, imgPos: 'top', spring: 15 } },
+    '3': { note: 'Как перекидной, но настольный: страница на месяц, над ней место под картинку. Сверху 15 мм под пружину.', s: { mt: 4, mb: 6, ml: 8, mr: 8, imgPart: 32, imgPos: 'top', spring: 15 } },
     '4': { note: 'Все месяцы на одной визитке мелкой сеткой, сверху год. Текст мельче 5 пт в печати не читается.', s: { mt: 3, mb: 3, ml: 3, mr: 3, imgPart: 0, spring: 0, mGap: 1.5 } },
     '5': { note: 'Все месяцы на одном листе: сверху место под картинку и год.', s: { mt: 12, mb: 12, ml: 12, mr: 12, imgPart: 25, imgPos: 'top', spring: 0, mGap: 6 } },
     '6': { note: 'Год одним листом: месяцы строками, дни недели столбиками вровень — для офиса и планирования.', s: { mt: 10, mb: 10, ml: 10, mr: 10, imgPart: 0, spring: 0 } }
@@ -4732,6 +5145,11 @@
   }
   // одно поле: pre — cc_ (содержание) или cs_ (стиль)
   function calQ(id) { return CAL_HELP[id] ? '<a class="calq" data-act="calhelp" data-k="' + id + '" title="Что это и пример">?</a>' : ''; }
+  // подпись поля: последнее слово и «?» — вместе, значок не уезжает на отдельную строку
+  function calLbl(s, id) {
+    var q = calQ(id), m = /^([\s\S]*?)(\S+)\s*$/.exec(s);
+    return q && m ? esc(m[1]) + '<span class="nw">' + esc(m[2]) + q + '</span>' : esc(s) + q;
+  }
   function calHB(id) { return CAL_HELP[id] ? '<div class="calhelp" id="h_' + id + '" style="display:none"></div>' : ''; }
   function calTip(id) { return CAL_HELP[id] ? ' title="' + esc(CAL_HELP[id].t.split('\n')[0]) + '"' : ''; }
   function calField(f, pre) {
@@ -4739,7 +5157,7 @@
     if (k == 'head') return '<div class="lth" style="margin-top:12px">' + esc(f[1]) + '</div>';
     if (k == 'note') return '<div class="ex" id="' + id + '"></div>';
     if (k == 'c') return '<div id="' + id + 'Row"><div class="chkq"><label class="chk"' + calTip(id) + '><input type="checkbox" id="' + id + '">' + esc(f[1]) + '</label>' + calQ(id) + '</div>' + calHB(id) + '</div>';
-    h = '<div id="' + id + 'Row"><div class="row"><span class="k"' + calTip(id) + '>' + esc(f[1]) + calQ(id) + '</span>';
+    h = '<div id="' + id + 'Row"><div class="row' + (CAL_HELP[id] ? ' hq' : '') + '"><span class="k"' + calTip(id) + '>' + calLbl(f[1], id) + '</span>';
     if (k == 's') h += '<select id="' + id + '" class="wide">' + calOpt(f[3] || []) + '</select>';
     else if (k == 'f') h += '<select id="' + id + '" class="wide calfont"></select>';
     else if (k == 'col') h += '<span class="calsw" id="' + id + 'Sw"></span><input type="text" class="calcol" id="' + id + '" placeholder="нет">';
@@ -4747,8 +5165,8 @@
     else if (k == 'wh') h += '<input type="text" id="' + pre + 'w"><span class="x">×</span><input type="text" id="' + pre + 'h">';
     else if (k == 'shwh') h += '<input type="text" id="' + pre + 'shW"><span class="x">×</span><input type="text" id="' + pre + 'shH">';
     else if (k == 'yearfrom') h += '<input type="text" id="' + pre + 'year"><select id="' + pre + 'from" style="margin-left:6px"></select>';
-    else if (k == 't') h += '<input type="text" class="calwide" id="' + id + '" placeholder="' + esc(f[3] || '') + '">';
-    else if (k == 'area') h = '<div id="' + id + 'Row"><div class="row" style="display:block"><span class="k"' + calTip(id) + '>' + esc(f[1]) + calQ(id) + '</span></div>' + calHB(id) + '<textarea id="' + id + '" class="calarea" placeholder="' + esc(f[3] || '') + '"></textarea></div>';
+    else if (k == 't') h += '<input type="text" class="wide" id="' + id + '" placeholder="' + esc(f[3] || '') + '">';
+    else if (k == 'area') h = '<div id="' + id + 'Row"><div class="row" style="display:block"><span class="k"' + calTip(id) + '>' + calLbl(f[1], id) + '</span></div>' + calHB(id) + '<textarea id="' + id + '" class="calarea" placeholder="' + esc(f[3] || '') + '"></textarea></div>';
     else h += '<input type="text" id="' + id + '">';
     return k == 'area' ? h : h + '</div>' + calHB(id) + '</div>';
   }
@@ -4941,7 +5359,13 @@
     h += '<option value="">— изменён вручную —</option>';
     $('calStyle').innerHTML = h;
     if (sel) $('calStyle').value = /^[pu]:/.test(sel) || sel === '' ? sel : 'p:' + sel;
-    if (!noApply) calStyleApply();
+    if (!noApply) calStyleApply(); else calStyleNoteUi();
+  }
+  function calStyleNoteUi() {
+    var v = $('calStyle').value, note = '', i;
+    for (i = 0; i < CAL_PRESETS.length; i++) if ('p:' + CAL_PRESETS[i].id == v) note = CAL_PRESETS[i].note;
+    if (/^u:/.test(v)) note = 'Свой стиль.';
+    $('calStyleNote').innerText = note;
   }
   function calStyleApply() {
     var v = $('calStyle').value, s = null, note = '', i, k;
@@ -5055,9 +5479,74 @@
   var LT_DEF = { ltH: 100, ltWall: 8, ltH2: '', ltT2: 5, ltSA: 1220, ltSB: 2440, ltMargin: 5, ltKerf: 6, ltRes: 5, ltGapB: 1, ltGapF: 1 };
   var CT = ['ctPerM', 'ctPierce', 'ctSpeed', 'ctPierceSec', 'ctMin'];
   // Лазер: поля и галочки хранятся в макросе строкой «поле=значение|…»
-  var LA = ['laW', 'laH', 'laMargin', 'laGap', 'laKits', 'laHead', 'laColIn', 'laColOut', 'laTol', 'laIdle'];
-  var LA_C = ['laRot', 'laDedupe', 'laJoin', 'laInner', 'laColors', 'laMoves'];
-  var LA_DEF = { laW: 600, laH: 400, laMargin: 5, laGap: 0, laKits: 1, laHead: 'tl', laColIn: '255 0 0', laColOut: '0 0 255', laTol: 0.05, laIdle: 300 };
+  var LA = ['laW', 'laH', 'laMargin', 'laGap', 'laKits', 'laHead', 'laColIn', 'laColOut', 'laTol', 'laIdle', 'laTool',
+            'laOrder', 'laOffset', 'laSideOut', 'laSideHole', 'laKerf', 'laEntry', 'laLead'];
+  var LA_C = ['laRot', 'laDedupe', 'laJoin', 'laInner', 'laColors', 'laMoves', 'laHold'];
+  var LA_DEF = { laW: 600, laH: 400, laMargin: 5, laGap: 0, laKits: 1, laHead: 'tl', laColIn: '255 0 0', laColOut: '0 0 255', laTol: 0.05, laIdle: 300, laTool: 3,
+                 laOrder: 'color', laOffset: 'none', laSideOut: 'out', laSideHole: 'in', laKerf: 0.15, laEntry: 'near', laLead: 0 };
+  // У лазера и фрезера свой лист, поле и угол старта: фрезер — полный лист 2440 × 1220, поле 10 мм, старт там, где полосы
+  var LA_M = ['laW', 'laH', 'laMargin', 'laHead', 'laOrder', 'laOffset', 'laSideOut', 'laSideHole', 'laEntry', 'laLead'];
+  var LA_MDEF = { mill: { laW: 2440, laH: 1220, laMargin: 10, laHead: 'bl', laOrder: 'rows', laOffset: 'prog', laSideOut: 'out', laSideHole: 'in', laEntry: 'near', laLead: 0 } };
+  // Точка старта — у каждого станка своя; одна на раскладку и рез
+  var PT9N = { tl: 'слева вверху', t: 'сверху посередине', tr: 'справа вверху', l: 'слева посередине', c: 'по центру',
+               r: 'справа посередине', bl: 'слева внизу', b: 'снизу посередине', br: 'справа внизу' };
+  // У УФ своя точка старта — одна на раскладку «На лист» и «По форме»
+  function startKey() { return eqCur == 'cut' ? cutMachine : eqCur; }
+  function cutStart() {
+    var k = startKey(), v = ''; try { v = LS.getItem('cutStart_' + k) || ''; } catch (x) { }
+    if (PT9N[v]) return v;
+    if (k == 'uv') { v = ($('alignV').value == '2' ? 't' : $('alignV').value == '1' ? 'b' : '') + ($('alignH').value == '1' ? 'l' : $('alignH').value == '2' ? 'r' : ''); return v || 'c'; }
+    return k == 'mill' ? 'bl' : 'tl';
+  }
+  // УФ, «На лист»: точка старта = куда прижат блок карт (те же «Прижать блок», только квадратиком)
+  function uvAlignSync() {
+    if (eqCur != 'uv') return;
+    var v = cutStart(), h = v.charAt(v.length - 1);
+    $('alignV').value = v.charAt(0) == 't' ? '2' : v.charAt(0) == 'b' ? '1' : '0';
+    $('alignH').value = h == 'l' ? '1' : h == 'r' ? '2' : '0';
+  }
+  // Значок CorelDRAW «AnchorLocation» в его же мерках (поле 4800): колечко 1200 с толщиной 300, шаг 1800,
+  // перемычки по краю; выбранное — сплошное
+  var PT9K = ['tl', 't', 'tr', 'l', 'c', 'r', 'bl', 'b', 'br'];
+  function pt9Svg(v) {
+    var d = '', i, x, y;
+    for (i = 0; i < 9; i++) {
+      x = (i % 3) * 1800; y = Math.floor(i / 3) * 1800;
+      d += 'M' + x + ' ' + y + 'h1200v1200h-1200z';
+      if (PT9K[i] != v) d += 'M' + (x + 900) + ' ' + (y + 300) + 'h-600v600h600z';
+    }
+    // перемычки — отдельной фигурой: при «чётно-нечётной» заливке они вырезали бы дырки в колечках
+    var e = 'M900 300h1200v300h-1200zM2700 300h1200v300h-1200zM900 4200h1200v300h-1200zM2700 4200h1200v300h-1200z' +
+            'M300 900h300v1200h-300zM4200 900h300v1200h-300zM300 2700h300v1200h-300zM4200 2700h300v1200h-300z';
+    return '<svg class="pt9i" viewBox="0 0 4800 4800" width="24" height="24" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="' + d + '"/>' +
+           '<path fill="currentColor" d="' + e + '"/></svg>';
+  }
+  function pt9Ui() {
+    uvAlignSync();
+    var v = cutStart(), a = document.querySelectorAll('.pt9 a'), b = document.querySelectorAll('.pt9'), i, s;
+    for (i = 0; i < a.length; i++) a[i].className = a[i].getAttribute('data-v') == v ? 'on' : '';
+    for (i = 0; i < b.length; i++) {
+      s = b[i].getElementsByTagName('svg')[0]; if (s) b[i].removeChild(s);
+      b[i].insertAdjacentHTML('afterbegin', pt9Svg(v));
+    }
+    if ($('laStartTxt')) $('laStartTxt').innerText = PT9N[v];
+    if ($('nsStartTxt')) $('nsStartTxt').innerText = PT9N[v];
+    $('uvStartTxt').innerText = $('uvStartTxt2').innerText = PT9N[v];
+  }
+  function laMachSave(m) {
+    var o = {}, i; for (i = 0; i < LA_M.length; i++) o[LA_M[i]] = $(LA_M[i]).value;
+    try { LS.setItem('laSet_' + m, JSON.stringify(o)); } catch (x) { }
+  }
+  function laMachLoad(m) {
+    var o = null, i, d = LA_MDEF[m] || {}, k, v;
+    try { o = JSON.parse(LS.getItem('laSet_' + m) || 'null'); } catch (x) { }
+    o = o || {};
+    // чего нет в сохранённом (поля новее сохранения) — из значений станка по умолчанию, у лазера — общих
+    for (i = 0; i < LA_M.length; i++) {
+      k = LA_M[i]; v = o[k] != null && o[k] !== '' ? o[k] : (d[k] != null ? d[k] : (m == 'laser' ? LA_DEF[k] : null));
+      if (v != null && v !== '') $(k).value = v;
+    }
+  }
   var laReady = false;
   function laFill() {
     if (laReady || !S) return;
@@ -5068,6 +5557,9 @@
     laTableLoad();
     laMatFill(L.laMat || '');
     if (L.laTh != null) { $('laTh').value = L.laTh; laModeShow(); }
+    // первый раз: то, что было в полях, — набор лазера
+    try { if (!LS.getItem('laSet_laser')) laMachSave('laser'); } catch (x) { }
+    laMachLoad(cutMachine);
     laUi();
   }
   // ---- таблица режимов лазера: разбор таблицы, нарисованной в CorelDRAW надписями ----
@@ -5201,12 +5693,22 @@
     }
     return tb(laTable.cut, 'Рез') + tb(laTable.engrave, 'Гравировка') + '<div class="ex">Скорость мм/с · мощность % · время на квадрат 100 × 100 мм.</div>';
   }
-  function laUi() { $('laColRow').style.display = $('laColors').checked ? '' : 'none'; }
+  function laUi() {
+    $('laColRow').style.display = $('laColors').checked ? '' : 'none';
+    var none = $('laOffset').value == 'none';
+    $('laKerfRow').style.display = $('laSideOutRow').style.display = $('laSideHoleRow').style.display = none ? 'none' : '';
+    $('laToolRow').style.display = none ? 'none' : '';
+    $('laToolTxt').innerText = $('nsGap').value || $('laTool').value;
+  }
   function laParams() {
     var p = [], i;
+    // у фрезера фреза — та же, что зазор укладки
+    if (eqCur == 'cut' && cutMachine == 'mill' && $('nsGap').value) $('laTool').value = $('nsGap').value;
     for (i = 0; i < LA.length; i++) p.push(LA[i] + '=' + $(LA[i]).value);
     for (i = 0; i < LA_C.length; i++) p.push(LA_C[i] + '=' + ($(LA_C[i]).checked ? 1 : 0));
     p.push('laNums=' + ($('laMoves').checked ? 1 : 0));
+    p.push('laMill=' + (eqCur == 'cut' && cutMachine == 'mill' ? 1 : 0), 'laStart=' + cutStart());
+    if (laReady) laMachSave(cutMachine);
     // материал: для итога — название и скорость, с которой считать время
     var c = laCut();
     p.push('laMat=' + $('laMat').value.replace(/[|=]/g, ' '), 'laTh=' + $('laTh').value);
@@ -5280,7 +5782,7 @@
     p.push('plate=' + ($('plate').checked ? 1 : 0)); p.push('plateCenter=' + ($('plateCenter').checked ? 1 : 0));
     var P = window.PRINTERS || [], pi = $('printer').value;
     if (pi !== '' && P[pi]) p.push('printer=' + P[pi][0]);
-    p.push('mirror=' + ($('mirror').checked ? 1 : 0)); p.push('guides=' + ($('guides').checked ? 1 : 0)); p.push('orient=' + $('orient').value); p.push('alignH=' + $('alignH').value); p.push('alignV=' + $('alignV').value);
+    p.push('mirror=' + ($('mirror').checked ? 1 : 0)); p.push('guides=' + ($('guides').checked ? 1 : 0)); p.push('orient=' + $('orient').value); uvAlignSync(); p.push('alignH=' + $('alignH').value); p.push('alignV=' + $('alignV').value); p.push('numCorner=' + (eqCur == 'uv' ? 1 : 0));
     return p.join('|');
   }
 
@@ -5316,6 +5818,8 @@
     var roll = impMode == 'roll', qty = fnum('cQty'), t = '';
     var ids = ['cColRow', 'cSpoilRow', 'cPaperRow', 'cPlateRow', 'cRunRow'];
     for (var i = 0; i < ids.length; i++) $(ids[i]).style.display = roll ? 'none' : '';
+    var digi = eqCur == 'digi';
+    if (digi) $('cPlateRow').style.display = 'none';
     $('cM2Row').style.display = roll ? '' : 'none';
     if (roll) {
       if (!calcRoll) { $('cOut').innerText = ''; return; }
@@ -5328,28 +5832,33 @@
     var sheets = Math.ceil(qty / calcPer), all = sheets + fnum('cSpoil');
     var plates = wt ? Math.max(f, b) : f + b, passes = all * (b > 0 && !wt ? 2 : 1);
     if (wt) sheets = Math.ceil(qty / (calcPer * 2)), all = sheets + fnum('cSpoil'), passes = all * 2;
+    if (digi) plates = 0;
     var paper = all * fnum('cPaper'), plate = plates * fnum('cPlate'), run = passes / 1000 * fnum('cRun');
-    t = 'На листе ' + (wt ? calcPer * 2 + ' (свой оборот — два комплекта)' : calcPer) + ' шт. Листов: ' + sheets + ' + ' + fnum('cSpoil') + ' на приладку = ' + all + '. Пластин: ' + plates + '. Прогонов: ' + passes + '.';
-    if (paper + plate + run > 0) t += String.fromCharCode(10) + 'Бумага ' + money(paper) + ' + пластины ' + money(plate) + ' + печать ' + money(run) + ' = ' + money(paper + plate + run) + ' (за штуку ' + (Math.round((paper + plate + run) / qty * 100) / 100) + ').';
+    t = 'На листе ' + (wt ? calcPer * 2 + ' (свой оборот — два комплекта)' : calcPer) + ' шт. Листов: ' + sheets + ' + ' + fnum('cSpoil') + ' на приладку = ' + all + '.' + (digi ? '' : ' Пластин: ' + plates + '.') + ' Прогонов: ' + passes + '.';
+    if (paper + plate + run > 0) t += String.fromCharCode(10) + 'Бумага ' + money(paper) + (digi ? '' : ' + пластины ' + money(plate)) + ' + печать ' + money(run) + ' = ' + money(paper + plate + run) + ' (за штуку ' + (Math.round((paper + plate + run) / qty * 100) / 100) + ').';
     $('cOut').innerText = t;
   }
 
   // Рулон: ширина × длина, блок по центру (схематично)
+  // Схема листа — как страница в CorelDRAW: белая бумага с рамкой, карты светло-голубые с синим контуром
+  // (промежутки видны и при малом зазоре); одинаково в тёмной и светлой теме. Ширина — по панели
+  var SCH = { paper: '#f4f5f6', edge: '#8a8d93', dead: '#c9ccd1', card: '#acc8e5', cardEdge: '#2d5d93' };
+  function schW() { var b = $('sheetBox'), w = b && b.clientWidth ? b.clientWidth - 6 : 300; return Math.max(160, Math.min(w, 340)); }
   function drawRoll(c, n, rot, L) {
     var W = parseFloat($('rollW').value) || 1370, cw = parseFloat($('cutW').value) || 50, ch = parseFloat($('cutH').value) || 50;
     if (rot) { var tt = cw; cw = ch; ch = tt; }
     var gx = parseFloat($('gapX').value) || 0, gy = parseFloat($('gapY').value) || 0;
     if (!L || !c) { $('sheetBox').innerHTML = ''; return; }
-    var k = Math.min(270 / W, 220 / L), s = '', bw = c * cw + (c - 1) * gx, bh = n * ch + (n - 1) * gy, x0 = (W - bw) / 2, y0 = (L - bh) / 2;
-    s += '<rect x="1" y="1" width="' + W * k + '" height="' + L * k + '" fill="#404040" stroke="#525252"/>';
+    var k = Math.min(schW() / W, 280 / L), s = '', bw = c * cw + (c - 1) * gx, bh = n * ch + (n - 1) * gy, x0 = (W - bw) / 2, y0 = (L - bh) / 2;
+    s += '<rect x="1" y="1" width="' + W * k + '" height="' + L * k + '" fill="' + SCH.paper + '" stroke="' + SCH.edge + '"/>';
     var sd = (parseFloat($('rollSide').value) || 0) * k;
-    s += '<rect x="1" y="1" width="' + sd + '" height="' + L * k + '" fill="#2e2e2e"/><rect x="' + (1 + W * k - sd) + '" y="1" width="' + sd + '" height="' + L * k + '" fill="#2e2e2e"/>';
+    s += '<rect x="1" y="1" width="' + sd + '" height="' + L * k + '" fill="' + SCH.dead + '"/><rect x="' + (1 + W * k - sd) + '" y="1" width="' + sd + '" height="' + L * k + '" fill="' + SCH.dead + '"/>';
     for (var r = 0; r < n; r++) for (var q = 0; q < c; q++)
-      s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + Math.max(1, cw * k) + '" height="' + Math.max(1, ch * k) + '" fill="#1d4470"' + ($('rollCut').value != '0' ? ' stroke="#e040a0" stroke-width="0.6"' : '') + '/>';
+      s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + Math.max(1, cw * k) + '" height="' + Math.max(1, ch * k) + '" fill="' + SCH.card + '" stroke="' + ($('rollCut').value != '0' ? '#e040a0' : SCH.cardEdge) + '" stroke-width="0.6"/>';
     if ($('rollMarks').value != '0') {
       var g = (parseFloat($('rollMGap').value) || 10) * k, m = Math.max(2, (parseFloat($('rollMSize').value) || 3) * k);
       var pts = [[x0 * k - g - m, y0 * k - g - m], [(x0 + bw) * k + g, y0 * k - g - m], [x0 * k - g - m, (y0 + bh) * k + g], [(x0 + bw) * k + g, (y0 + bh) * k + g]];
-      for (var pi = 0; pi < 4; pi++) s += '<rect x="' + (1 + pts[pi][0]) + '" y="' + (1 + pts[pi][1]) + '" width="' + m + '" height="' + m + '" fill="#e6e8eb"/>';
+      for (var pi = 0; pi < 4; pi++) s += '<rect x="' + (1 + pts[pi][0]) + '" y="' + (1 + pts[pi][1]) + '" width="' + m + '" height="' + m + '" fill="#1f1f1f"/>';
     }
     $('sheetBox').innerHTML = '<svg width="' + (W * k + 2) + '" height="' + (L * k + 2) + '" xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
   }
@@ -5364,7 +5873,7 @@
     var cw = parseFloat($('cutW').value) || 85.6, ch = parseFloat($('cutH').value) || 54;
     if (rot) { var tmp = cw; cw = ch; ch = tmp; }
     var gx = parseFloat($('gapX').value) || 0, gy = parseFloat($('gapY').value) || 0;
-    var k = Math.min(270 / PW, 180 / PH), w = W * k, h = H * k, s = '';
+    var k = Math.min(schW() / PW, 260 / PH), w = W * k, h = H * k, s = '';
     var m = parseFloat($('margin').value) || 0, bw = c * cw + (c - 1) * gx, bh = n * ch + (n - 1) * gy;
     var sides = $('marginSides').checked, mv = function (id) { var v = parseFloat($(id).value); return isNaN(v) ? m : v; };
     var mL = sides ? mv('marginL') : m, mR = sides ? mv('marginR') : m, mT = sides ? mv('marginT') : m, mB = sides ? mv('marginB') : m;
@@ -5380,7 +5889,7 @@
       if ($('colorBar').checked && $('plateStyle').value != '2') { var cl = ['#00aeef', '#ec008c', '#fff200', '#231f20']; for (var bj = 0; bj < 40; bj++) s0 += '<rect x="' + (1 + (px + 10) * k + bj * (W - 20) * k / 40) + '" y="' + (1 + (py - 5.5) * k) + '" width="' + ((W - 20) * k / 40) + '" height="' + Math.max(2, 5 * k) + '" fill="' + cl[bj % 4] + '"/>'; }
       s0 += '<g transform="translate(' + px * k + ',' + py * k + ')">';
     }
-    s += '<rect x="1" y="1" width="' + w + '" height="' + h + '" fill="#404040" stroke="#525252"/>';
+    s += '<rect x="1" y="1" width="' + w + '" height="' + h + '" fill="' + SCH.paper + '" stroke="' + SCH.edge + '"/>';
     var gs = plate ? '0' : $('gripperSide').value, gm = (parseFloat($('gripper').value) || 0) * k;
     if (gs == '1') s += '<rect x="1" y="1" width="' + w + '" height="' + gm + '" fill="#8a5a2a"/>';
     if (gs == '2') s += '<rect x="1" y="' + (1 + h - gm) + '" width="' + w + '" height="' + gm + '" fill="#8a5a2a"/>';
@@ -5396,7 +5905,12 @@
       }
     }
     for (var r = 0; r < n; r++) for (var q = 0; q < c; q++)
-      s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + cw * k + '" height="' + ch * k + '" fill="#1d4470"/>';
+      s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + cw * k + '" height="' + ch * k + '" fill="' + SCH.card + '" stroke="' + SCH.cardEdge + '" stroke-width="0.6"/>';
+    // УФ: карта 1 — в углу точки старта, с неё пойдут номера
+    if (eqCur == 'uv' && impMode == 'sample' && c > 0 && n > 0) {
+      var fr = av == '1' ? n - 1 : 0, fq = ah == '2' ? c - 1 : 0, fs = Math.max(7, Math.min(14, Math.min(cw, ch) * k * 0.6));
+      s += '<text x="' + (1 + (x0 + fq * (cw + gx) + cw / 2) * k) + '" y="' + (1 + (y0 + fr * (ch + gy) + ch / 2) * k + fs * 0.36) + '" font-size="' + fs + '" font-weight="bold" text-anchor="middle" fill="' + SCH.cardEdge + '">1</text>';
+    }
     if ($('cutMarks').checked && c > 0 && n > 0) {
       var L = 4, e = 1;   // метки на схеме — условно, чтобы было видно, где они будут
       for (var q2 = 0; q2 < c; q2++) for (var k2 = 0; k2 < 2; k2++) {
@@ -5471,12 +5985,17 @@
       ? '<div><b>PDF</b> — вектор: цвет CMYK, белила «' + esc(p.w) + '» и лак «' + esc(p.v) + '» — плашечными цветами' + (p.mir ? ', зеркально' : '') + rot + '.</div>'
       : '<div><b>TIFF</b> — растр ' + p.dpi + ' dpi: CMYK + каналы «' + esc(p.w) + '» и «' + esc(p.v) + '»' + (p.mir ? ', зеркально' : '') + rot + '.</div>';
     // кнопки вывода — под формат этого принтера
-    $('trialOut').setAttribute('data-mode', p.fmt); $('trialOut').lastChild.nodeValue = pdf ? 'PDF пробного…' : 'TIFF пробного…';
+    $('trialOut').setAttribute('data-mode', p.fmt); $('trialOut').lastChild.nodeValue = pdf ? 'PDF пробного листа…' : 'TIFF пробного листа…';
     $('orderOut').setAttribute('data-mode', p.fmt); $('orderOut').lastChild.nodeValue = pdf ? 'PDF всего заказа…' : 'TIFF всего заказа…';
     if (pdf) $('trialOut').removeAttribute('data-mod'); else $('trialOut').setAttribute('data-mod', 'UW');
     if (pdf) $('orderOut').removeAttribute('data-mod'); else $('orderOut').setAttribute('data-mod', 'UW');
     if (pdf) $('orderAlt').setAttribute('data-mod', 'UW'); else $('orderAlt').removeAttribute('data-mod');
     $('tplOut').lastChild.nodeValue = pdf ? 'Шаблон стола → PDF' : 'Шаблон стола → TIFF';
+    $('trialNote').innerText = '«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем ' +
+      (pdf ? 'PDF пробного листа — откройте его в Acrobat или в программе печати.' : 'TIFF пробного листа — откройте его в Фотошопе или в программе печати.');
+    $('orderAltNote').innerText = (pdf ? '«TIFF…» — все листы с подставленными номерами TIFF-файлами, если принтеру так удобнее.'
+      : '«PDF…» — все листы с подставленными номерами в PDF: для типографии, цифровой печати или проверки.') +
+      ' «Печать…» — сразу на принтер, сначала откроется окно выбора принтера.';
     $('orderAlt').setAttribute('data-mode', pdf ? 'tiff' : 'pdf'); $('orderAlt').lastChild.nodeValue = pdf ? 'TIFF…' : 'PDF…';
     $('orderOutNote').innerText = pdf
       ? 'PDF с подставленными номерами: по файлу на лист или одним файлом (галочка ниже). Белила и лак — плашками «' + p.w + '» и «' + p.v + '». CorelDRAW будет занят, остановить — «Стоп» в окошке.'
@@ -5511,7 +6030,7 @@
       $('outHint').innerHTML = '<div class="result badbox"><span class="bad">Номера не настроены.</span>' +
         '<button class="btn full" data-act="goto" data-to="0" style="margin-top:6px">← Номера</button></div>';
     } else $('outHint').innerHTML = '';
-    $('outInfo').innerHTML = R.total > 0 ? ('Листов: <span class="big">' + R.total + '</span> · по ' + R.places + ' карт на листе · записей ' + R.records)
+    $('outInfo').innerHTML = !fieldsReady() ? '' : R.total > 0 ? ('Листов: <span class="big">' + R.total + '</span> · по ' + R.places + ' карт на листе · записей ' + R.records)
       : ('<span class="bad">Листов не определить: ' + esc(R.why) + '</span>');
     $('allLbl').innerText = 'Все листы' + (R.total > 0 ? ' (' + R.total + ')' : '');
     $('tiffDpi').value = R.tiffDpi; $('pdfOneFile').checked = R.pdfOneFile;
@@ -5528,6 +6047,7 @@
   }
 
   function plan() {
+    if (!fieldsReady() || S.doc.sample) { $('planTrial').innerText = ''; $('plan').innerText = ''; return; }
     var t = range('trial'), o = range('order');
     var pdf = outPdfEq() || !!(prnList && prnList[prnCur] && prnList[prnCur].fmt == 'pdf');
     function fmt(s) { return pdf ? s.replace(/TIFF: \d+ файл[а-я]*, /, 'PDF, ') : s; }
@@ -5648,6 +6168,13 @@
     }
     if (ac == 'cphone') { var ph = contacts().phone; say(copyText(ph) ? 'Номер скопирован: ' + ph : 'Номер: ' + ph); return; }
     if (ac == 'ccode') { var mc = (S && S.lic && S.lic.code) || ''; say(copyText(mc) ? 'Код компьютера скопирован: ' + mc : 'Код компьютера: ' + mc); return; }
+    if (ac == 'pt9') { try { LS.setItem('cutStart_' + startKey(), e.getAttribute('data-v')); } catch (x) { } pt9Ui(); if (eqCur == 'uv' && S) impCalc(); return; }
+    if (ac == 'machine') {
+      if (laReady) laMachSave(cutMachine);
+      cutMachine = e.getAttribute('data-v'); try { LS.setItem('cutMachine', cutMachine); } catch (x) { }
+      if (laReady) laMachLoad(cutMachine);
+      cfBuilt = ''; renderEq(); applyEq(); bind(); return;
+    }
     if (ac == 'calsec') { calSec = e.getAttribute('data-v'); try { LS.setItem('calSec', calSec); } catch (x) { } calSecShow(); return; }
     if (ac == 'svc') { svcShow($('svcBar').className.indexOf('open') < 0); return; }
     if (ac == 'helpcat') { svcShow(false); helpShow(e.getAttribute('data-v') || eqCur); return; }
@@ -5704,8 +6231,8 @@
       return;
     }
     if (ac == 'lapack') { laShow('Раскладываю…'); setTimeout(function () { laShow(call('LaserPack', laParams())); load(); }, 30); return; }
-    if (ac == 'laopt') { laShow('Считаю резку…'); setTimeout(function () { laShow(call('LaserOptimize', laParams())); }, 30); return; }
-    if (ac == 'laundo') { laShow(call('LaserUndo')); return; }
+    if (ac == 'laopt') { laShow('Считаю резку…'); setTimeout(function () { laShow(call('LaserOptimize', laParams())); cutStatus(true); renderEq(); bind(); }, 30); return; }
+    if (ac == 'laundo') { laShow(call('LaserUndo')); cutStatus(true); renderEq(); bind(); return; }
     if (ac == 'latableread') {
       var raw = String(call('LaserTableRead') || '');
       if (!raw || raw.indexOf('|') < 0) { laShow(raw || 'В открытом документе нет надписей таблицы.'); return; }
@@ -5795,6 +6322,19 @@
       eqCur = first; try { LS.setItem('vpEq', eqCur); } catch (x) { }
       eqGo(0, true); load(); return;
     }
+    if (ac == 'ccrun') { ccRun(); return; }
+    if (ac == 'ccshow') { say(call('CutCheckShow', e.getAttribute('data-key'))); return; }
+    if (ac == 'ccfix') {
+      var fk = e.getAttribute('data-key');
+      say(fk == 'all' ? 'Исправляю по очереди…' : 'Исправляю…');
+      setTimeout(function () {
+        var fr = String(call('CutCheckFix', fk) || ''), p = fr.indexOf('\n');
+        // первая строка — что сделано, дальше — новая проверка
+        say(p < 0 ? fr : fr.slice(0, p));
+        if (p >= 0) ccRender(fr.slice(p + 1));
+      }, 30);
+      return;
+    }
     if (ac == 'cutsave') {
       var cw = cfWhat(), cf = $('cfFmt').value;
       try { LS.setItem('vpCutFmt_' + cw, cf); } catch (x) { }
@@ -5832,7 +6372,11 @@
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; if (e.getAttribute('data-sub')) showSub(e.getAttribute('data-sub'));
       if (e.getAttribute('data-mode')) { impMode = e.getAttribute('data-mode'); try { LS.setItem('impMode', impMode); } catch (x) { } }
       // шаг выбранного оборудования, куда ведёт ссылка, — если он есть
-      var GE = eqOf(eqCur); for (var gi = 0; gi < GE.steps.length; gi++) if (GE.steps[gi].tab == tab && (!GE.steps[gi].sub || GE.steps[gi].sub == e.getAttribute('data-sub'))) { eqStep = gi; break; }
+      var gsub = e.getAttribute('data-sub'), GE = eqOf(eqCur), gf = -1, gi;
+      var gfind = function () { for (gi = 0; gi < GE.steps.length; gi++) if (GE.steps[gi].tab == tab && (!GE.steps[gi].sub || GE.steps[gi].sub == gsub)) return gi; return -1; };
+      gf = gfind();
+      if (gf < 0 && eqCur != 'all') { GE = eqOf('all'); gf = gfind(); if (gf >= 0) { eqCur = 'all'; try { LS.setItem('vpEq', eqCur); } catch (x) { } } }
+      if (gf >= 0) eqStep = gf;
       load(); return; }
     if (a == 'add') { r = call('AddField', e.getAttribute('data-kind')); if (r) say(r); load(); if (!r && S.fields.length) { cur = S.fields[S.fields.length - 1].id; renderFields(); renderEditor(); bind(); } return; }
     if (a == 'delfield') {
@@ -6026,7 +6570,10 @@
   helpLinks();
   helpAttach();
   bind();
-  if (connect()) { call('LogLine', 'панель загружена, режим ' + (document.documentMode || '?')); load(); }
+  if (connect()) {
+    try { if (LS.getItem('vpTheme') == 'light') themeSet('light'); } catch (x) { }
+    call('LogLine', 'панель загружена, режим ' + (document.documentMode || '?')); themeCheck(true); load();
+  }
 
   // ---- своя полоса прокрутки (системная в CorelDRAW — широкая и светлая) ----
   (function () {

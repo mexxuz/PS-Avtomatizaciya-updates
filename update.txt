@@ -1,9 +1,9 @@
-version=1.8.1
-note=Без ключа бесплатно: нумерация до 50 номеров, раскладка на лист и вывод — всё в «Макете». Новое в «Заказе»: лист согласования клиенту и задание в печать для цеха. За ключом можно написать кнопкой в Telegram или на почту. Исправлено: при выводе в PDF и TIFF нижние объекты больше не закрывают верхние.
-file=VarPrint.gms|35178c1aa233b7bd4599f3bc1bf0d50e869fc308d76bbd7831df6aaa81853fef
-file=index.html|212943c1b7f1c8168cba47ee40311928f185bb64cddb433ac10919c7a1bb9300
-file=VarPrint_merge.exe|cf76872953fc54390eea7246a0bc36f70fddc62c5790462ab861c23511732833
-file=VarPrint_nest.exe|46e83feef1bfc65904c95229adf34cfa550d82794ac84694a7db9cc30c0d7177
+version=1.8.2
+note=Резка на станке: лазер и фрезер теперь в одном месте. Проверка контуров перед резкой, файлы для RDWorks и ArtCAM, у фрезера — общий рез и полосы, точка старта и порядок реза. Раскладка по форме: одинаковые детали ложатся блоками, прямоугольные — сразу по габаритам. УФ-планшет: можно выбрать, с какого угла стола начинать раскладку — там встанет первая карта и первый номер. Панель подстраивается под светлую тему CorelDRAW. Работает в CorelDRAW X7 и новее. Обновления ставятся надёжнее.
+file=VarPrint.gms|b543a2fe56d54f63992d0db82d97464403582c30f102cde86f50680079cdd802
+file=index.html|4c9e2dc7855b4bcfad7301d9386e48ece9c5b96c16207f5ee2d206c3f7e8961c
+file=VarPrint_merge.exe|8d0357eff3c23f00f37eb907346111f9290caf8e31b85b76ebb590654e1abebd
+file=VarPrint_nest.exe|e8a5ded6be8271bfd3c32bbc859df6d058ac3e812ba2c8eeae148e0b9d3b17b9
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=2ogbEau8Fo2-pU3Wn9bStwh1hMkm5BTZbzZqDUJnNBe_AJ89t3dB98e0vjEEIkTet1A67jBQ_ydvn7I_8aGoJA
+sig=S5cb5c2HPShX7VjjhTSkvnl2zzXiTGOCuT8z5mr15BRBP2705qnMemUm9hI127KIoRXeTyESJF6mILTWFDSXAQ
