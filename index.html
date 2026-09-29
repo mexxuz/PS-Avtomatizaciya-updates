@@ -1305,7 +1305,11 @@
       <div class="ex keep" id="updState"></div>
       <button class="btn full main" data-act="updcheck" id="updBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg><span id="updBtnT">Проверить обновления</span></button>
       <div class="steps" id="updSteps" style="display:none"></div>
-      <div class="ex keep">Программа и сама проверяет раз в сутки. Новая версия скачивается в фоне и встаёт, когда вы закрываете CorelDRAW.</div>
+      <div id="updRe" style="display:none">
+        <button class="btn full" data-act="updrestart" id="updReBtn">Перезапустить CorelDRAW и обновить</button>
+        <div class="ex keep cst" id="updReSt">CorelDRAW закроется, через несколько секунд откроется уже с новой версией. Или просто закройте его, когда будет удобно.</div>
+      </div>
+      <div class="ex keep">Программа сама проверяет обновления раз в сутки и ставит их, когда вы закрываете CorelDRAW.</div>
     </div>
     <div class="card"><h4>Ключ</h4>
       <div class="svcrow"><span class="k" id="licK">Ключ</span><b id="licV"></b></div>
@@ -1314,18 +1318,15 @@
     <div class="card"><h4>Связь с разработчиком</h4>
       <div id="devCts"></div>
       <div class="ex keep cst" id="devSt" style="display:none"></div>
-      <div class="svcsub">Сообщить о проблеме</div>
-      <textarea id="problem" rows="3" placeholder="Что не так? Например: белила вылезают из-под краски на третьей карте сверху"></textarea>
-      <label class="chk"><input type="checkbox" id="withShot" checked>Приложить снимок окна CorelDRAW</label>
-      <button class="btn full main" data-act="problem">Отправить разработчику</button>
+      <div class="svcsub">Что-то не работает?</div>
+      <textarea id="problem" rows="3" placeholder="Опишите, что случилось"></textarea>
+      <label class="chk"><input type="checkbox" id="withShot" checked>Приложить снимок экрана</label>
+      <button class="btn full main" data-act="problem">Отправить</button>
       <div class="ex keep cst" id="probSt" style="display:none"></div>
-      <div class="ex keep">Уйдёт ваше описание, снимок окна и отчёт о том, что нажимали. Макеты и файлы клиентов не отправляются.</div>
-      <div class="svcsub">Отчёт о работе</div>
-      <div class="cbtns"><button class="btn" data-act="report" title="Скопировать и сохранить на рабочий стол как «PS-отчёт.txt»">Скопировать</button><button class="btn" data-act="sendreport">Отправить</button></div>
+      <div class="ex keep">Ваши макеты и файлы не отправляются.</div>
+      <label class="chk" style="margin-top:10px"><input type="checkbox" id="repAuto">Сообщать о сбоях автоматически</label>
+      <div class="ex keep" style="margin-top:6px"><a class="lnk" data-act="report" title="Скопировать отчёт о работе и сохранить на рабочий стол — «PS-отчёт.txt»">Скопировать отчёт для разработчика</a></div>
       <div class="ex keep cst" id="repSt" style="display:none"></div>
-      <div class="ex keep">Что вы нажимали и что ответил макрос — по нему разработчик находит ошибку.</div>
-      <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях сами</label>
-      <div class="ex under keep">Уходит только текст отчёта: что нажимали, что ответил макрос, версия и код компьютера. Макеты, номера и файлы клиентов не отправляются. Нет связи — отчёт подождёт и уйдёт позже.</div>
     </div>
     </div>
     <div class="svchd" data-act="svc" title="Справка, вид панели, оборудование, обновления, связь с разработчиком">
@@ -1399,7 +1400,7 @@
   // Бегущая полоса: показывается при нажатии кнопки, убирается, когда макрос ответил.
   // Кнопки, которые ничего не считают, её не держат: если за полсекунды вызова не было — убрать.
   var busyEl = null, busyUsed = false;
-  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, updcheck: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
+  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, updcheck: 1, updrestart: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
   function busyShow(btn) {
     busyHide();
     var w = document.createElement('div'); w.className = 'busy'; w.innerHTML = '<span></span>';
@@ -2204,7 +2205,7 @@
   }
   function updRun() {
     if (updBusy) return;
-    updBusy = true;
+    updBusy = true; $('updRe').style.display = 'none';
     $('updBtn').disabled = true; $('updBtnT').innerText = 'Проверяю…';
     updSteps(['cur', '', '', ''], []);
     setTimeout(function () {
@@ -2213,13 +2214,13 @@
       if (p[0] == 'no') { updSteps(['done', 'done', 'skip', 'skip'], [ok, 'Новой нет — у вас последняя версия ' + ver]); updEnd(r); return; }
       var note = p.slice(2).join('|');
       if (p[0] == 'pend') {
-        updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Уже скачана и сверена', 'Закройте CorelDRAW — обновление встанет само. Через полминуты откройте снова.'], note);
-        updEnd(r); return;
+        updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Уже скачана и сверена', 'Осталось закрыть CorelDRAW'], note);
+        $('updRe').style.display = ''; updEnd(r); return;
       }
       updSteps(['done', 'done', 'cur', ''], [ok, 'Есть версия ' + ver, 'Скачиваю и сверяю файлы — до минуты, панель в это время не отвечает'], note);
       setTimeout(function () {
         var r2 = call('UpdateCheck') || 'макрос не ответил';
-        if (/скачано/.test(r2)) updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Файлы скачаны и сверены', 'Закройте CorelDRAW — обновление встанет само. Через полминуты откройте снова.'], note);
+        if (/скачано/.test(r2)) { updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Файлы скачаны и сверены', 'Осталось закрыть CorelDRAW'], note); $('updRe').style.display = ''; }
         else updSteps(['done', 'done', 'bad', 'skip'], [ok, 'Есть версия ' + ver, 'Не скачалось: ' + r2.replace(/^Обновление не получилось:\s*/, '')], 'Нажмите ещё раз. Не выходит — поставьте новую версию установщиком.');
         updEnd(r2);
       }, 150);
@@ -2233,7 +2234,7 @@
     else if (S.updPend) h = '<span class="info">Скачана версия ' + esc(S.updPend) + ' — встанет, когда закроете CorelDRAW.</span>';
     else if (S.updLast) h = 'Последняя проверка: ' + (S.updLast == today ? 'сегодня' : L[2] + '.' + L[1] + '.' + L[0]) + '.';
     else h = 'Обновления ещё не проверялись.';
-    if (!updBusy) $('updState').innerHTML = h;
+    if (!updBusy) { $('updState').innerHTML = h; $('updRe').style.display = S.updPend ? '' : 'none'; }
     if ($('repAuto')) $('repAuto').checked = (S.repAuto !== false);
   }
 
@@ -6444,6 +6445,13 @@
     }
     if (a == 'sendreport') { cardSay(e, 'Отправляю отчёт…', 'repSt'); setTimeout(function () { cardSay(e, call('ReportSend'), 'repSt'); }, 30); return; }
     if (a == 'updcheck') { updRun(); return; }
+    if (a == 'updrestart') {
+      var rr = call('UpdateRestart') || 'no|Макрос не ответил.';
+      if (rr.indexOf('ok|') != 0) { $('updReSt').className = 'ex keep cst warn'; $('updReSt').innerText = rr.replace(/^no\|/, ''); return; }
+      // закрывает CorelDRAW программа подмены — снаружи, через секунду-две
+      $('updReBtn').disabled = true; $('updReSt').className = 'ex keep cst info'; $('updReSt').innerText = 'Сейчас CorelDRAW закроется, а через несколько секунд откроется сам — уже с новой версией.';
+      return;
+    }
     if (a == 'src') { var sr = call('SetField', cur, 'source', e.getAttribute('data-v')); load(); if (sr && sr != 'ok') say(sr); return; }
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; if (e.getAttribute('data-sub')) showSub(e.getAttribute('data-sub'));
       if (e.getAttribute('data-mode')) { impMode = e.getAttribute('data-mode'); try { LS.setItem('impMode', impMode); } catch (x) { } }

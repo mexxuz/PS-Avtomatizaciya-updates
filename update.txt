@@ -1,9 +1,9 @@
-version=1.8.3
-note=Понятнее «Помощь и настройки»: версия и кнопка «Проверить обновления» видны всегда, а проверка показывает по шагам, что происходит. Ключ и связь с разработчиком — кнопками: Telegram, почта, телефон, отправить отчёт. Ответ каждой кнопки — прямо под ней. Обновления проверяются и без открытого документа.
-file=VarPrint.gms|5e62b5154fb77812a47be3aa0c70532d83ceabfd6578b9fd2fbb30e0f8475cf8
-file=index.html|821cbb23b6a5b42bcdcef076a3a1ab0c2970de07692e01430890690ae695f9db
-file=VarPrint_merge.exe|562e6e2c5a4a46dfef7af3563a1aefb02dcfab959557ea841592e3a4d59efcf6
-file=VarPrint_nest.exe|ceb2bf28b4ea19684042d54e02eece6b773d9312922ae345d8bafd3d998b70b2
+version=1.8.4
+note=Обновления ставятся надёжнее: новая версия встаёт через секунду после закрытия CorelDRAW, а кнопка «Перезапустить CorelDRAW и обновить» сделает всё сама — закроет, обновит и откроет снова. Блок «Что-то не работает?» стал проще.
+file=VarPrint.gms|6938be5aedce1d6337d69debefb84a3ee9bba24f302f82d575111e057eae207c
+file=index.html|0785328a1f1e483a29d869a8dbff15f3dc8e965d7653986588e251d16548322b
+file=VarPrint_merge.exe|11b3aab257a6fcbda778b70031d6a68f19d87295aebdf2123da30f736e1250e6
+file=VarPrint_nest.exe|4865253aa703c355783a13d66ab14a94b2db626dd3db88f7283b6f2acfd58b6c
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=GcInimpdI5MHOHBegTzADOw8eqMAauLJUirnWy0XnSVwGrWnSJ7-x9nJzeh0tzBowLGZYUpxMTvxL9XZkslsZg
+sig=KRyJykl8mlUapbv3HgTRML7nj1MNMeCMHhDtb730OtryKB_DLLHDMXpLWqp1LexUcClmZ0W6q1ZMDa2NpYmGpw
