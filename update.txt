@@ -1,9 +1,9 @@
-version=1.8.2
-note=Резка на станке: лазер и фрезер теперь в одном месте. Проверка контуров перед резкой, файлы для RDWorks и ArtCAM, у фрезера — общий рез и полосы, точка старта и порядок реза. Раскладка по форме: одинаковые детали ложатся блоками, прямоугольные — сразу по габаритам. УФ-планшет: можно выбрать, с какого угла стола начинать раскладку — там встанет первая карта и первый номер. Панель подстраивается под светлую тему CorelDRAW. Работает в CorelDRAW X7 и новее. Обновления ставятся надёжнее.
-file=VarPrint.gms|b543a2fe56d54f63992d0db82d97464403582c30f102cde86f50680079cdd802
-file=index.html|4c9e2dc7855b4bcfad7301d9386e48ece9c5b96c16207f5ee2d206c3f7e8961c
-file=VarPrint_merge.exe|8d0357eff3c23f00f37eb907346111f9290caf8e31b85b76ebb590654e1abebd
-file=VarPrint_nest.exe|e8a5ded6be8271bfd3c32bbc859df6d058ac3e812ba2c8eeae148e0b9d3b17b9
+version=1.8.3
+note=Понятнее «Помощь и настройки»: версия и кнопка «Проверить обновления» видны всегда, а проверка показывает по шагам, что происходит. Ключ и связь с разработчиком — кнопками: Telegram, почта, телефон, отправить отчёт. Ответ каждой кнопки — прямо под ней. Обновления проверяются и без открытого документа.
+file=VarPrint.gms|5e62b5154fb77812a47be3aa0c70532d83ceabfd6578b9fd2fbb30e0f8475cf8
+file=index.html|821cbb23b6a5b42bcdcef076a3a1ab0c2970de07692e01430890690ae695f9db
+file=VarPrint_merge.exe|562e6e2c5a4a46dfef7af3563a1aefb02dcfab959557ea841592e3a4d59efcf6
+file=VarPrint_nest.exe|ceb2bf28b4ea19684042d54e02eece6b773d9312922ae345d8bafd3d998b70b2
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=S5cb5c2HPShX7VjjhTSkvnl2zzXiTGOCuT8z5mr15BRBP2705qnMemUm9hI127KIoRXeTyESJF6mILTWFDSXAQ
+sig=GcInimpdI5MHOHBegTzADOw8eqMAauLJUirnWy0XnSVwGrWnSJ7-x9nJzeh0tzBowLGZYUpxMTvxL9XZkslsZg

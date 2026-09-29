@@ -478,6 +478,20 @@
   .cbtns { display: flex; margin-top: 8px; }
   .cbtns .btn { -ms-flex: 1 1 0%; flex: 1 1 0%; width: 10px; min-width: 0; height: 28px; padding: 0 6px; }
   .cbtns .btn + .btn { margin-left: 6px; }
+  /* «Помощь и настройки»: ход проверки обновления по шагам, ответы кнопок — прямо в карточке
+     (общая строка сообщений прячется под открытой шторкой) */
+  .svcrow { display: flex; align-items: baseline; padding: 2px 0; }
+  .svcrow .k { flex: 1; color: #9a9ea5; }
+  .svcrow b { color: #e2e5e9; font-weight: 600; }
+  .steps { margin: 8px 0 2px; }
+  .steps > div { display: flex; padding: 2px 0; color: #9a9ea5; }
+  .steps i { flex: none; width: 16px; margin-right: 4px; font-style: normal; text-align: center; }
+  .steps .done { color: #caced4; }
+  .steps .done i { color: #7fc97f; }
+  .steps .cur { color: #8fb8e6; }
+  .steps .bad { color: #e0a060; }
+  .cst { margin-top: 6px; }
+  .svcsub { color: #d4d6d9; font-weight: bold; margin: 14px 0 4px; }
   .ccode { margin-top: 7px; font-size: 11px; color: #9a9ea5; }
   .ccode b { color: #e2e5e9; letter-spacing: .03em; }
   .inkcnt { margin-left: auto; padding-left: 8px; color: #8a8d93; font-size: 11px; white-space: nowrap; }
@@ -1286,20 +1300,31 @@
       <div class="ex keep">Какие значки показывать сверху. Снимите галочку — значок спрячется.</div>
       <div class="eqpick" id="svcEq"></div>
     </div>
-    <div class="card"><h4>Обновления и ключ</h4>
-      <div class="ex keep" id="verLine"></div>
-      <div class="ex keep" id="svcLic"></div>
+    <div class="card"><h4>Обновления</h4>
+      <div class="svcrow"><span class="k">Версия программы</span><b id="updVer"></b></div>
+      <div class="ex keep" id="updState"></div>
+      <button class="btn full main" data-act="updcheck" id="updBtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg><span id="updBtnT">Проверить обновления</span></button>
+      <div class="steps" id="updSteps" style="display:none"></div>
+      <div class="ex keep">Программа и сама проверяет раз в сутки. Новая версия скачивается в фоне и встаёт, когда вы закрываете CorelDRAW.</div>
+    </div>
+    <div class="card"><h4>Ключ</h4>
+      <div class="svcrow"><span class="k" id="licK">Ключ</span><b id="licV"></b></div>
+      <button class="btn full" data-act="licshow" id="licBtn">Сменить ключ</button>
     </div>
     <div class="card"><h4>Связь с разработчиком</h4>
-      <div><a class="lnk" data-act="report">Что-то не так? Скопировать отчёт о проблеме</a></div>
-      <div class="ex keep">Отчёт соберёт, что вы нажимали и что ответил макрос. Он скопируется — вставьте его в сообщение разработчику. Ещё он сохранится файлом «PS-отчёт.txt» на рабочем столе.</div>
-      <div class="note" style="margin-top:8px">Что-то выглядит неправильно?</div>
-      <textarea id="problem" rows="3" placeholder="Например: белила вылезают из-под краски на третьей карте сверху"></textarea>
+      <div id="devCts"></div>
+      <div class="ex keep cst" id="devSt" style="display:none"></div>
+      <div class="svcsub">Сообщить о проблеме</div>
+      <textarea id="problem" rows="3" placeholder="Что не так? Например: белила вылезают из-под краски на третьей карте сверху"></textarea>
       <label class="chk"><input type="checkbox" id="withShot" checked>Приложить снимок окна CorelDRAW</label>
-      <button class="btn full main" data-act="problem">Сообщить о проблеме</button>
+      <button class="btn full main" data-act="problem">Отправить разработчику</button>
+      <div class="ex keep cst" id="probSt" style="display:none"></div>
       <div class="ex keep">Уйдёт ваше описание, снимок окна и отчёт о том, что нажимали. Макеты и файлы клиентов не отправляются.</div>
-      <button class="btn full" data-act="sendreport" style="margin-top:6px">Отправить только отчёт</button>
-      <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях автоматически</label>
+      <div class="svcsub">Отчёт о работе</div>
+      <div class="cbtns"><button class="btn" data-act="report" title="Скопировать и сохранить на рабочий стол как «PS-отчёт.txt»">Скопировать</button><button class="btn" data-act="sendreport">Отправить</button></div>
+      <div class="ex keep cst" id="repSt" style="display:none"></div>
+      <div class="ex keep">Что вы нажимали и что ответил макрос — по нему разработчик находит ошибку.</div>
+      <label class="chk"><input type="checkbox" id="repAuto">Отправлять отчёты о сбоях сами</label>
       <div class="ex under keep">Уходит только текст отчёта: что нажимали, что ответил макрос, версия и код компьютера. Макеты, номера и файлы клиентов не отправляются. Нет связи — отчёт подождёт и уйдёт позже.</div>
     </div>
     </div>
@@ -1374,7 +1399,7 @@
   // Бегущая полоса: показывается при нажатии кнопки, убирается, когда макрос ответил.
   // Кнопки, которые ничего не считают, её не держат: если за полсекунды вызова не было — убрать.
   var busyEl = null, busyUsed = false;
-  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
+  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, updcheck: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
   function busyShow(btn) {
     busyHide();
     var w = document.createElement('div'); w.className = 'busy'; w.innerHTML = '<span></span>';
@@ -1480,17 +1505,29 @@
     return r;
   }
   function keyMsg(part) {
+    if (part == '-') return 'Здравствуйте! Вопрос по PS • Автоматизация ' + ((S && S.ver) || '') + '. Код компьютера: ' + ((S && S.lic && S.lic.code) || '') + '.';
     return 'Здравствуйте! Нужен ключ PS • Автоматизация' + (part ? ', часть «' + part + '»' : '') + '. Код компьютера: ' + ((S && S.lic && S.lic.code) || '') + '.';
   }
-  function contactBtns(part) {
+  // plain — все кнопки одинаковые: главная кнопка в карточке своя
+  function contactBtns(part, plain) {
     var c = contacts(), h = '', pv = esc(part || '');
     if (!c.tg && !c.mail && !c.phone) return '';
     h += '<div class="cbtns">';
-    if (c.tg) h += '<button class="btn main" data-act="ctg" data-v="' + pv + '" title="Сообщение с кодом компьютера скопируется — вставьте его в чат">Telegram</button>';
+    if (c.tg) h += '<button class="btn' + (plain ? '' : ' main') + '" data-act="ctg" data-v="' + pv + '" title="Сообщение с кодом компьютера скопируется — вставьте его в чат">Telegram</button>';
     if (c.mail) h += '<button class="btn" data-act="cmail" data-v="' + pv + '" title="Письмо с кодом компьютера">Почта</button>';
     if (c.phone) h += '<button class="btn" data-act="cphone" title="' + esc(c.phone) + '">Телефон</button>';
     h += '</div><div class="ccode">Код компьютера: <b>' + esc((S && S.lic && S.lic.code) || '') + '</b> · <a class="lnk" data-act="ccode">скопировать</a></div>';
     return h;
+  }
+  // Ответ кнопки — в её карточке (строка .cst), если там есть такая; общая строка — как обычно
+  function cardSay(e, t, id) {
+    say(t);
+    var el = id ? $(id) : null, p = e;
+    while (!el && p && p.className != null) { if (/\bcard\b/.test(p.className)) { el = p.querySelector('.cst'); break; } p = p.parentNode; }
+    if (!el || !$('svcBar').contains(el)) return;
+    el.style.display = t ? '' : 'none';
+    el.className = 'ex keep cst' + (/^(Не |Нет |Отчёт собрать не|Не удалось)|не открыл|не получилось/.test(t) ? ' warn' : '');
+    el.innerText = t;
   }
   function copyText(t) { try { return !!window.clipboardData.setData('Text', t); } catch (x) { return false; } }
   function lockSay(id) { lockMsg(lockWhy(id)); }
@@ -1846,14 +1883,13 @@
       sq += '<div class="it' + (off ? ' off' : '') + '" data-act="eqvis" data-v="' + E.id + '"><span class="ck">' + (off ? '' : '✓') + '</span>' + eqSvg(E.id) + '<span>' + esc(E.n) + '</span></div>';
     }
     $('svcEq').innerHTML = sq;
-    var L = S && S.lic ? S.lic : null, lh = '';
+    var L = S && S.lic ? S.lic : null;
     if (L) {
-      if (L.key) lh = 'Ключ действует до ' + esc(L.until) + '.';
-      else if (L.trial > 0) lh = 'Пробный период: осталось ' + L.trial + ' ' + plural(L.trial, 'день', 'дня', 'дней') + ', работает всё.';
-      else lh = 'Пробный период закончился — работает бесплатное.';
-      lh += ' <a class="lnk" data-act="licshow">' + (L.key ? 'Сменить ключ' : 'Ввести ключ') + '</a>';
+      $('licK').innerText = L.key ? 'Действует до' : 'Пробный период';
+      $('licV').innerText = L.key ? L.until : (L.trial > 0 ? 'осталось ' + L.trial + ' ' + plural(L.trial, 'день', 'дня', 'дней') : 'закончился');
+      $('licBtn').innerText = L.key ? 'Сменить ключ' : 'Ввести ключ';
     }
-    $('svcLic').innerHTML = lh;
+    $('devCts').innerHTML = contactBtns('-', true);
   }
   function svcShow(on) {
     var b = $('svcBar');
@@ -2151,13 +2187,53 @@
   }
 
   // Версия и обновления через интернет
+  var updBusy = false;
+  // Проверка обновления по шагам — каждый шаг отдельным вызовом, между ними панель успевает перерисоваться.
+  // st: '' — впереди, cur — идёт, done — сделано, bad — не вышло, skip — не показывать
+  var UPD_T = ['Связь со складом обновлений', 'Есть ли новая версия', 'Скачать и сверить файлы', 'Установка — когда закроете CorelDRAW'];
+  function updSteps(st, tx, more) {
+    var h = '', i, ic = { '': '○', cur: '…', done: '✓', bad: '✕' };
+    for (i = 0; i < 4; i++) if (st[i] != 'skip') h += '<div class="' + st[i] + '"><i>' + ic[st[i]] + '</i><span>' + esc(tx[i] || UPD_T[i]) + '</span></div>';
+    $('updSteps').innerHTML = h + (more ? '<div class="ex keep">' + esc(more) + '</div>' : '');
+    $('updSteps').style.display = '';
+  }
+  function updEnd(t) {
+    updBusy = false;
+    $('updBtn').disabled = false; $('updBtnT').innerText = 'Проверить ещё раз';
+    call('LogLine', 'обновление: ' + t);
+  }
+  function updRun() {
+    if (updBusy) return;
+    updBusy = true;
+    $('updBtn').disabled = true; $('updBtnT').innerText = 'Проверяю…';
+    updSteps(['cur', '', '', ''], []);
+    setTimeout(function () {
+      var r = call('UpdateInfo') || 'err|макрос не ответил', p = r.split('|'), ok = 'Склад на связи', ver = p[1] || '';
+      if (p[0] == 'err') { updSteps(['bad', 'skip', 'skip', 'skip'], ['Склад обновлений не отвечает: ' + ver], 'Проверьте интернет и нажмите ещё раз.'); updEnd(r); return; }
+      if (p[0] == 'no') { updSteps(['done', 'done', 'skip', 'skip'], [ok, 'Новой нет — у вас последняя версия ' + ver]); updEnd(r); return; }
+      var note = p.slice(2).join('|');
+      if (p[0] == 'pend') {
+        updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Уже скачана и сверена', 'Закройте CorelDRAW — обновление встанет само. Через полминуты откройте снова.'], note);
+        updEnd(r); return;
+      }
+      updSteps(['done', 'done', 'cur', ''], [ok, 'Есть версия ' + ver, 'Скачиваю и сверяю файлы — до минуты, панель в это время не отвечает'], note);
+      setTimeout(function () {
+        var r2 = call('UpdateCheck') || 'макрос не ответил';
+        if (/скачано/.test(r2)) updSteps(['done', 'done', 'done', 'cur'], [ok, 'Есть версия ' + ver, 'Файлы скачаны и сверены', 'Закройте CorelDRAW — обновление встанет само. Через полминуты откройте снова.'], note);
+        else updSteps(['done', 'done', 'bad', 'skip'], [ok, 'Есть версия ' + ver, 'Не скачалось: ' + r2.replace(/^Обновление не получилось:\s*/, '')], 'Нажмите ещё раз. Не выходит — поставьте новую версию установщиком.');
+        updEnd(r2);
+      }, 150);
+    }, 150);
+  }
   function renderVer() {
-    var h = 'Версия ' + esc(S.ver || '') + ' · <a class="lnk" data-act="updcheck">проверить обновления</a>';
-    if (S.upd) {
-      var u = S.upd.split('|');
-      h = '<span class="ok">✓ Обновлено до версии ' + esc(u[0]) + '.</span> ' + (u[1] ? esc(u[1]) + ' ' : '') + h;
-    }
-    $('verLine').innerHTML = h;
+    $('updVer').innerText = S.ver || '—';
+    var h, d = new Date(), p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    var today = d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()), L = String(S.updLast || '').split('-');
+    if (S.upd) { var u = S.upd.split('|'); h = '<span class="ok">✓ Обновлено до версии ' + esc(u[0]) + '.</span>' + (u[1] ? ' ' + esc(u[1]) : ''); }
+    else if (S.updPend) h = '<span class="info">Скачана версия ' + esc(S.updPend) + ' — встанет, когда закроете CorelDRAW.</span>';
+    else if (S.updLast) h = 'Последняя проверка: ' + (S.updLast == today ? 'сегодня' : L[2] + '.' + L[1] + '.' + L[0]) + '.';
+    else h = 'Обновления ещё не проверялись.';
+    if (!updBusy) $('updState').innerHTML = h;
     if ($('repAuto')) $('repAuto').checked = (S.repAuto !== false);
   }
 
@@ -2303,7 +2379,7 @@
     if (!S.doc) {
       $('doc').innerHTML = 'Нет открытого документа'; $('doc').title = '';
       // календарю документ не нужен — он собирается в новом
-      renderEq(); applyEq();
+      renderEq(); applyEq(); renderVer();
       if (tab == 5) calInit();
       renderTour(); bind(); return;
     }
@@ -6158,16 +6234,16 @@
       if (ac == 'ctg') {
         var cp = copyText(msg);
         rr = call('OpenLink', 'https://t.me/' + cc.tg);
-        say(rr == 'ok' ? (cp ? 'Открываю Telegram. Сообщение с кодом компьютера скопировано — вставьте его в чат (Ctrl+V).' : 'Открываю Telegram. Напишите: ' + msg)
+        cardSay(e, rr == 'ok' ? (cp ? 'Открываю Telegram. Сообщение с кодом компьютера скопировано — вставьте его в чат (Ctrl+V).' : 'Открываю Telegram. Напишите: ' + msg)
                        : 'Telegram не открылся. Напишите @' + cc.tg + ': ' + msg);
       } else {
-        rr = call('OpenLink', 'mailto:' + cc.mail + '?subject=' + encodeURIComponent('Ключ PS • Автоматизация') + '&body=' + encodeURIComponent(msg));
-        say(rr == 'ok' ? 'Открываю почту — письмо с кодом компьютера уже написано.' : 'Почта не открылась. Напишите на ' + cc.mail + ': ' + msg);
+        rr = call('OpenLink', 'mailto:' + cc.mail + '?subject=' + encodeURIComponent((e.getAttribute('data-v') == '-' ? 'Вопрос' : 'Ключ') + ' PS • Автоматизация') + '&body=' + encodeURIComponent(msg));
+        cardSay(e, rr == 'ok' ? 'Открываю почту — письмо с кодом компьютера уже написано.' : 'Почта не открылась. Напишите на ' + cc.mail + ': ' + msg);
       }
       return;
     }
-    if (ac == 'cphone') { var ph = contacts().phone; say(copyText(ph) ? 'Номер скопирован: ' + ph : 'Номер: ' + ph); return; }
-    if (ac == 'ccode') { var mc = (S && S.lic && S.lic.code) || ''; say(copyText(mc) ? 'Код компьютера скопирован: ' + mc : 'Код компьютера: ' + mc); return; }
+    if (ac == 'cphone') { var ph = contacts().phone; cardSay(e, copyText(ph) ? 'Номер скопирован: ' + ph : 'Номер: ' + ph); return; }
+    if (ac == 'ccode') { var mc = (S && S.lic && S.lic.code) || ''; cardSay(e, copyText(mc) ? 'Код компьютера скопирован: ' + mc : 'Код компьютера: ' + mc); return; }
     if (ac == 'pt9') { try { LS.setItem('cutStart_' + startKey(), e.getAttribute('data-v')); } catch (x) { } pt9Ui(); if (eqCur == 'uv' && S) impCalc(); return; }
     if (ac == 'machine') {
       if (laReady) laMachSave(cutMachine);
@@ -6261,10 +6337,10 @@
     if (ac == 'pffix') { var fr = call('PFFix', e.getAttribute('data-key')); pfRun(); say(fr); return; }
     if (ac == 'report') {
       var rep = call('Report');
-      if (!rep) { say('Отчёт собрать не удалось.'); return; }
+      if (!rep) { cardSay(e, 'Отчёт собрать не удалось.', 'repSt'); return; }
       var ok = false; try { ok = window.clipboardData.setData('Text', rep); } catch (x) { }
-      say(ok ? 'Отчёт скопирован — вставьте его в сообщение (Ctrl+V). Копия лежит на рабочем столе: PS-отчёт.txt.'
-             : 'Отчёт сохранён на рабочем столе: PS-отчёт.txt — отправьте этот файл.');
+      cardSay(e, ok ? 'Отчёт скопирован — вставьте его в сообщение (Ctrl+V). Копия лежит на рабочем столе: PS-отчёт.txt.'
+             : 'Отчёт сохранён на рабочем столе: PS-отчёт.txt — отправьте этот файл.', 'repSt');
       return;
     }
     if (ac == 'liccopy') { var c = $('licCode'); c.focus(); c.select(); try { window.clipboardData.setData('Text', c.value); say('Код скопирован: ' + c.value); } catch (x) { say('Код выделен — нажмите Ctrl+C.'); } return; }
@@ -6361,13 +6437,13 @@
     if (a == 'tourstop') { tourEnd(''); return; }
     if (a == 'problem') {
       var pt = $('problem').value;
-      if (!/\S/.test(pt)) { say('Напишите одной строкой, что не так.'); return; }
-      say('Отправляю…');
-      setTimeout(function () { var pr = call('ProblemSend', pt, $('withShot').checked ? '1' : '0'); say(pr); if (pr.indexOf('Отправлено') === 0) $('problem').value = ''; }, 30);
+      if (!/\S/.test(pt)) { cardSay(e, 'Напишите одной строкой, что не так.', 'probSt'); return; }
+      cardSay(e, 'Отправляю…', 'probSt');
+      setTimeout(function () { var pr = call('ProblemSend', pt, $('withShot').checked ? '1' : '0'); cardSay(e, pr, 'probSt'); if (pr.indexOf('Отправлено') === 0) $('problem').value = ''; }, 30);
       return;
     }
-    if (a == 'sendreport') { say('Отправляю отчёт…'); setTimeout(function () { say(call('ReportSend')); }, 30); return; }
-    if (a == 'updcheck') { say('Смотрю, есть ли обновление…'); setTimeout(function () { say(call('UpdateCheck')); }, 30); return; }
+    if (a == 'sendreport') { cardSay(e, 'Отправляю отчёт…', 'repSt'); setTimeout(function () { cardSay(e, call('ReportSend'), 'repSt'); }, 30); return; }
+    if (a == 'updcheck') { updRun(); return; }
     if (a == 'src') { var sr = call('SetField', cur, 'source', e.getAttribute('data-v')); load(); if (sr && sr != 'ok') say(sr); return; }
     if (a == 'goto') { var to = +e.getAttribute('data-to'); tab = to; if (e.getAttribute('data-sub')) showSub(e.getAttribute('data-sub'));
       if (e.getAttribute('data-mode')) { impMode = e.getAttribute('data-mode'); try { LS.setItem('impMode', impMode); } catch (x) { } }
