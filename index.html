@@ -513,6 +513,10 @@
   .pt9 a:nth-of-type(3n+1) { left: 3px; } .pt9 a:nth-of-type(3n+2) { left: 12px; } .pt9 a:nth-of-type(3n) { left: 21px; }
   .pt9 a:nth-of-type(-n+3) { top: 3px; } .pt9 a:nth-of-type(n+4) { top: 12px; } .pt9 a:nth-of-type(n+7) { top: 21px; }
   .pt9:hover { color: #e2e5e9; }
+  /* УФ: только четыре угла стола — места для щелчка крупнее */
+  .pt9.pt4 a { width: 12px; height: 12px; margin: -6px 0 0 -6px; }
+  .pt9.pt4 a:nth-of-type(1) { left: 5px; top: 5px; } .pt9.pt4 a:nth-of-type(2) { left: 19px; top: 5px; }
+  .pt9.pt4 a:nth-of-type(3) { left: 5px; top: 19px; } .pt9.pt4 a:nth-of-type(4) { left: 19px; top: 19px; }
   .ptv { flex: 1 1 58%; display: flex; align-items: center; min-width: 0; }
   .ptv .x { margin-left: 8px; }
   .modesw.machsw { margin: 8px 10px 2px; }
@@ -647,6 +651,7 @@
       <button class="btn" data-act="impmode" data-v="nest" data-mod="UWPML" id="modeNest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M3.7 3.7 15.8 3.7 15.8 6.8 11.3 6.8 11.3 11.3 8.2 11.3 8.2 6.8 3.7 6.8z" fill="currentColor"/><path d="M3.7 12.7 6.8 12.7 6.8 17.2 12.7 17.2 12.7 12.7 17.2 12.7 17.2 8.2 20.3 8.2 20.3 20.3 3.7 20.3z"/></svg><span>По форме</span></button>
       <button class="btn" data-act="impmode" data-v="roll" data-mod="WP" id="modeRoll"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><ellipse cx="5" cy="5.5" rx="1.6" ry="2.5"/><path d="M5 3h14a1.6 2.5 0 0 1 0 5H5"/><path d="M6.5 8v13h12V8"/><path d="M9 11.5h7M9 14.5h7M9 17.5h4"/></svg><span>Рулон</span></button>
       <button class="btn" data-act="impmode" data-v="book" data-mod="CO" id="modeBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 6.5C9.5 4.8 6 4.6 3 5.5v13c3-.9 6.5-.7 9 1 2.5-1.7 6-1.9 9-1v-13c-3-.9-6.5-.7-9 1z"/><path d="M12 6.5v13"/><path d="M10.8 10h2.4M10.8 15h2.4"/></svg><span>Брошюра</span></button>
+      <button class="btn" data-act="impmode" data-v="ctp" data-mod="O" id="modeCtp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="3.5" width="19" height="17" rx="1"/><rect x="6" y="6" width="12" height="9" rx=".4"/><path d="M4.5 18h15"/><path d="M4.5 6.5v2.5M19.5 6.5v2.5"/></svg><span>Пластина</span></button>
     </div>
     <div class="adv" id="srcRow">
       <div class="seg">
@@ -679,7 +684,7 @@
       <div class="row adv"><span class="k">Поле от края</span><input type="text" id="nsMargin"></div>
       <div class="row"><span class="k">Зазор между деталями</span><input type="text" id="nsGap"></div>
       <div class="eqonly" data-eq="uv">
-        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt2"></span></span></div>
+        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9 pt4"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt2"></span></span></div>
         <div class="ex under">С какого угла стола начать укладку. Та же точка, что у раскладки «На лист».</div>
       </div>
       <div class="eqonly" data-eq="cut">
@@ -706,6 +711,10 @@
       <label class="chk"><input type="checkbox" id="nsMore" checked>Не влезло на лист — продолжать на следующих</label>
       <div class="row"><span class="k">Сколько искать</span><select id="nsQual" class="wide"><option value="fast">быстро — 5 секунд</option><option value="good">хорошо — 20 секунд</option><option value="max">максимум — 45 секунд, точнее</option></select></div>
       <div class="ex">Программа перебирает тысячи вариантов на всех ядрах процессора и берёт лучший. Остановить можно в любой момент.</div>
+      <div class="eqonly" data-eq="plot">
+        <label class="chk"><input type="checkbox" id="nsMarks">Метки SignMaster для плоттера</label>
+        <div class="ex under">Кружки по бокам, как у раскладки на рулон, — у каждого листа вокруг его деталей. Поле от края — не меньше 8 мм.</div>
+      </div>
       <label class="chk"><input type="checkbox" id="nsDxf">Сохранить ещё DXF каждого листа для станка</label>
       <div class="row"><span class="k">Скорость резки, м/мин</span><input type="text" id="nsSpeed" placeholder="не считать"></div>
       </div>
@@ -727,12 +736,69 @@
         <button class="btn full" data-act="goto" data-to="4" data-sub="sCost" data-eq="plot cut">Стоимость резки по длине и врезкам →</button>
       </div>
     </div>
-    <div id="bookBox" style="display:none" class="card"><h4>Брошюра на скрепку</h4>
-      <div class="ex">Откройте документ, где каждая страница — полоса брошюры (обложка — страница 1). Макрос сделает развороты для печати: лист за листом, лицо и оборот, в порядке для фальцовки. Полос должно быть кратно 4 — иначе в конце добавятся пустые.</div>
-      <div class="info" id="bookInfo"></div>
+    <div id="ctpBox" style="display:none" class="card"><h4>Пластина для вывода</h4>
+      <div class="ex">Откройте готовый лист — раскладку заказчика или свою: каждая страница — лист бумаги, как его печатать. Программа поставит его на пластину печатника — клапан, уголки с мишенями, шкалы, «КЛАПАН», полосу и подпись внизу пластины — и сохранит PDF для вывода с именем по образцу 525-459_4_PS_FOR_VIZA_….pdf.</div>
+      <div class="row"><span class="k">Печатник</span><select id="plPrinter" class="wide"></select></div>
+      <div class="info" id="plPrinterNote" style="display:none"></div>
+      <div class="row"><span class="k">Пластина</span><input type="text" id="plW"><span class="x">×</span><input type="text" id="plH"></div>
+      <div class="row"><span class="k">Клапан, мм</span><input type="text" id="plK"><span class="x"></span><label class="chk" style="margin:0"><input type="checkbox" id="plCenter">лист по центру</label></div>
+      <div class="row"><span class="k">Клапан — до</span><select id="plTo" class="wide"><option value="paper">края листа (страницы)</option><option value="job">края работы</option></select></div>
+      <div class="ex under">Обычно клапан — от нижнего края пластины до края бумаги. «До края работы» — если страница больше бумаги или поле под работой не в счёт.</div>
+      <div class="row adv"><span class="k">Бумага</span><input type="text" id="plPaperW" placeholder="как стр."><span class="x">×</span><input type="text" id="plPaperH"></div>
+      <div class="ex under adv">Пусто — бумага размером со страницу. Если на странице только работа, без полей, впишите бумагу: работа встанет по её центру.</div>
+      <div class="row"><span class="k">Вылет у работы, мм</span><input type="text" id="plBleed"></div>
+      <div class="ex under">Метки встают за вылет, чтобы не залезть на него. Без вылета — 0.</div>
+      <div class="lth" style="margin-top:10px">Метки</div>
+      <div class="row"><span class="k">Как в файлах</span><select id="plPreset" class="wide"><option value="politext">Шкалки Politext</option><option value="viza">VIZA — шкала у хвоста</option><option value="amirbek">AMIRBEK — шкала двумя половинами</option><option value="own">свой набор</option></select></div>
+      <div class="row"><span class="k">Уголки с мишенями</span><select id="plCorners" class="wide"><option value="1">мишень в квадрате</option><option value="2">круглая мишень</option><option value="0">нет</option></select></div>
+      <label class="chk"><input type="checkbox" id="plWedges">Шкалы тонов по бокам: C, M слева, Y, K справа</label>
+      <div class="row"><span class="k">Шкала у хвоста</span><select id="plBar" class="wide"><option value="0">нет</option><option value="1">сплошная, над работой</option><option value="2">две половины, мишень посередине</option></select></div>
+      <label class="chk"><input type="checkbox" id="plKlap">«КЛАПАН» и квадраты красок под работой</label>
+      <label class="chk"><input type="checkbox" id="plFooter">Полоса и подпись внизу пластины</label>
+      <div class="ex under">Полоса, «N СТРАНИЦ В ФАЙЛЕ», строка вывода «подпись, имя файла, дата, Page - N», названия красок и линейка.</div>
+      <div class="row"><span class="k">Подпись</span><input type="text" id="plCompany" class="wide"></div>
+      <div class="info" id="plInfo"></div>
+      <button class="btn main full" data-act="ctprun" data-mod="O" style="height:32px;margin-top:8px">Поставить на пластину и сохранить PDF…</button>
+      <div class="ex keep cst" id="plOut" style="display:none"></div>
+      <div class="ex">Имя PDF подскажет само: пластина, число пластин (4 на страницу для CMYK, буквы — для плашек), печатник, имя листа. Рядом ляжет файл CorelDRAW с тем же именем — он откроется: проверьте клапан и метки. Бумага и клапан видны на непечатном слое.</div>
+    </div>
+    <div id="bookBox" style="display:none" class="card"><h4>Брошюра и книга</h4>
+      <div class="ex">Откройте документ, где каждая страница — полоса, по порядку (обложка — страница 1). Программа разложит тетради на печатный лист — лицо и оборот, с метками реза и фальцовки. Лист, печатник, клапан, кресты и шкала — ниже, как для любого офсетного листа.</div>
+      <div class="lth" style="margin-top:10px">Файл пришёл разворотами?</div>
+      <div class="ex">Разворот на странице, два разворота или весь каталог сеткой на одной странице — сначала разрежьте на полосы: получится новый файл, каждая страница — одна полоса, по порядку чтения.</div>
+      <div class="row"><span class="k">Формат полосы, мм</span><input type="text" id="spW"><span class="x">×</span><input type="text" id="spH"></div>
+      <label class="chk"><input type="checkbox" id="spCover">Обложка разворотом: последняя | первая</label>
+      <button class="btn full" data-act="spsplit" data-mod="CO">Разрезать на полосы…</button>
+      <div class="ex keep cst" id="spOut" style="display:none"></div>
+      <div class="lth" style="margin-top:12px">Тетради</div>
+      <label class="chk"><input type="checkbox" id="bkAuto" checked>Лист печати — подобрать самому</label>
+      <div class="ex under">Из стандартных (450 × 320 … 1040 × 720): где меньше листов печати, а при равенстве — меньше бумаги. С пластиной печатника — только те, что на неё встают.</div>
+      <div class="row"><span class="k">Скрепление</span><select id="bkBind" class="wide"><option value="saddle">скрепка — тетради вкладкой</option><option value="perfect">КБС — тетради подборкой</option></select></div>
+      <div class="row"><span class="k">Тетрадей на лист</span><select id="bkCopies" class="wide"><option value="auto">сколько войдёт</option><option value="one">одна</option><option value="wt">своим оборотом</option></select></div>
+      <div class="ex under">Сколько войдёт — одинаковые тетради рядом, тираж печатать в столько же раз меньше листов. Своим оборотом — лицо и оборот тетради на одной стороне листа: одна форма на тетрадь, лист переворачивают слева направо.</div>
+      <div class="row"><span class="k">Полос в тетради</span><select id="bkP" class="wide"><option value="0">сколько войдёт на лист</option><option value="32">32</option><option value="16">16</option><option value="8">8</option><option value="4">4</option></select></div>
+      <label class="chk"><input type="checkbox" id="bkCover">Обложка отдельно — своим листом</label>
+      <div class="ex under">Полосы 1, 2 и две последние уходят на обложку. У КБС обложка — разворотом с корешком.</div>
+      <div class="row"><span class="k">Пустые полосы</span><select id="bkBlank" class="wide"><option value="back">перед задней обложкой</option><option value="end">в самом конце</option></select></div>
+      <div class="ex under">Если страниц не кратно 4, добавятся пустые — чтобы задняя обложка осталась на своём месте, их ставят перед ней.</div>
       <div class="row"><span class="k">Вылет, мм</span><input type="text" id="bkBleed"></div>
-      <div class="row"><span class="k">Сдвиг на сползание на лист, мм</span><input type="text" id="bkCreep"></div>
-      <div class="ex">При фальцовке внутренние листы выступают, и после обрезки поля у них уже. Макрос сдвигает их полосы к корешку. Обычно — толщина бумаги: 0,1 мм для 130 г, 0,15 — для 170 г, 0 — если листов мало.</div>
+      <div class="row adv"><span class="k">Припуск под обрез у сгибов, мм</span><input type="text" id="bkTrim"></div>
+      <div class="ex under adv">У сгибов, которые потом срезают (голова к голове, передний край), полосы раздвигаются на припуск — туда уходит вылет и нож.</div>
+      <div id="bkSaddleBox">
+        <div class="row"><span class="k">Сползание на лист, мм</span><input type="text" id="bkCreep"></div>
+        <div class="ex under">Внутренние листы скрепки выступают — после обрезки поля у них уже. Полосы сдвигаются к корешку. Обычно — толщина бумаги: 0,1 мм для 130 г, 0,15 — для 170 г.</div>
+      </div>
+      <div id="bkPerfectBox">
+        <div class="row"><span class="k">Фрезеровка корешка, мм</span><input type="text" id="bkGrind"></div>
+        <div class="row"><span class="k">Толщина бумаги блока, мм</span><input type="text" id="bkPaper"></div>
+        <div class="ex under">Корешок срезают фрезой — полосы отодвигаются от сгиба на столько же. Толщина бумаги — для ширины корешка обложки.</div>
+        <label class="chk"><input type="checkbox" id="bkCollate" checked>Метки подборки на корешке</label>
+        <div class="ex under">Чёрный брусок на сгибе, у каждой тетради ниже предыдущей: после подборки на корешке блока — ровная лесенка, пропущенную или лишнюю тетрадь видно сразу.</div>
+      </div>
+      <label class="chk"><input type="checkbox" id="bkCut" checked>Метки реза</label>
+      <label class="chk"><input type="checkbox" id="bkFold" checked>Метки фальцовки</label>
+      <div class="ex under">Реза — по голове, низу и переднему краю: там, где режут тетрадь. У корешка — метка фальцовки.</div>
+      <div class="info" id="bookInfo"></div>
     </div>
     <div id="impHint"></div>
     <div id="selBox" style="display:none" class="card"><h4>Выделенные объекты</h4>
@@ -752,11 +818,11 @@
       <div class="row"><span class="k">Тираж, шт.</span><input type="text" id="rollQty"></div>
       <div class="row"><span class="k">Контур реза</span><select id="rollCut" class="wide"><option value="0">нет</option><option value="1">прямоугольник по резу</option><option value="2">свой контур из макета</option></select></div>
       <div class="ex">Линия реза рисуется плашечным цветом CutContour — его понимают RIP и плоттеры: режут, но не печатают. «Свой контур» — нарисуйте его в макете на слое с названием CutContour.</div>
-      <div class="row"><span class="k">Метки плоттера</span><select id="rollMarks" class="wide"><option value="0">нет</option><option value="1">Summa (OPOS)</option><option value="2">Graphtec (ARMS)</option><option value="3">Mimaki</option></select></div>
+      <div class="row"><span class="k">Метки плоттера</span><select id="rollMarks" class="wide"><option value="0">нет</option><option value="1">Summa (OPOS)</option><option value="4">SignMaster (Graphtec ARMS)</option><option value="2">Graphtec — квадраты</option><option value="3">Mimaki</option></select></div>
       <div class="row adv" id="rollMarkRow"><span class="k">Размер метки × отступ</span><input type="text" id="rollMSize"><span class="x">×</span><input type="text" id="rollMGap"></div>
       <div class="ex adv">По меткам плоттер находит напечатанное и режет точно по контуру. Summa и Graphtec — чёрные квадраты, Mimaki — уголки. На длинной раскладке Summa и Graphtec получают ещё метки по бокам через 0,5 м.</div>
     </div>
-    <div class="card" id="cardSheet"><h4>Лист и карта, мм</h4>
+    <div class="card" id="cardSheet"><h4 id="cardSheetH">Лист и карта, мм</h4>
       <div class="row adv" id="presetRow"><span class="k">Формат</span><select id="sheetPreset" class="wide"></select></div>
       <div class="ex adv" id="presetNote">Для цифры отступ 5 мм — поле, которое машина не пропечатывает. Точнее — в инструкции к принтеру.</div>
       <div class="row" id="sheetRow"><span class="k" id="sheetLbl">Лист (стол)</span><input type="text" id="sheetW"><span class="x">×</span><input type="text" id="sheetH"><button class="btn" data-act="swap" title="Повернуть лист" style="margin-left:4px;padding:0 6px">⇄</button></div>
@@ -767,7 +833,7 @@
     <div class="card" id="cardPlace"><h4>Как расставить карты, мм</h4>
       <div class="row"><span class="k">Зазор ↔ × ↕</span><input type="text" id="gapX"><span class="x">×</span><input type="text" id="gapY"></div>
       <div class="eqonly" data-eq="uv">
-        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="t" title="сверху посередине"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="l" title="слева посередине"></a><a data-act="pt9" data-v="c" title="по центру"></a><a data-act="pt9" data-v="r" title="справа посередине"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="b" title="снизу посередине"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt"></span></span></div>
+        <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9 pt4"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt"></span></span></div>
         <div class="ex under">С какого угла стола начать: туда прижмётся блок карт, там встанет карта 1 — с неё пойдут номера.</div>
       </div>
       <div class="row adv"><span class="k">Отступ от края листа</span><input type="text" id="margin"></div>
@@ -838,6 +904,7 @@
     <div class="ex under adv">Обычно не нужно: первый раз программа спросит имя файла, а дальше будет заменять его же — и раскладку, и рулон, и укладку по форме, и сборный лист. Поставьте галочку, если нужен ещё один файл рядом со старым.</div>
     <button class="btn main full" data-act="impose" id="impBtn" style="height:32px;margin-top:8px">Разложить в новый файл…</button>
     <div class="note" id="impBtnNote"></div>
+    <div class="ex keep cst" id="bkOut" style="display:none"></div>
     <div id="next1" class="next"></div>
   </div>
 
@@ -1056,6 +1123,8 @@
       <div class="row"><span class="k">Вылет, мм</span><input type="text" id="bleedW"></div>
       <div class="row"><span class="k">Чем заполнить</span><select id="bleedMode" class="wide"><option value="1">копией рисунка</option><option value="0">сплошным цветом</option></select></div>
       <div class="ex">Копия — когда у рисунка живой край: фото, градиент, узор. Сплошной цвет — когда фон одноцветный.</div>
+      <label class="chk"><input type="checkbox" id="bleedCut" checked>Линия реза — по краю рисунка (CutContour)</label>
+      <div class="ex under">Плоттер режет по краю рисунка, а печать заходит за него на вылет: при небольшом промахе ножа белого края не будет. Для плоттера вылет — около 2 мм.</div>
       <button class="btn full" data-act="bleedshape" data-mod="WP">Построить вылет</button>
     </div>
     </div>
@@ -1163,6 +1232,13 @@
       </div>
       <button class="btn main full" data-act="cutsave" id="cfBtn">Сохранить файл</button>
       <div class="ltres" id="cfOut" style="display:none"></div>
+    </div>
+    <div class="card eqonly" data-eq="plot"><h4>Метки SignMaster на файл печати</h4>
+      <div class="ex">Для макета, собранного вручную: метки встанут там же, где их поставит SignMaster, — шаблон из SignMaster совмещать не нужно. В файле должна быть линия реза цветом или слоем CutContour: SignMaster ставит метки вокруг неё.</div>
+      <div class="row"><span class="k">Отступ меток от макета, мм</span><input type="text" id="smGap" value="3"></div>
+      <div class="ex under">Как «Mark Position» в SignMaster. В ваших шаблонах — 3 мм.</div>
+      <button class="btn full" data-act="smmarks" data-mod="P">Поставить метки SignMaster</button>
+      <div class="ltres" id="smOut" style="display:none"></div>
     </div>
     </div>
     <div class="subpage" data-group="gCut" id="sLaser">
@@ -1389,6 +1465,8 @@
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function say(t) {
     var m = $('msg'); if (!t) { m.style.display = 'none'; return; } m.style.display = 'block'; m.innerText = t;
+    // строка сообщений — внизу длинной панели: если её не видно, прокрутить к ней (иначе кажется, что ничего не произошло)
+    try { var rb = m.getBoundingClientRect(); if (rb.bottom > (window.innerHeight || document.documentElement.clientHeight) - 40 || rb.top < 0) m.scrollIntoView(false); } catch (x) { }
     // «нет в ключе» от макроса: без повтора кода компьютера и контактов — они в плашке или кнопками
     var cut = String(t).search(/\s*Код (этого )?компьютера:/);
     if (cut > 0 && S && S.lic && S.lic.contact) lockMsg(String(t).substring(0, cut));
@@ -1570,7 +1648,7 @@
       { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' },
       { n: 'PDF для типографии', tab: 3, sub: 'sPdf', pf: 'digital', mod: '' }] },
     { id: 'offset', m: 'O', s: 'Офсет', n: 'Офсетная печать', steps: [
-      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' },
+      { n: 'Раскладка', tab: 1, modes: ['sheet', 'book', 'ctp'], mode: 'sheet', mod: '' }, { n: 'Вывод', tab: 2, sub: 'sOut', mod: '' },
       { n: 'PDF для типографии', tab: 3, sub: 'sPdf', pf: 'offset', mod: '' }] },
     { id: 'uv', m: 'U', s: 'УФ', n: 'УФ-планшет', steps: [
       { n: 'Раскладка', tab: 1, modes: ['sheet', 'nest'], mode: 'sheet', mod: '' }, { n: 'Белила и лак', tab: 2, sub: 'sInk', mod: 'UW' },
@@ -1918,7 +1996,7 @@
     var A = eqOf(eqCur), ai = eqActive(), st = ai >= 0 ? A.steps[ai] : null, ms = null;
     if (!st && tab == 1) for (i = 0; i < A.steps.length; i++) if (A.steps[i].tab == 1) { st = A.steps[i]; break; }
     if (st && st.tab == 1) ms = st.modes;
-    var M = { sheet: 'modeSheet', nest: 'modeNest', roll: 'modeRoll', book: 'modeBook' };
+    var M = { sheet: 'modeSheet', nest: 'modeNest', roll: 'modeRoll', book: 'modeBook', ctp: 'modeCtp' };
     for (var k in M) hideEl($(M[k]), !!ms && !inArr(ms, k));
     hideEl($('modesRow'), !!ms && ms.length < 2); hideEl($('modesNote'), !!ms && ms.length < 2);
     presetFill(); outEq(); cfUi(); ccFill(); if (eqCur == 'cut' && cutMachine == 'laser' && tab == 4 && subOn('sCost')) ctLaSync();
@@ -2715,7 +2793,7 @@
     $('gripRow').style.display = on ? 'none' : ''; $('gripNote').style.display = on ? 'none' : '';
     $('tailNote').style.display = on ? 'none' : '';
     $('klapan').disabled = $('plateCenter').checked;
-    $('sheetLbl').innerText = on ? 'Бумага' : 'Лист (стол)';
+    $('sheetLbl').innerText = on ? 'Бумага' : (eqCur == 'uv' ? 'Лист (стол)' : 'Лист');
     printerNote();
   }
   var impMode = 'sample';
@@ -2732,34 +2810,43 @@
     // готовая укладка открыта — сразу режим «По форме», один раз на файл
     if (S.nestRes && S.doc && lastResDoc != S.doc.name) { lastResDoc = S.doc.name; impMode = 'nest'; }
     if (!S.nestRes) lastResDoc = '';
-    var book = impMode == 'book', roll = impMode == 'roll', sel = impMode == 'sel' || roll, nest = impMode == 'nest';
+    var book = impMode == 'book', roll = impMode == 'roll', sel = impMode == 'sel' || roll, nest = impMode == 'nest', ctp = impMode == 'ctp';
     // «Лист» — это и весь документ, и выделенное: какой из двух — выбирается переключателем ниже
     var sheet = impMode == 'sample' || impMode == 'sel';
     $('modeSheet').className = 'btn' + (sheet ? ' sel' : ''); $('modeNest').className = 'btn' + (nest ? ' sel' : '');
-    $('modeRoll').className = 'btn' + (roll ? ' sel' : ''); $('modeBook').className = 'btn' + (book ? ' sel' : '');
+    $('modeRoll').className = 'btn' + (roll ? ' sel' : ''); $('modeBook').className = 'btn' + (book ? ' sel' : ''); $('modeCtp').className = 'btn' + (ctp ? ' sel' : '');
     $('srcRow').style.display = sheet ? '' : 'none';
     $('srcDoc').className = 'btn' + (impMode == 'sample' ? ' sel' : ''); $('srcSel').className = 'btn' + (impMode == 'sel' ? ' sel' : '');
     $('modeNote').innerText = { sample: 'Раскладывается весь документ: страницы — это стороны (первая — лицо, вторая — оборот). Номера и данные из шага «Номера» подставятся на каждое место.', sel: 'Раскладывается то, что выделено на странице, — визитка, флаер, наклейка. Одна сторона, все копии одинаковые. Можно собрать на один лист разные макеты.',
-      roll: 'На рулон: наклейки, плёнка, баннеры. Контур реза и метки для плоттера.', book: 'Брошюра на скрепку: страницы по листам в порядке для фальцовки.',
+      roll: 'На рулон: наклейки, плёнка, баннеры. Контур реза и метки для плоттера.', ctp: 'Готовый лист — на пластину печатника: клапан, метки, шкалы, подпись и PDF для вывода пластин.', book: 'Брошюра и книга: тетради на печатный лист — скрепка или КБС. Файл разворотами — сначала разрезать на полосы.',
       nest: 'Фигурные детали по их настоящему контуру: вкладываются друг в друга, материала уходит меньше. Для плоттера, лазера, фрезера.' }[impMode] || '';
     $('selBox').style.display = sel ? '' : 'none';
     $('rollBox').style.display = roll ? '' : 'none';
     $('nestBox').style.display = nest ? '' : 'none';
-    // у укладки по форме своя кнопка — общая «Разложить» ей не нужна
-    $('impBtn').style.display = nest ? 'none' : ''; $('impBtnNote').style.display = nest ? 'none' : '';
+    // у укладки по форме и у пластины своя кнопка — общая «Разложить» им не нужна
+    $('impBtn').style.display = nest || ctp ? 'none' : ''; $('impBtnNote').style.display = nest || ctp ? 'none' : '';
+    $('ctpBox').style.display = ctp ? '' : 'none';
+    if (!ctp) $('plOut').style.display = 'none';
     var hide = ['sheetRow', 'alignRow', 'colsBox', 'sheetOnly', 'fOffsetH', 'fOffset'];
     for (var hi = 0; hi < hide.length; hi++) $(hide[hi]).style.display = roll ? 'none' : '';
     var hideB = ['cardSheet', 'cardPlace', 'sheetBox', 'impCalc', 'sheetOnly', 'fOffsetH', 'fOffset', 'cutBox', 'impHint', 'selBox', 'rollBox'];
     $('bookBox').style.display = book ? '' : 'none';
-    if (book || nest) {
+    if (!book) $('bkOut').style.display = 'none';
+    if (book || nest || ctp) {
       for (var bi = 0; bi < hideB.length; bi++) $(hideB[bi]).style.display = 'none';
     } else { $('cardSheet').style.display = ''; $('cardPlace').style.display = ''; $('sheetBox').style.display = ''; $('impCalc').style.display = ''; $('impHint').style.display = ''; }
+    // брошюра: лист, печатник, клапан, метки — те же блоки, что у офсетного листа, без размера карты и своего оборота
+    var bkRows = [$('cutW').parentNode, $('radius').parentNode, $('bleed').parentNode, $('wtRow'), $('wtNote'), $('mirBox')];
+    for (var bki = 0; bki < bkRows.length; bki++) if (bkRows[bki]) bkRows[bki].style.display = book ? 'none' : '';
     if (book) {
-      var B = S.book || {}; if (!$('bkBleed').value) { $('bkBleed').value = B.bleed || '2'; $('bkCreep').value = B.creep || '0.1'; }
-      var np = +B.pages || 0; $('bookInfo').innerText = 'В документе страниц: ' + np + (np % 4 ? ' — не кратно 4, в конце будет ' + (4 - np % 4) + ' пустых.' : ' — листов: ' + np / 4 + '.');
+      $('cardSheet').style.display = ''; $('sheetOnly').style.display = ''; $('fOffsetH').style.display = ''; $('fOffset').style.display = '';
+      applyFolds(); if ($('cutMarks').checked) $('cutBox').style.display = '';
+      bookLoad(); bookUi(); bookPlan();
     }
+    $('cardSheetH').innerText = book ? 'Лист печати, мм' : 'Лист и карта, мм';
     if (roll) { var R = S.roll || {}; if (!$('rollW').value) { $('rollW').value = num(R.w); $('rollSide').value = num(R.side); $('rollQty').value = num(R.qty); $('rollCut').value = String(R.cut); $('rollMarks').value = String(R.marks); $('rollMSize').value = num(R.msize); $('rollMGap').value = num(R.mgap); } $('rollMarkRow').style.display = $('rollMarks').value == '0' ? 'none' : ''; }
-    else if (!book && !nest) { $('fOffset').style.display = ''; applyFolds(); if ($('cutMarks').checked) $('cutBox').style.display = ''; }
+    else if (!book && !nest && !ctp) { $('fOffset').style.display = ''; applyFolds(); if ($('cutMarks').checked) $('cutBox').style.display = ''; }
+    if (ctp) { $('askOut').parentNode.style.display = 'none'; plLoad(); plInfo(); } else $('askOut').parentNode.style.display = '';
     // люверсы — свой шаг, укладка — режим «По форме» здесь же
     var E = S.eye || {}; if (!$('eyeHole').value) { $('eyeHole').value = num(E.hole); $('eyeEdge').value = num(E.edge); $('eyeStep').value = num(E.step); $('eyeSides').value = String(E.sides); $('eyeHem').value = num(E.hem); $('eyeTarget').value = String(E.target); $('eyePrint').checked = !!E.print; }
     if (tab == 4) eyeCalc();
@@ -2775,6 +2862,7 @@
       $('nsW').value = num(NE.w); $('nsH').value = num(NE.h); $('nsMargin').value = num(NE.margin);
       $('nsGap').value = num(NE.gap); $('nsRot').value = String(NE.rot || 4); $('nsQual').value = NE.qual || 'good';
       $('nsMore').checked = NE.more !== false; $('nsMirror').checked = !!NE.mirror; $('nsDxf').checked = !!NE.dxf;
+      try { $('nsMarks').checked = LS.getItem('nsMarks') == '1'; $('smGap').value = LS.getItem('smGap') || '3'; } catch (x) { $('smGap').value = '3'; }
       $('nsInHoles').checked = NE.inHoles !== false; $('nsSpeed').value = NE.speed ? num(NE.speed) : '';
       nsKey = 'common'; nsSync();
     }
@@ -2794,7 +2882,7 @@
       ? '<div class="card"><span class="big">Открыт образец карты.</span><div class="ex">Из него макрос сделает отдельный файл — лист с картами. Сам образец не меняется.</div></div>'
       : '<div class="card"><span class="big">Открыта раскладка.</span><div class="ex">' + (S.imp.src ? 'Сделана из образца «' + esc(S.imp.src) + '». Поменяйте что нужно и нажмите «Переразложить» — образец откроется сам.'
                    : 'Образец для неё не найден — при «Переразложить» макрос попросит его выбрать.') + '</div></div>';
-    $('impBtn').innerText = book ? 'Сделать развороты…' : roll ? 'Разложить на рулон…' : sel ? 'Разложить выделенное в новый документ' : (S.doc.sample ? 'Разложить в новый файл…' : 'Переразложить…');
+    $('impBtn').innerText = book ? 'Разложить тетради…' : roll ? 'Разложить на рулон…' : sel ? 'Разложить выделенное в новый документ' : (S.doc.sample ? 'Разложить в новый файл…' : 'Переразложить…');
     $('impBtnNote').innerText = book ? 'Спросит, куда сохранить. Исходная брошюра не меняется.' : roll ? 'Спросит, куда сохранить. Лист — ширина рулона, длина по тиражу; контур реза и метки — отдельными слоями.' : sel ? 'Откроется новый документ: лист с копиями и страница «Шаблон стола». Сохраните его сами.'
       : (S.doc.sample ? 'Спросит, куда сохранить; в конце файла появится страница «Шаблон стола».'
       : 'Предложит сохранить поверх этой раскладки. Старая заменится новой.');
@@ -2816,7 +2904,7 @@
     if (!$('gMargin').value) $('gMargin').value = T.gMargin || '5';
     $('gCenter').checked = T.gCenter == '1';
     $('askOut').checked = S.askOut === true;
-    if (!$('bleedW').value) $('bleedW').value = T.bleedW || '3';
+    if (!$('bleedW').value) { $('bleedW').value = T.bleedW || (eqCur == 'plot' ? '2' : '3'); if (T.bleedCut === '0') $('bleedCut').checked = false; }
     $('bleedMode').value = String(T.bleedMode == null ? '1' : T.bleedMode);
     if (S.pf.bleed === '' || S.pf.safe === '') pfDefaults(); else { $('pfBleed').value = S.pf.bleed; $('pfSafe').value = S.pf.safe; }
   }
@@ -3157,6 +3245,7 @@
     p.push('nsMore=' + ($('nsMore').checked ? 1 : 0));
     p.push('nsMirror=' + ($('nsMirror').checked ? 1 : 0));
     p.push('nsDxf=' + ($('nsDxf').checked ? 1 : 0));
+    if (eqCur == 'plot') p.push('nsMarks=' + ($('nsMarks').checked ? 1 : 0));
     var mill = eqCur == 'cut' && cutMachine == 'mill';
     p.push('nsMill=' + (mill ? 1 : 0), 'nsStripCut=' + ($('nsStripCut').checked ? 1 : 0), 'nsStripLines=' + ($('nsStripLines').checked ? 1 : 0));
     // способ, заполнение, точка старта и полосы — у резки на станке; остальным — по форме, как было
@@ -3769,7 +3858,7 @@
       'Вывод': ['Пробный лист, потом весь заказ — в PDF или сразу на принтер.', 'order', { sheets: 2 }],
       'PDF для типографии': ['PDF/X-4 для цифровой печати: цвет CMYK, шрифты внутри, вылет по формату. Перед сохранением макет проверится.', '', null] } },
     offset: { lead: 'Офсет: спуск на печатный лист, клапан, шкала, кресты, пластина печатника, свой оборот, брошюра и PDF для типографии. Проверка, правки и номера — в «Макете».', st: {
-      'Раскладка': ['«Лист» — карты на печатный лист; клапан, шкала, кресты и пластина — в разделе «Офсет». «Брошюра» — развороты для фальцовки.', 'plate', {}],
+      'Раскладка': ['«Лист» — карты на печатный лист; клапан, шкала, кресты и пластина — в разделе «Офсет». «Брошюра» — развороты для фальцовки. «Пластина» — готовый лист на пластину печатника с метками и PDF для вывода.', 'plate', {}],
       'Вывод': ['PDF с номерами — по файлу на лист или одним файлом.', 'order', { sheets: 2 }],
       'PDF для типографии': ['PDF/X-1a — его принимает любая типография. Перед сохранением макет проверится.', '', null] } },
     cut: { lead: 'Резка на станке — лазер CO2 или фрезер: укладка деталей по форме, объёмные буквы, порядок реза, файл для станка и цена. Станок выбирается переключателем «Лазер · Фрезер».', st: {
@@ -5571,8 +5660,11 @@
   function startKey() { return eqCur == 'cut' ? cutMachine : eqCur; }
   function cutStart() {
     var k = startKey(), v = ''; try { v = LS.getItem('cutStart_' + k) || ''; } catch (x) { }
+    if (k == 'uv') {
+      if (!PT9N[v]) v = ($('alignV').value == '1' ? 'b' : 't') + ($('alignH').value == '2' ? 'r' : 'l');
+      return v.length == 2 ? v : (v == 'b' ? 'b' : 't') + (v == 'r' ? 'r' : 'l');
+    }
     if (PT9N[v]) return v;
-    if (k == 'uv') { v = ($('alignV').value == '2' ? 't' : $('alignV').value == '1' ? 'b' : '') + ($('alignH').value == '1' ? 'l' : $('alignH').value == '2' ? 'r' : ''); return v || 'c'; }
     return k == 'mill' ? 'bl' : 'tl';
   }
   // УФ, «На лист»: точка старта = куда прижат блок карт (те же «Прижать блок», только квадратиком)
@@ -5598,13 +5690,24 @@
     return '<svg class="pt9i" viewBox="0 0 4800 4800" width="24" height="24" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="' + d + '"/>' +
            '<path fill="currentColor" d="' + e + '"/></svg>';
   }
+  function pt4Svg(v) {
+    var d = '', i, x, y, K = ['tl', 'tr', 'bl', 'br'];
+    for (i = 0; i < 4; i++) {
+      x = (i % 2) * 3600; y = Math.floor(i / 2) * 3600;
+      d += 'M' + x + ' ' + y + 'h1200v1200h-1200z';
+      if (K[i] != v) d += 'M' + (x + 900) + ' ' + (y + 300) + 'h-600v600h600z';
+    }
+    var e = 'M1200 450h2400v300h-2400zM1200 4050h2400v300h-2400zM450 1200h300v2400h-300zM4050 1200h300v2400h-300z';
+    return '<svg class="pt9i" viewBox="0 0 4800 4800" width="24" height="24" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="' + d + '"/>' +
+           '<path fill="currentColor" d="' + e + '"/></svg>';
+  }
   function pt9Ui() {
     uvAlignSync();
     var v = cutStart(), a = document.querySelectorAll('.pt9 a'), b = document.querySelectorAll('.pt9'), i, s;
     for (i = 0; i < a.length; i++) a[i].className = a[i].getAttribute('data-v') == v ? 'on' : '';
     for (i = 0; i < b.length; i++) {
       s = b[i].getElementsByTagName('svg')[0]; if (s) b[i].removeChild(s);
-      b[i].insertAdjacentHTML('afterbegin', pt9Svg(v));
+      b[i].insertAdjacentHTML('afterbegin', /\bpt4\b/.test(b[i].className) ? pt4Svg(v) : pt9Svg(v));
     }
     if ($('laStartTxt')) $('laStartTxt').innerText = PT9N[v];
     if ($('nsStartTxt')) $('nsStartTxt').innerText = PT9N[v];
@@ -5863,7 +5966,152 @@
     return p.join('|');
   }
 
+  // ---- пластина для вывода: печатник, клапан, набор меток (запоминается у каждого печатника) ----
+  var PL = ['plPrinter', 'plW', 'plH', 'plK', 'plCenter', 'plTo', 'plPaperW', 'plPaperH', 'plBleed', 'plPreset', 'plCorners', 'plWedges', 'plBar', 'plKlap', 'plFooter', 'plCompany'];
+  var PL_DEF = { plPrinter: '', plW: '', plH: '', plK: '', plCenter: false, plTo: 'paper', plPaperW: '', plPaperH: '', plBleed: '0', plPreset: 'politext', plCorners: '1', plWedges: true, plBar: '0', plKlap: true, plFooter: true, plCompany: 'POLITEXT' };
+  // наборы меток — как в файлах бюро
+  var PL_SET = { politext: { plCorners: '1', plWedges: true, plBar: '0', plKlap: true, plFooter: true },
+    viza: { plCorners: '1', plWedges: false, plBar: '1', plKlap: true, plFooter: false },
+    amirbek: { plCorners: '1', plWedges: false, plBar: '2', plKlap: true, plFooter: true } };
+  var PL_MARKS = ['plCorners', 'plWedges', 'plBar', 'plKlap', 'plFooter'];
+  var plLoaded = false;
+  function plVal(k, v) { var e = $(k); if (e.type == 'checkbox') e.checked = !!v; else e.value = v; }
+  function plGet(k) { var e = $(k); return e.type == 'checkbox' ? e.checked : e.value; }
+  function plLoad() {
+    if (plLoaded) return;
+    plLoaded = true;
+    var o = '<option value="">— свой размер пластины —</option>', P = window.PRINTERS || [];
+    for (var i = 0; i < P.length; i++) o += '<option value="' + i + '">' + esc(P[i][0]) + ' · ' + P[i][1] + '×' + P[i][2] + ' · ' + klapanText(P[i][3]) + '</option>';
+    $('plPrinter').innerHTML = o;
+    var s = {}; try { s = JSON.parse(LS.getItem('plateSet') || '{}') || {}; } catch (x) { }
+    for (i = 0; i < PL.length; i++) plVal(PL[i], s[PL[i]] != null ? s[PL[i]] : PL_DEF[PL[i]]);
+    plUi();
+  }
+  function plSave() {
+    var o = {};
+    for (var i = 0; i < PL.length; i++) o[PL[i]] = plGet(PL[i]);
+    try { LS.setItem('plateSet', JSON.stringify(o)); } catch (x) { }
+  }
+  function plPrinterName() { var P = window.PRINTERS || [], i = $('plPrinter').value; return i !== '' && P[i] ? P[i][0] : ''; }
+  function plUi() {
+    var P = window.PRINTERS || [], i = $('plPrinter').value, t = '';
+    if (i !== '' && P[i]) { t = P[i][0] + ': пластина ' + P[i][1] + '×' + P[i][2] + ', ' + klapanText(P[i][3]) + (P[i][4] ? '. ' + P[i][4] : '.'); if (P[i][3] == null) t += ' Клапан впишите сами.'; }
+    $('plPrinterNote').innerText = t; $('plPrinterNote').style.display = t ? '' : 'none';
+    $('plK').disabled = $('plCenter').checked;
+  }
+  // набор меток печатника: свой сохранённый, иначе — по имени (VIZA, AMIRBEK), иначе шкалки Politext
+  function plPresetFor(name) {
+    var k = '';
+    try { k = LS.getItem('plPreset_' + name) || ''; } catch (x) { }
+    if (k) { try { return JSON.parse(k); } catch (x) { } }
+    var p = /VIZA|VISA/i.test(name) ? 'viza' : (/AMIRBEK/i.test(name) ? 'amirbek' : 'politext'), o = { plPreset: p };
+    for (var m in PL_SET[p]) o[m] = PL_SET[p][m];
+    return o;
+  }
+  function plRemember() {
+    var o = { plPreset: $('plPreset').value };
+    for (var i = 0; i < PL_MARKS.length; i++) o[PL_MARKS[i]] = plGet(PL_MARKS[i]);
+    try { LS.setItem('plPreset_' + plPrinterName(), JSON.stringify(o)); } catch (x) { }
+  }
+  function plChange(id) {
+    if (id == 'plPrinter') {
+      var P = window.PRINTERS || [], i = $('plPrinter').value;
+      if (i !== '' && P[i]) {
+        $('plW').value = P[i][1]; $('plH').value = P[i][2];
+        $('plCenter').checked = P[i][3] != null && P[i][3] < 0;
+        $('plK').value = P[i][3] != null && P[i][3] >= 0 ? P[i][3] : '';
+        var o = plPresetFor(P[i][0]);
+        for (var k in o) plVal(k, o[k]);
+      }
+    } else if (id == 'plPreset') {
+      var st = PL_SET[$('plPreset').value];
+      if (st) for (var m in st) plVal(m, st[m]);
+      plRemember();
+    } else if (inArr(PL_MARKS, id)) {
+      $('plPreset').value = 'own'; plRemember();
+    }
+    plUi(); plSave(); plInfo();
+  }
+  function plParams() {
+    var p = [];
+    for (var i = 0; i < PL.length; i++) if (PL[i] != 'plPrinter' && PL[i] != 'plPreset') { var v = plGet(PL[i]); p.push(PL[i] + '=' + (v === true ? 1 : (v === false ? 0 : v))); }
+    p.push('plPrinter=' + plPrinterName());
+    return p.join('|');
+  }
+  function plInfo() {
+    var el = $('plInfo'), r = call('PlateInfo', plParams()) || '', a = r.split('|');
+    if (a[0] != 'ok') { el.className = 'info warn'; el.innerText = a.slice(1).join('|') || 'Откройте готовый лист.'; return; }
+    var t = (+a[1] == 1 ? 'Страница ' : 'Страниц ' + a[1] + ', каждая ') + a[2] + ' × ' + a[3] + ' мм, работа на ней ' + a[4] + ' × ' + a[5] + ' мм. ';
+    t += 'Над листом до края пластины остаётся ' + a[6] + ' мм.';
+    if (a[7]) t += ' ' + a[7];
+    el.className = a[7] ? 'info warn' : 'info'; el.innerText = t;
+  }
+
+  // ---- брошюра: свои настройки (запоминаются в панели) и «что получится» до раскладки ----
+  var BK = ['bkBind', 'bkP', 'bkCover', 'bkBlank', 'bkBleed', 'bkTrim', 'bkCreep', 'bkGrind', 'bkPaper', 'bkCollate', 'bkFold', 'bkCut', 'bkAuto', 'bkCopies'];
+  var BK_DEF = { bkBind: 'saddle', bkP: '0', bkCover: false, bkBlank: 'back', bkBleed: '3', bkTrim: '6', bkCreep: '0.1', bkGrind: '3', bkPaper: '0.1', bkCollate: true, bkFold: true, bkCut: true, bkAuto: true, bkCopies: 'auto' };
+  var bookLoaded = false;
+  function bookLoad() {
+    if (bookLoaded) return;
+    bookLoaded = true;
+    var o = {}; try { o = JSON.parse(LS.getItem('bookSet') || '{}') || {}; } catch (x) { }
+    for (var i = 0; i < BK.length; i++) {
+      var k = BK[i], v = o[k] != null ? o[k] : BK_DEF[k], e = $(k);
+      if (e.type == 'checkbox') e.checked = !!v; else e.value = v;
+    }
+  }
+  function bookSave() {
+    var o = {};
+    for (var i = 0; i < BK.length; i++) { var e = $(BK[i]); o[BK[i]] = e.type == 'checkbox' ? e.checked : e.value; }
+    try { LS.setItem('bookSet', JSON.stringify(o)); } catch (x) { }
+  }
+  function bookParams() {
+    var p = [];
+    for (var i = 0; i < BK.length; i++) { var e = $(BK[i]); p.push(BK[i] + '=' + (e.type == 'checkbox' ? (e.checked ? 1 : 0) : e.value)); }
+    // файл разворотами — раскладка сама разрежет его на полосы с этими настройками
+    p.push('spW=' + $('spW').value, 'spH=' + $('spH').value, 'spCover=' + ($('spCover').checked ? 1 : 0));
+    return p.join('|');
+  }
+  function bookUi() {
+    var sad = $('bkBind').value == 'saddle';
+    $('bkSaddleBox').style.display = sad ? '' : 'none'; $('bkPerfectBox').style.display = sad ? 'none' : '';
+  }
+  // «A5 » — если формат стандартный (в любой ориентации), иначе пусто
+  function paperName(w, h) {
+    var F = { 'A6': [105, 148], 'A5': [148, 210], 'A4': [210, 297], 'A3': [297, 420], 'B5': [176, 250], 'B6': [125, 176] }, a = +String(w).replace(',', '.'), b = +String(h).replace(',', '.');
+    for (var k in F) if ((Math.abs(a - F[k][0]) < 1 && Math.abs(b - F[k][1]) < 1) || (Math.abs(a - F[k][1]) < 1 && Math.abs(b - F[k][0]) < 1)) return k + ' ';
+    return '';
+  }
+  function bookPlan() {
+    var r = call('BookPlan', impParams(), bookParams()) || '', a = r.split('|'), el = $('bookInfo');
+    if (a[0] != 'ok') { el.className = 'info warn'; el.innerText = a.slice(1).join('|') || 'Откройте документ брошюры.'; return; }
+    var sizes = a[3].split(','), n = sizes.length, t = 'Страниц ' + a[1] + ' → ', same = true;
+    for (var si = 1; si < n; si++) if (sizes[si] != sizes[0]) same = false;
+    t += (a[6] == '1' ? 'обложка и ' : '') + n + ' ' + plural(n, 'тетрадь', 'тетради', 'тетрадей') + (same ? (n > 1 ? ' по ' : ' на ') + sizes[0] + ' полос' : ' (' + sizes.join(' + ') + ' полос)');
+    t += '. Листов печати — ' + a[5] + ', у каждого лицо и оборот.';
+    if (a[10] == '1' && a[9]) {
+      var sz = a[9].split('x'); $('sheetW').value = sz[0]; $('sheetH').value = sz[1];
+      t += ' Лист ' + sz[0] + ' × ' + sz[1] + ' мм — подобран.';
+    }
+    if (a[8] == '1') t += ' Тетрадь встаёт на лист повёрнутой на 90°.';
+    if (+a[11] > 1) t += a[12] == '1' ? ' Своим оборотом: на листе ' + a[11] + ' тетради (лицо и оборот рядом), одна форма на тетрадь.' : ' На листе ' + a[11] + ' одинаковых тетради — листов на тираж в ' + a[11] + ' раза меньше.';
+    if (a[7]) t += ' ' + a[7];
+    // страницы широкие — похоже на развороты: раскладывать такое нельзя, сначала разрезать
+    if (a[13]) {
+      // файл разворотами: расчёт тетрадей по нему неверен — только что не так и что сделать
+      var g = a[13].split(';'), fmtN = paperName(g[0], g[1]);
+      if (!$('spW').value) { $('spW').value = g[0]; $('spH').value = g[1]; }
+      el.className = 'info warn';
+      el.innerText = (g[2].indexOf(',') < 0 && g[2].indexOf('–') < 0 ? 'Страница ' + g[2] + ' — разворот' : 'Страницы ' + g[2] + ' — развороты') +
+        ' (вдвое шире полосы)' + (g[3] ? ', ' + g[3] + ' — одиночные полосы' : '') + ' ' + fmtN + g[0] + ' × ' + g[1] + ' мм. ' +
+        '«Разложить тетради» сначала сама разрежет его на полосы (формат — выше, в «Файл пришёл разворотами?»; если обложка пришла разворотом «последняя | первая» — поставьте там галочку), потом разложит и откроет готовый файл.';
+      return;
+    }
+    el.className = 'info'; el.innerText = t;
+  }
+
   function impCalc() {
+    if (impMode == 'book') { bookPlan(); return; }
     if (impMode == 'sel' && $('gang').checked) {
       $('impCalc').innerText = call('GangInfo', impParams(), $('gangQty').value);
       $('sheetBox').innerHTML = '';
@@ -5932,7 +6180,14 @@
     s += '<rect x="1" y="1" width="' + sd + '" height="' + L * k + '" fill="' + SCH.dead + '"/><rect x="' + (1 + W * k - sd) + '" y="1" width="' + sd + '" height="' + L * k + '" fill="' + SCH.dead + '"/>';
     for (var r = 0; r < n; r++) for (var q = 0; q < c; q++)
       s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + Math.max(1, cw * k) + '" height="' + Math.max(1, ch * k) + '" fill="' + SCH.card + '" stroke="' + ($('rollCut').value != '0' ? '#e040a0' : SCH.cardEdge) + '" stroke-width="0.6"/>';
-    if ($('rollMarks').value != '0') {
+    // SignMaster: кружки слева и справа — верхняя и нижняя пары на уровне краёв блока, между ними через ~300 мм; треугольник-«верх»
+    if ($('rollMarks').value == '4') {
+      var g4 = (parseFloat($('rollMGap').value) || 3), d4 = (parseFloat($('rollMSize').value) || 4), r4 = Math.max(1.5, d4 * k / 2);
+      var xl = (x0 - g4 - d4 / 2) * k, xr = (x0 + bw + g4 + d4 / 2) * k, n4 = Math.max(1, Math.round(bh / 300));
+      for (var i4 = 0; i4 <= n4; i4++) { var y4 = (y0 + bh * i4 / n4) * k; s += '<circle cx="' + (1 + xl) + '" cy="' + (1 + y4) + '" r="' + r4 + '" fill="#1f1f1f"/><circle cx="' + (1 + xr) + '" cy="' + (1 + y4) + '" r="' + r4 + '" fill="#1f1f1f"/>'; }
+      var cx4 = 1 + (xl + xr) / 2, yb4 = 1 + y0 * k - r4 - 1;
+      s += '<path d="M' + (cx4 - r4 * 1.2) + ' ' + yb4 + 'L' + (cx4 + r4 * 1.2) + ' ' + yb4 + 'L' + cx4 + ' ' + (yb4 - r4 * 2) + 'z" fill="#1f1f1f"/>';
+    } else if ($('rollMarks').value != '0') {
       var g = (parseFloat($('rollMGap').value) || 10) * k, m = Math.max(2, (parseFloat($('rollMSize').value) || 3) * k);
       var pts = [[x0 * k - g - m, y0 * k - g - m], [(x0 + bw) * k + g, y0 * k - g - m], [x0 * k - g - m, (y0 + bh) * k + g], [(x0 + bw) * k + g, (y0 + bh) * k + g]];
       for (var pi = 0; pi < 4; pi++) s += '<rect x="' + (1 + pts[pi][0]) + '" y="' + (1 + pts[pi][1]) + '" width="' + m + '" height="' + m + '" fill="#1f1f1f"/>';
@@ -6175,7 +6430,7 @@
     }
     if (ac == 'bleedshape') {
       say('Строю вылет по форме…');
-      setTimeout(function () { say(call('BleedShape', $('bleedW').value, $('bleedMode').value)); }, 30);
+      setTimeout(function () { say(call('BleedShape', $('bleedW').value, $('bleedMode').value, $('bleedCut').checked ? '1' : '0')); }, 30);
       return;
     }
     if (ac == 'guides') { say(call('GuidesRun', $('gMargin').value, $('gCenter').checked ? '1' : '0', $('gClear').checked ? '1' : '0')); return; }
@@ -6245,6 +6500,12 @@
     }
     if (ac == 'cphone') { var ph = contacts().phone; cardSay(e, copyText(ph) ? 'Номер скопирован: ' + ph : 'Номер: ' + ph); return; }
     if (ac == 'ccode') { var mc = (S && S.lic && S.lic.code) || ''; cardSay(e, copyText(mc) ? 'Код компьютера скопирован: ' + mc : 'Код компьютера: ' + mc); return; }
+    if (ac == 'smmarks') {
+      var sg = $('smGap').value || '3'; try { LS.setItem('smGap', sg); } catch (x) { }
+      var smr = call('SmMarks', sg) || 'Макрос не ответил.';
+      $('smOut').style.display = ''; $('smOut').innerText = smr; say(smr);
+      return;
+    }
     if (ac == 'pt9') { try { LS.setItem('cutStart_' + startKey(), e.getAttribute('data-v')); } catch (x) { } pt9Ui(); if (eqCur == 'uv' && S) impCalc(); return; }
     if (ac == 'machine') {
       if (laReady) laMachSave(cutMachine);
@@ -6508,9 +6769,30 @@
       return;
     }
     if (a == 'impose' && impMode == 'sel') a = 'imposeSel';
+    if (a == 'spsplit') {
+      var so = $('spOut'); so.style.display = ''; so.className = 'ex keep cst'; so.innerText = 'Режу на полосы… Ход работы — в CorelDRAW.';
+      var spw = $('spW').value, sph = $('spH').value, spc = $('spCover').checked ? '1' : '0', spb = $('bkBleed').value;
+      setTimeout(function () { var rs = call('SpreadSplit', spw, sph, spc, spb) || ''; so.innerText = rs; if (/^Готово/.test(rs)) so.className = 'ex keep cst ok'; else if (rs) so.className = 'ex keep cst warn'; say(rs); load(); }, 60);
+      return;
+    }
+    if (a == 'ctprun') {
+      var po = $('plOut'), pp = plParams();
+      po.style.display = ''; po.className = 'ex keep cst'; po.innerText = 'Ставлю на пластину… Ход работы — в CorelDRAW.';
+      setTimeout(function () {
+        var r8 = call('PlateRun', pp) || '';
+        po.style.display = r8 ? '' : 'none'; po.innerText = r8; po.className = 'ex keep cst' + (/^Готово/.test(r8) ? ' ok' : ' warn');
+        say(r8); load();
+      }, 60);
+      return;
+    }
     if (a == 'impose' && impMode == 'book') {
-      say('Делаю развороты…');
-      setTimeout(function () { var r6 = call('BookletRun', $('bkBleed').value, $('bkCreep').value); say(r6 ? r6 : ''); load(); }, 60);
+      var bo = $('bkOut'), bpp = impParams(), bkp = bookParams();
+      bo.style.display = ''; bo.className = 'ex keep cst'; bo.innerText = 'Раскладываю тетради… Ход работы — в CorelDRAW.';
+      setTimeout(function () {
+        var r6 = call('BookRun', bpp, bkp) || '';
+        bo.style.display = r6 ? '' : 'none'; bo.innerText = r6; bo.className = 'ex keep cst' + (/^Готово/.test(r6) ? ' ok' : ' warn');
+        say(r6); load();
+      }, 60);
       return;
     }
     if (a == 'impose' && impMode == 'roll') {
@@ -6573,6 +6855,8 @@
       return;
     }
     var id = e.id;
+    // в брошюре лист вписали руками — значит, подбирать не надо
+    if (impMode == 'book' && (id == 'sheetW' || id == 'sheetH') && $('bkAuto').checked) { $('bkAuto').checked = false; bookSave(); }
     if (id && (inArr(IMP, id) || id == 'cols' || id == 'rows' || id == 'mirror' || id == 'guides' || id == 'orient' || id == 'alignH' || id == 'alignV' || id == 'regMarks' || id == 'colorBar' || id == 'sheetInfo' || id == 'gripperSide' || id == 'gripper' || id == 'workTurn')) { impCalc(); return; }
     if (id == 'printer') {
       var P = window.PRINTERS || [], i = e.value;
@@ -6598,7 +6882,11 @@
     if (inArr(CK, id)) { calcSave(); calcUpdate(); return; }
     if (id == 'sheetPreset') { if (e.value) { var ps = e.value.split('|'); $('sheetW').value = ps[0]; $('sheetH').value = ps[1]; $('margin').value = ps[2]; } impCalc(); return; }
     if (id == 'backDX' || id == 'backDY') { return; }
-    if (id == 'rollMarks') { var dm = { '1': [3, 10], '2': [5, 10], '3': [10, 10] }[e.value]; if (dm) { $('rollMSize').value = dm[0]; $('rollMGap').value = dm[1]; } $('rollMarkRow').style.display = e.value == '0' ? 'none' : ''; impCalc(); return; }
+    if (id && id.indexOf('bk') == 0 && inArr(BK, id)) { bookSave(); bookUi(); bookPlan(); return; }
+    if (id && id.indexOf('pl') == 0 && inArr(PL, id)) { plChange(id); return; }
+    if (id == 'smGap') { try { LS.setItem('smGap', e.value); } catch (x) { } return; }
+    if (id == 'nsMarks') { try { LS.setItem('nsMarks', e.checked ? '1' : '0'); } catch (x) { } return; }
+    if (id == 'rollMarks') { var dm = { '1': [3, 10], '2': [5, 10], '3': [10, 10], '4': [4, 3] }[e.value]; if (dm) { $('rollMSize').value = dm[0]; $('rollMGap').value = dm[1]; } $('rollMarkRow').style.display = e.value == '0' ? 'none' : ''; impCalc(); return; }
     if (id == 'rollW' || id == 'rollSide' || id == 'rollQty' || id == 'rollCut' || id == 'rollMSize' || id == 'rollMGap') { impCalc(); return; }
     if (inArr(EYE, id) || id == 'eyePrint') { eyeCalc(); return; }
     if (id == 'cc_kind') { calKindChange(false); calPrevIdx = 0; calChanged(); return; }

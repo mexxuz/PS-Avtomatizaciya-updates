@@ -1,9 +1,9 @@
-version=1.8.4
-note=Обновления ставятся надёжнее: новая версия встаёт через секунду после закрытия CorelDRAW, а кнопка «Перезапустить CorelDRAW и обновить» сделает всё сама — закроет, обновит и откроет снова. Блок «Что-то не работает?» стал проще.
-file=VarPrint.gms|6938be5aedce1d6337d69debefb84a3ee9bba24f302f82d575111e057eae207c
-file=index.html|0785328a1f1e483a29d869a8dbff15f3dc8e965d7653986588e251d16548322b
-file=VarPrint_merge.exe|11b3aab257a6fcbda778b70031d6a68f19d87295aebdf2123da30f736e1250e6
-file=VarPrint_nest.exe|4865253aa703c355783a13d66ab14a94b2db626dd3db88f7283b6f2acfd58b6c
+version=1.8.5
+note=Брошюра и книга для офсета: тетради на 4–32 полосы, скрепка и КБС, обложка отдельно, пустые полосы на своём месте, файл разворотами режется на полосы сам, лист подбирается сам, несколько тетрадей на лист и «своим оборотом». Лист на пластину печатника для CTP. Плоттер: метки SignMaster — на рулоне, по форме и кнопкой на любой файл; вылет с линией реза по краю рисунка. УФ: точка старта — четыре угла стола. Ответы кнопок теперь видны сразу.
+file=VarPrint.gms|d7176b73230123e7cee286e1b23fd11522ca99b05bdfa5b88539e3931c1a9b34
+file=index.html|209cf35eeb15e4fe378b7d5aa8251f05f827689c64f7b4092939a8856224247a
+file=VarPrint_merge.exe|ffaf1e2959bfa3bcc167b1e6f3efe03cbf342f6cdef5e7a56dbd0c88f7f4af85
+file=VarPrint_nest.exe|5c9fb6a885ac27361c9f680ab0303532d820aaf297d0283935627fa5e4479829
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=KRyJykl8mlUapbv3HgTRML7nj1MNMeCMHhDtb730OtryKB_DLLHDMXpLWqp1LexUcClmZ0W6q1ZMDa2NpYmGpw
+sig=bvqGmO4chHQEXiCzitiHpRgWDrF0ats76gztl2TdAJJDk7dmAdpEOoOv4Gmehbauw-xAbRYvierBwc63tZ8p5g
