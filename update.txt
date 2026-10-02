@@ -1,9 +1,9 @@
-version=1.8.5
-note=Брошюра и книга для офсета: тетради на 4–32 полосы, скрепка и КБС, обложка отдельно, пустые полосы на своём месте, файл разворотами режется на полосы сам, лист подбирается сам, несколько тетрадей на лист и «своим оборотом». Лист на пластину печатника для CTP. Плоттер: метки SignMaster — на рулоне, по форме и кнопкой на любой файл; вылет с линией реза по краю рисунка. УФ: точка старта — четыре угла стола. Ответы кнопок теперь видны сразу.
-file=VarPrint.gms|d7176b73230123e7cee286e1b23fd11522ca99b05bdfa5b88539e3931c1a9b34
-file=index.html|209cf35eeb15e4fe378b7d5aa8251f05f827689c64f7b4092939a8856224247a
-file=VarPrint_merge.exe|6b41a58d8f99064d8b9fb90ae12a12f1302f6ddc8b019ba519ac255aac074b1a
-file=VarPrint_nest.exe|fd19e8a93bca1494ee82baf69b627dd73e5e9d7f617f36a4d730916931fa56a5
+version=1.8.6
+note=Офсет: раскладка флаеров по умолчанию (еврофлаер, рез в одну линию, метки, шкалы), свой оборот с вариантами (вбок или через голову, книжный или календарный) и цветом на превью. Вывод «по содержимому» для РИПа. PDF раскладки стал в десятки раз легче. Превью листов для бланка заказа. УФ: блок по центру стола, настройки шаблона в «Раскладке». Шаги можно переставлять перетаскиванием. Спецкраски — по одной галочке. Проверка ловит картинку на слое белил/лака. Новое поле нумерации получает первый свободный номер. Плавная анимация панели и управление с клавиатуры.
+file=VarPrint.gms|e5a8d2d0bad3ffcee47d965b4f15d50e2d05320170bdbf2a0cdc0580f7725fb0
+file=index.html|eed0e8077471429204e24ec20a0877a28702fe33ce328f4bb19f4eb6eecc8668
+file=VarPrint_merge.exe|9c8349f340350068e77756772dfc979c9c36bca0df69b9c8c3eca7f4e57f2191
+file=VarPrint_nest.exe|73d8f9909789c9100e868c8ebc7ea23b429ee14826cc9cfd0f5fca9379fac834
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=cIp5Em1dycxwKzEF-HxkwHLuSKcg4npEL48lIOMAKXMXb2iCOA9ez1RPBYSm9q4T1oeF4HHTU1vUugPhpZ7W3Q
+sig=HoRTlChjnnL56V4ueSTZkRMJHzg_LcibnzxGZrrmWDA95h5uYf5ikUvhLMKABQ1yuqVqPUKhLbXofNyjqBqyyQ

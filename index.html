@@ -15,16 +15,68 @@
   .tab.on { background: #1d4470; color: #fff; }
   .page { display: none; padding: 0 10px 10px; }
   .page.on { display: block; }
+  /* Анимации — короткие и тихие: панель рабочая, движение только подсказывает, что поменялось.
+     Только на действия человека (смена шага, раскрытие, сообщение), не на каждое обновление панели */
+  @keyframes vpIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes vpFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes vpTip { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  /* ПЛАВНО ВЕЗДЕ: у всего, на что наводят и нажимают, цвет, фон, рамка, прозрачность и тень меняются за 0,2 с.
+     Частные правила ниже (кнопки, вкладки, плашки) уточняют — у них ещё и сдвиг/масштаб */
+  a, button, label, [data-act], .it, .tile, .sec-h, .calq, .k, .lb, .note, .ex, .info, svg, svg *, .x {
+    transition: color .2s ease-out, background-color .2s ease-out, border-color .2s ease-out, opacity .2s ease-out, box-shadow .2s ease-out, fill .2s ease-out, stroke .2s ease-out; }
+  /* всё, что появляется из скрытого, — проявляется: раскрытые разделы, подсказки «?», вкладки внутри шага,
+     затемнение под «Помощью», полоса обучения */
+  .fold-body, .calhelp, .subpage.on, .tourbar { animation: vpFade .2s ease-out; }
+  body.svcopen .svcdim { animation: vpFade .2s ease-out; }
+  /* уголок раздела поворачивается, а не перескакивает */
+  .sec-h .caret { transition: transform .22s cubic-bezier(.2, .8, .2, 1), border-color .2s ease-out; }
+  .page.on.enter { animation: vpIn .18s ease-out; }
+  /* кнопки: подсветка наведения проявляется, нажатие — короткое «вдавливание», отпускание — мягко назад */
+  .btn { transition: background-color .18s ease-out, border-color .18s ease-out, color .18s ease-out, opacity .18s ease-out, transform .22s cubic-bezier(.2, .8, .2, 1); }
+  .btn:active { transform: scale(.96); transition-duration: .06s; }
+  .btn.main:active { background: #183a60; border-color: #183a60; }
+  .seg .btn:active, .modes .btn:active { transform: scale(.98); }
+  .sub-opt { animation: vpFade .15s ease-out; }
+  /* наведение — подсветка проявляется, а не щёлкает */
+  .stp .st, .eq, .subtabs .sub, .svchd, .eqpick .it, .ddpop div.it, .modesw a, .lnk { transition: color .2s ease-out, background-color .2s ease-out, border-color .2s ease-out, transform .22s cubic-bezier(.2, .8, .2, 1); }
+  /* пункты и значки при нажатии чуть «вдавливаются» */
+  .stp .st:active, .eq:active { transform: scale(.95); transition-duration: .06s; }
+  #tabs .eq:hover { background-color: #363636; }
+  #tabs .eq.on:hover { background-color: #1d4470; }
+  .subtabs .sub:active { transform: scale(.97); transition-duration: .06s; }
+  /* смена пункта: синяя черта переезжает под новый пункт, значок оборудования заливается плавно */
+  .stp { position: relative; }
+  .stp.hasind .st.on { border-bottom-color: transparent; }
+  .stp .ind { position: absolute; bottom: -1px; height: 2px; background: #4a86c5; transition: left .32s cubic-bezier(.2, .8, .2, 1), width .32s cubic-bezier(.2, .8, .2, 1); }
+  .stp .ind.noanim { transition: none; }
+  @keyframes vpEqOn { from { background-color: #333333; } to { background-color: #1d4470; } }
+  .eq.on.just { animation: vpEqOn .3s ease-out; }
+  /* сообщения: первое въезжает снизу, следующее на месте вспыхивает синей рамкой и проявляется заново, пустое — гаснет */
+  @keyframes vpMsgNew { 0% { opacity: .25; border-color: #4a86c5; } 40% { opacity: 1; } 100% { opacity: 1; border-color: #3c3c3c; } }
+  .msg.show { animation: vpIn .18s ease-out; }
+  .msg.again { animation: vpMsgNew .45s ease-out; }
+  .msg.gone { opacity: 0; transition: opacity .18s ease-in; }
+  .cst.show { animation: vpIn .18s ease-out; }
+  /* «Без анимаций» в «Вид панели» (и системная настройка, где браузер её знает) — всё сразу на месте */
+  body.nomotion *, body.nomotion *:before, body.nomotion *:after { animation: none !important; transition: none !important; }
+  body.nomotion .btn:active { transform: none; }
+  /* поля: рамка и подсветка при наведении и фокусе проявляются плавно; у открытого списка поле подсвечено как в фокусе */
+  input[type=text], textarea, select { transition: border-color .18s ease-out, box-shadow .18s ease-out, background-color .18s ease-out, color .18s ease-out; }
+  input[type=text]:focus, textarea:focus { background-color: #2b2b2b; }
+  select.ddon { border-color: #4a86c5; box-shadow: 0 0 0 1px #4a86c5; }
+  @media (prefers-reduced-motion: reduce) { *, *:before, *:after { animation: none !important; transition: none !important; } .btn:active { transform: none; } }
+  /* фокус с клавиатуры — видная рамка; мышью не мешает (класс kbd ставится по Tab, снимается щелчком) */
+  body.kbd [tabindex]:focus, body.kbd .btn:focus, body.kbd a:focus { outline: 2px solid #4a86c5; outline-offset: -2px; }
   .sec-h { display: flex; align-items: center; font-weight: 600; padding: 10px 0 5px; border-bottom: 1px solid #3c3c3c; margin-bottom: 6px; }
   .caret { width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #caced4; margin-right: 6px; }
   .row { display: flex; align-items: center; min-height: 26px; }
   .row .k { flex: 1; color: #9a9ea5; min-width: 64px; padding-right: 8px; }
-  .row input[type=text] { width: 64px; }
+  .row input[type=text] { width: 64px; min-width: 40px; -ms-flex: 0 1 64px; flex: 0 1 64px; }
   .row input.wide { width: auto; flex: 2; }
   input[type=text], select { height: 20px; background: #262626; border: 1px solid #525252; border-radius: 2px; color: #caced4;
          font-family: inherit; font-size: 12px; padding: 0 5px; }
   select { height: 22px; background: #3c3c3c; }
-  input[type=text]:focus { border-color: #2d5d93; outline: none; }
+  input[type=text]:focus { border-color: #4a86c5; box-shadow: 0 0 0 1px #4a86c5; outline: none; }
   .x { color: #9a9ea5; padding: 0 4px; }
   label.chk { display: flex; align-items: center; min-height: 22px; cursor: pointer; }
   label.chk input { margin: 0 6px 0 0; }
@@ -55,12 +107,26 @@
   .note { color: #9a9ea5; font-size: 11px; padding: 3px 0; }
   .info { color: #8fb8e6; padding: 5px 0; }
   .warn { color: #e0a060; }
+  /* облачко над «Помощь и настройки»: где расширенный режим и настройки; закрывается «Понятно» или щелчком по полосе */
+  .svctip { animation: vpTip .2s ease-out .3s both; position: fixed; left: 20px; right: 8px; bottom: 38px; z-index: 75; padding: 9px 11px 9px; border-radius: 6px;
+            background: #2b5f96; color: #eef3f9; font-size: 11.5px; line-height: 1.45; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+  /* хвостик — с левого края, как у облачка сообщения: левый бок продолжается вниз остриём */
+  .svctip { border-bottom-left-radius: 0; }
+  /* остриё — к середине значка «?» на полосе (значок 16 px, отступ 12 px, полоса 34 px) — облачко поверх полосы */
+  .svctip:after { content: ''; position: absolute; left: 0; bottom: -13px; border-width: 13px 14px 0 0; border-style: solid; border-color: #2b5f96 transparent transparent transparent; }
+  .svctip b { color: #fff; }
+  /* CorelDRAW даёт фон каждому элементу — у содержимого облачка фон его же цвета */
+  .svctip b, .svctip .row2, .svctip .lnk { background: #2b5f96; }
+  .svctip .row2 { display: flex; align-items: center; margin-top: 7px; }
+  .svctip .row2 .btn { -ms-flex: 0 0 auto; flex: 0 0 auto; height: 24px; padding: 0 10px; background: #fff; color: #234f80; border-color: #fff; }
+  .svctip .row2 .lnk { margin-left: auto; padding-left: 8px; color: #cfe0f2; white-space: nowrap; font-size: 11px; }
+  body.nohint .svctip, body.svcopen .svctip { display: none; }
   .msg { margin-top: 8px; padding: 6px 8px; border: 1px solid #3c3c3c; border-radius: 3px; background: #202020; color: #9a9ea5; white-space: pre-wrap; display: none; }
   .empty { padding: 10px 0; color: #9a9ea5; }
   .sheet { display: block; margin: 6px auto 2px; }
   textarea { width: 100%; box-sizing: border-box; height: 64px; background: #262626; border: 1px solid #525252; border-radius: 2px;
              color: #caced4; font-family: Consolas, monospace; font-size: 11px; padding: 4px 5px; resize: vertical; }
-  textarea:focus { border-color: #2d5d93; outline: none; }
+  textarea:focus { border-color: #4a86c5; box-shadow: 0 0 0 1px #4a86c5; outline: none; }
   .code { font-family: Consolas, monospace; font-size: 15px; letter-spacing: 1px; color: #fff; }
   .licbar { padding: 5px 10px; border-bottom: 1px solid #3c3c3c; display: none; }
   a.lnk { color: #8fb8e6; cursor: pointer; text-decoration: underline; }
@@ -91,6 +157,9 @@
   #srcRow .seg .btn { height: auto; min-height: 40px; padding: 5px 4px; line-height: 14px; white-space: normal; }
   #srcRow .seg .btn small { display: block; font-size: 11px; color: #9a9ea5; margin-top: 2px; }
   #srcRow .seg .btn.sel small { color: #c9d9ec; }
+  #turnBox .seg .btn { height: auto; min-height: 40px; padding: 5px 4px; line-height: 14px; white-space: normal; }
+  #turnBox .seg .btn small { display: block; font-size: 11px; color: #9a9ea5; margin-top: 2px; }
+  #turnBox .seg .btn.sel small { color: #c9d9ec; }
   .seg .btn:first-child { border-radius: 3px 0 0 3px; }
   .seg .btn:last-child { border-radius: 0 3px 3px 0; border-left: 0; }
   .seg .btn.sel { background: #1d4470; border-color: #2d5d93; color: #fff; }
@@ -142,7 +211,8 @@
   .calq { display: inline-block; width: 14px; height: 14px; line-height: 14px; border-radius: 7px; background: #3a3f47; color: #cfd3d8; font-size: 10px; font-weight: bold; text-align: center; margin-left: 5px; cursor: pointer; text-decoration: none; vertical-align: 1px; flex: none; }
   .calq:hover { background: #4a5260; color: #fff; }
   .nw { white-space: nowrap; }
-  .row[data-help] .k, .row.hq .k { min-width: 104px; }
+  .row[data-help] .k, .row.hq .k { min-width: 84px; }
+  #sheetRow { -ms-flex-wrap: wrap; flex-wrap: wrap; }
   .calq.on { background: #3d7fd0; color: #fff; }
   .chkq { display: flex; align-items: center; }
   .chkq .chk { flex: 0 1 auto; }
@@ -196,10 +266,19 @@
   .xback { font-size: 11px; color: #9a9ea5; margin: -2px 0 8px; }
   /* бегущая полоса по верхнему краю панели, пока макрос считает. Панель в это время заморожена:
      внутри прокручиваемой части ничего не перерисовывается, а полоса, закреплённая поверх, движется */
-  @keyframes busyrun { from { transform: translateX(-100%); } to { transform: translateX(340%); } }
+  /* полоса хода работы: отрезок с мягкими краями разгоняется, растягивается и тормозит; полоса проявляется и гаснет.
+     Только сдвиг и масштаб — их браузер рисует сам, даже пока панель ждёт ответа CorelDRAW */
+  @keyframes busyrun { 0% { transform: translateX(-120%) scaleX(.4); } 55% { transform: translateX(120%) scaleX(1); } 100% { transform: translateX(360%) scaleX(.4); } }
+  @keyframes busyPulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
   .topfix { position: fixed; left: 0; right: 0; top: 0; z-index: 50; background: #262626; border-bottom: 1px solid #333; }
   .busy { position: fixed; left: 0; right: 0; top: 0; height: 4px; background: #2a2a2a; overflow: hidden; z-index: 99; }
-  .busy span { display: block; height: 4px; width: 30%; background: #3d7fd0; animation: busyrun 1.3s linear infinite; }
+  .busy span { display: block; height: 4px; width: 30%; background: #3d7fd0; border-radius: 2px;
+               background: linear-gradient(90deg, rgba(61,127,208,0) 0%, #3d7fd0 30%, #6aa3e6 50%, #3d7fd0 70%, rgba(61,127,208,0) 100%);
+               animation: busyrun 1.4s cubic-bezier(.45, .05, .35, 1) infinite; }
+  .busy { animation: vpFade .2s ease-out; }
+  .busy.out { opacity: 0; transition: opacity .25s ease-in; }
+  /* без анимаций — полоса не бегает, а ровно «дышит» во всю ширину */
+  body.nomotion .busy span { width: 100%; background: #3d7fd0; animation: busyPulse 1.6s ease-in-out infinite !important; }
   /* объёмные буквы: три блока, у каждого свои кнопки */
   .ltsec { margin-top: 12px; padding-top: 8px; border-top: 1px solid #3a3a3a; }
   .lth { color: #d4d6d9; font-weight: bold; font-size: 12px; margin-bottom: 6px; }
@@ -319,7 +398,7 @@
   .svcbar.open .svcar { border-bottom: 0; border-top: 5px solid currentColor; }
   .svcbody { display: none; max-height: 72vh; overflow-y: auto; -ms-overflow-style: none; padding: 0 12px 6px; border-bottom: 1px solid #3c3c3c; }
   .svcbar.open { box-shadow: 0 -4px 14px rgba(0,0,0,.5); }
-  .svcbar.open .svcbody { display: block; }
+  .svcbar.open .svcbody { display: block; animation: vpIn .2s ease-out; }
   .svcbar.open .svchd { color: #e2e5e9; }
   .svcdim { display: none; position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 69; background: rgba(0,0,0,.45); }
   body.svcopen .svcdim { display: block; }
@@ -338,8 +417,8 @@
   .card.filelocked { opacity: .35; pointer-events: none; }
   .lockedarea { opacity: .35; pointer-events: none; }
   .sec-h.lockedbtn { color: #8a8d93; }
-  .btn.lockedbtn, .seg .btn.lockedbtn, .sub.lockedbtn { color: #6f7378; }
-  .btn.lockedbtn small, .seg .btn.lockedbtn small { color: #5f6368; }
+  .btn.lockedbtn, .seg .btn.lockedbtn, .sub.lockedbtn { color: #a6aab0; }
+  .btn.lockedbtn small, .seg .btn.lockedbtn small { color: #9a9ea5; }
   .btn.lockedbtn .lkb { color: #9a9ea5; }
   .tab .lk { color: #e8c67a; font-size: 11px; position: absolute; top: 3px; right: 6px; }
   input[type=text]:focus, textarea:focus { border-color: #4a86c5; }
@@ -350,7 +429,7 @@
            color: #caced4; padding: 0 22px 0 7px; -webkit-appearance: none; -moz-appearance: none; appearance: none; }
   select::-ms-expand { display: none; }
   select:hover { background-color: #454545; border-color: #454545; }
-  select:focus { border-color: #4a86c5; outline: none; }
+  select:focus { border-color: #4a86c5; box-shadow: 0 0 0 1px #4a86c5; outline: none; }
   select option { background: #262626; color: #caced4; }
   /* Свой выпадающий список. Движок панели (IE11) раскрывает родной так, что выбранный пункт встаёт поверх
      поля — список уезжает вверх на строку выше. Свой — всегда вниз от поля, как у CorelDRAW */
@@ -361,11 +440,35 @@
   .ddpop div.it:hover { background: #1d4470; color: #fff; }
   .ddpop div.grp { color: #8a8d93; padding-top: 5px; }
   .ddpop div.dis { color: #6f7378; }
+  /* список раскрывается от поля — вниз или вверх, — и гаснет при закрытии */
+  @keyframes vpDdDn { from { opacity: 0; transform: translateY(-4px) scaleY(.94); } to { opacity: 1; transform: none; } }
+  @keyframes vpDdUp { from { opacity: 0; transform: translateY(4px) scaleY(.94); } to { opacity: 1; transform: none; } }
+  .ddpop.dn { -ms-transform-origin: 50% 0; transform-origin: 50% 0; animation: vpDdDn .14s cubic-bezier(.2, .8, .2, 1); }
+  .ddpop.up { -ms-transform-origin: 50% 100%; transform-origin: 50% 100%; animation: vpDdUp .14s cubic-bezier(.2, .8, .2, 1); }
+  .ddpop.out { opacity: 0; transition: opacity .1s ease-in; pointer-events: none; }
   /* галочки и кружки: тёмный квадратик */
   input[type=checkbox]::-ms-check, input[type=radio]::-ms-check { background: #404040; border: 1px solid #5c5c5c; color: #ffffff; }
   input[type=checkbox]::-ms-check { border-radius: 2px; }
   input[type=checkbox]:checked::-ms-check, input[type=radio]:checked::-ms-check { background: #1d4470; border-color: #2d5d93; }
   input[type=checkbox], input[type=radio] { accent-color: #1d4470; }
+  /* галочки и кружки — свои: квадратик плавно заливается, галочка «впрыгивает». Родной флажок остаётся
+     под ним прозрачным: щелчок, клавиатура и подпись работают как раньше */
+  label.hascbx { position: relative; }
+  input.cbxin { position: absolute; left: 0; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 0 !important; opacity: 0; z-index: 2; cursor: pointer; }
+  .cbx { position: relative; display: inline-block; -ms-flex: 0 0 auto; flex: 0 0 auto; width: 12px; height: 12px; margin-right: 7px;
+         border: 1px solid #6a6a6a; border-radius: 3px; background: #2e2e2e;
+         transition: background-color .16s ease-out, border-color .16s ease-out; }
+  .cbx:after { content: ''; position: absolute; left: 3px; top: 0; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0;
+               opacity: 0; -ms-transform: rotate(45deg) scale(0); transform: rotate(45deg) scale(0);
+               transition: transform .2s cubic-bezier(.2, .8, .3, 1.35), opacity .12s ease-out; }
+  .cbx.rd { border-radius: 50%; }
+  .cbx.rd:after { left: 3px; top: 3px; width: 6px; height: 6px; border: 0; border-radius: 50%; background: #fff; -ms-transform: scale(0); transform: scale(0); }
+  label:hover .cbx { border-color: #8a8d93; }
+  input.cbxin:checked + .cbx { background: #2d5d93; border-color: #4a86c5; }
+  input.cbxin:checked + .cbx:after { opacity: 1; -ms-transform: rotate(45deg) scale(1); transform: rotate(45deg) scale(1); }
+  input.cbxin:checked + .cbx.rd:after { -ms-transform: scale(1); transform: scale(1); }
+  input.cbxin:disabled + .cbx { opacity: .45; }
+  body.kbd input.cbxin:focus + .cbx { outline: 2px solid #4a86c5; outline-offset: 1px; }
   /* кнопки: серая заливка без рамки; главная — синяя */
   .btn { background: #3c3c3c; border: 1px solid #3c3c3c; border-radius: 3px; color: #caced4; }
   .btn:hover { background: #484848; border-color: #484848; }
@@ -460,6 +563,9 @@
   .stp .st svg { display: block; width: 19px; height: 19px; margin: 0 auto 3px; }
   .stp .st .lb { display: block; font-size: 10.5px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: inherit; }
   .stp .st.on { color: #fff; border-bottom-color: #4a86c5; cursor: default; }
+  .stp .st.drag { opacity: 0.45; }
+  .stp .st.dropl { box-shadow: inset 2px 0 0 #4a86c5; }
+  .stp .st.dropr { box-shadow: inset -2px 0 0 #4a86c5; }
   .stp .st .dn { position: absolute; top: 1px; right: 50%; margin-right: -19px; color: #7fc97f; font-size: 10px; background: inherit; }
   .stp .st .dn.warn { color: #e0a030; font-weight: bold; }
   /* готовность резки на «Файле»: строка — отметка, что, ссылка на шаг */
@@ -494,10 +600,11 @@
   .svcsub { color: #d4d6d9; font-weight: bold; margin: 14px 0 4px; }
   .ccode { margin-top: 7px; font-size: 11px; color: #9a9ea5; }
   .ccode b { color: #e2e5e9; letter-spacing: .03em; }
-  .inkcnt { margin-left: auto; padding-left: 8px; color: #8a8d93; font-size: 11px; white-space: nowrap; }
+  .inkcnt { margin-left: auto; padding-left: 8px; color: #9a9ea5; font-size: 11px; white-space: nowrap; }
   /* закрытое ключом — серым */
-  .eq.off > svg, .eq.off .lb { opacity: .35; }
-  .stp .st.off > svg, .stp .st.off .lb { opacity: .38; }
+  /* закрытое по ключу отмечает замок, надпись остаётся читаемой */
+  .eq.off > svg, .eq.off .lb { opacity: .7; }
+  .stp .st.off > svg, .stp .st.off .lb { opacity: .75; }
   .stp .st.off.on > svg, .stp .st.off.on .lb { opacity: .6; }
   .stp .st.off .lk { color: #c3c7cd; }
   /* пунктов больше шести — подписи мельче, чтобы не обрезались */
@@ -570,6 +677,10 @@
   .eqbar { padding: 10px 10px 4px; }
   .eq { padding: 6px 0 5px; margin-right: 4px; border-radius: 4px; }
   .eq svg { width: 20px; height: 20px; }
+  /* значки приглушены, при наведении светлеют; у открытого — белые */
+  .eq svg, .stp .st svg { color: #74787e; transition: color .2s ease-out; }
+  .eq:hover svg, .stp .st:hover svg { color: #e2e5e9; }
+  .eq.on svg, .stp .st.on svg { color: #fff; }
   .eq.more { width: 20px; line-height: 20px; }
   .eqsep { margin: 5px 7px 5px 3px; }
   .eqhead { padding: 10px 12px 2px; align-items: center; }
@@ -589,6 +700,12 @@
   .modesw { display: flex; border: 1px solid #4a4a4a; border-radius: 13px; overflow: hidden; background: #262626; }
   .modesw a, .modesw a + a { -ms-flex: 1 1 0%; flex: 1 1 0%; width: 50%; text-align: center; margin: 0; padding: 4px 6px; color: #aeb2b8; background: #262626; white-space: nowrap; }
   .modesw a.on { background: #3c3c3c; color: #fff; font-weight: 600; }
+  /* переключатель режимов: светлая плашка перетекает под выбранный вариант */
+  .modesw.hasthumb { position: relative; }
+  .modesw.hasthumb a, .modesw.hasthumb a + a, .modesw.hasthumb a.on { position: relative; z-index: 1; background: transparent; font-weight: 400; }
+  .modesw .thumb { position: absolute; top: 0; bottom: 0; z-index: 0; background: #3c3c3c; border-radius: 12px;
+                   transition: left .26s cubic-bezier(.2, .8, .2, 1), width .26s cubic-bezier(.2, .8, .2, 1); }
+  .modesw .thumb.noanim { transition: none; }
   .eqtools { display: inline-flex; align-items: center; }
   .eqtools a.helpq { display: inline-block; width: 18px; height: 18px; line-height: 17px; text-align: center; border: 1px solid #4a4a4a;
                      border-radius: 9px; color: #8fb8e6; font-weight: 700; margin-left: 0; background: #262626; }
@@ -653,13 +770,24 @@
       <button class="btn" data-act="impmode" data-v="book" data-mod="CO" id="modeBook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 6.5C9.5 4.8 6 4.6 3 5.5v13c3-.9 6.5-.7 9 1 2.5-1.7 6-1.9 9-1v-13c-3-.9-6.5-.7-9 1z"/><path d="M12 6.5v13"/><path d="M10.8 10h2.4M10.8 15h2.4"/></svg><span>Брошюра</span></button>
       <button class="btn" data-act="impmode" data-v="ctp" data-mod="O" id="modeCtp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><rect x="2.5" y="3.5" width="19" height="17" rx="1"/><rect x="6" y="6" width="12" height="9" rx=".4"/><path d="M4.5 18h15"/><path d="M4.5 6.5v2.5M19.5 6.5v2.5"/></svg><span>Пластина</span></button>
     </div>
-    <div class="adv" id="srcRow">
+    <div id="srcRow">
       <div class="seg">
         <button class="btn" data-act="impsrc" data-v="sample" id="srcDoc">Весь документ<small>лицо, оборот, номера</small></button>
         <button class="btn" data-act="impsrc" data-v="sel" id="srcSel">Только выделенное<small>можно разные макеты</small></button>
       </div>
     </div>
     <div class="ex adv" id="modeNote" style="margin:0 0 6px"></div>
+    <div id="turnBox" style="display:none">
+      <div class="seg">
+        <button class="btn" data-act="turn" data-v="1" id="turnOwn">Свой оборот<small>лицо и оборот на одном листе</small></button>
+        <button class="btn" data-act="turn" data-v="0" id="turnAlien">Чужой оборот<small>у оборота свои пластины</small></button>
+      </div>
+      <div id="wtOpts">
+        <div class="row"><span class="k">Переворачивают</span><select id="wtMode" class="wide"><option value="1">слева направо</option><option value="2">через голову (снизу вверх)</option></select></div>
+        <div class="row"><span class="k">Оборот читают</span><select id="wtCal" class="wide"><option value="0">как книгу — повернув вбок</option><option value="1">как календарь — снизу вверх</option></select></div>
+      </div>
+      <div class="ex" id="turnNote" style="margin:4px 0 6px"></div>
+    </div>
     <div id="nestBox" class="card" style="display:none"><h4 id="nsTitle">Укладка по форме</h4>
       <div id="nsSteps">
         <div class="step"><span class="num">1</span>Нарисуйте или откройте детали. Каждая деталь — один объект; если она из нескольких кусков — сгруппируйте.</div>
@@ -681,7 +809,7 @@
       <div class="lth" style="margin-top:12px">Материал</div>
       <div class="row"><span class="k">Ширина × высота</span><input type="text" id="nsW"><span class="x">×</span><input type="text" id="nsH"></div>
       <div class="ex">Высота 0 — рулон: длина считается сама, сколько понадобится.</div>
-      <div class="row adv"><span class="k">Поле от края</span><input type="text" id="nsMargin"></div>
+      <div class="row"><span class="k">Поле от края</span><input type="text" id="nsMargin"></div>
       <div class="row"><span class="k">Зазор между деталями</span><input type="text" id="nsGap"></div>
       <div class="eqonly" data-eq="uv">
         <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9 pt4"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt2"></span></span></div>
@@ -813,7 +941,7 @@
     </div>
     <div id="rollBox" style="display:none" class="card"><h4>Рулон, мм</h4>
       <div class="row"><span class="k">Ширина рулона</span><input type="text" id="rollW"></div>
-      <div class="row adv"><span class="k">Поле принтера с каждой стороны</span><input type="text" id="rollSide"></div>
+      <div class="row"><span class="k">Поле принтера с каждой стороны</span><input type="text" id="rollSide"></div>
       <div class="ex adv">Край рулона, куда принтер не печатает. Обычно 10–20 мм — смотрите в настройках RIP.</div>
       <div class="row"><span class="k">Тираж, шт.</span><input type="text" id="rollQty"></div>
       <div class="row"><span class="k">Контур реза</span><select id="rollCut" class="wide"><option value="0">нет</option><option value="1">прямоугольник по резу</option><option value="2">свой контур из макета</option></select></div>
@@ -823,31 +951,39 @@
       <div class="ex adv">По меткам плоттер находит напечатанное и режет точно по контуру. Summa и Graphtec — чёрные квадраты, Mimaki — уголки. На длинной раскладке Summa и Graphtec получают ещё метки по бокам через 0,5 м.</div>
     </div>
     <div class="card" id="cardSheet"><h4 id="cardSheetH">Лист и карта, мм</h4>
-      <div class="row adv" id="presetRow"><span class="k">Формат</span><select id="sheetPreset" class="wide"></select></div>
+      <div class="row" id="presetRow"><span class="k">Формат</span><select id="sheetPreset" class="wide"></select></div>
       <div class="ex adv" id="presetNote">Для цифры отступ 5 мм — поле, которое машина не пропечатывает. Точнее — в инструкции к принтеру.</div>
-      <div class="row" id="sheetRow"><span class="k" id="sheetLbl">Лист (стол)</span><input type="text" id="sheetW"><span class="x">×</span><input type="text" id="sheetH"><button class="btn" data-act="swap" title="Повернуть лист" style="margin-left:4px;padding:0 6px">⇄</button></div>
+      <div class="row" id="sheetRow"><span class="k" id="sheetLbl">Лист (стол)</span><input type="text" id="sheetW"><span class="x">×</span><input type="text" id="sheetH"><button class="btn" data-act="swap" title="Поменять ширину и высоту местами" style="margin-left:4px;padding:0 6px">⇄</button></div>
       <div class="row"><span class="k" id="cutLbl">Карта по резу</span><input type="text" id="cutW"><span class="x">×</span><input type="text" id="cutH"></div>
-      <div class="row adv"><span class="k">Вылет за рез</span><input type="text" id="bleed"></div>
-      <div class="row adv"><span class="k">Скругление углов</span><input type="text" id="radius"></div>
+      <div class="row"><span class="k">Вылет за рез</span><input type="text" id="bleed"></div>
+      <div class="row"><span class="k">Скругление углов</span><input type="text" id="radius"></div>
     </div>
-    <div class="card" id="cardPlace"><h4>Как расставить карты, мм</h4>
+    <div class="card" id="cardPlace"><h4 id="cardPlaceH">Как расставить карты, мм</h4>
       <div class="row"><span class="k">Зазор ↔ × ↕</span><input type="text" id="gapX"><span class="x">×</span><input type="text" id="gapY"></div>
       <div class="eqonly" data-eq="uv">
         <div class="row"><span class="k">Точка старта</span><span class="ptv"><span class="pt9 pt4"><a data-act="pt9" data-v="tl" title="слева вверху"></a><a data-act="pt9" data-v="tr" title="справа вверху"></a><a data-act="pt9" data-v="bl" title="слева внизу"></a><a data-act="pt9" data-v="br" title="справа внизу"></a></span><span class="x" id="uvStartTxt"></span></span></div>
         <div class="ex under">С какого угла стола начать: туда прижмётся блок карт, там встанет карта 1 — с неё пойдут номера.</div>
+        <label class="chk"><input type="checkbox" id="uvCenter">Блок по центру стола</label>
+        <div class="ex under">Карты встанут посередине стола, поля поровну со всех сторон. Карта 1 и номера — всё равно от выбранного угла.</div>
       </div>
-      <div class="row adv"><span class="k">Отступ от края листа</span><input type="text" id="margin"></div>
+      <div class="row"><span class="k" id="marginLbl">Отступ от края листа</span><input type="text" id="margin"></div>
       <label class="chk adv"><input type="checkbox" id="marginSides">разный по сторонам</label>
       <div class="adv" id="sidesBox" style="display:none">
         <div class="row"><span class="k">сверху × снизу</span><input type="text" id="marginT"><span class="x">×</span><input type="text" id="marginB"></div>
         <div class="row"><span class="k">слева × справа</span><input type="text" id="marginL"><span class="x">×</span><input type="text" id="marginR"></div>
       </div>
       <div class="fold-body adv" id="fPlaceMore">
-      <div class="row"><span class="k">Карты</span><select id="orient"><option value="0">как больше влезет</option><option value="1">лёжа (горизонтально)</option><option value="2">стоя (боком)</option></select></div>
+      <div class="row"><span class="k" id="orientLbl">Карты</span><select id="orient"><option value="0">как больше влезет</option><option value="1">лёжа (горизонтально)</option><option value="2">стоя (боком)</option></select></div>
       <div class="row" id="alignRow"><span class="k">Прижать блок</span><span class="x" title="по вертикали">↕</span><select id="alignV" title="по вертикали"><option value="1">вниз</option><option value="0">по центру</option><option value="2">вверх</option></select><span class="x" title="по горизонтали">↔</span><select id="alignH" title="по горизонтали"><option value="0">по центру</option><option value="1">влево</option><option value="2">вправо</option></select></div>
       <div id="colsBox"><div class="row"><span class="k">Колонок × рядов</span><input type="text" id="cols" placeholder="авто"><span class="x">×</span><input type="text" id="rows" placeholder="авто"></div>
       <div class="ex">Оставьте «авто» — поместится сколько влезет. Число — чтобы ограничить, например 2 ряда для теста.</div></div>
       </div>
+    </div>
+    <div class="card" data-eq="uv" id="tplCard"><h4>Шаблон стола, мм</h4>
+      <div class="ex">Уголки по местам карт — последняя страница раскладки. Печатается первым прямо на стол, по уголкам раскладывают заготовки.</div>
+      <div class="row"><span class="k">Уголок: длина × толщина</span><input type="text" id="markLen"><span class="x">×</span><input type="text" id="markW"></div>
+      <div class="row"><span class="k">Отступ от края карты</span><input type="text" id="markGap"></div>
+      <div class="ex">0 — карта упирается в уголки; −0,5 — уголки под картой. В готовой раскладке поменяли — нажмите «Переразложить» или на «Выводе» «Шаблон стола»: уголки перерисуются.</div>
     </div>
     <div class="sheetwrap" id="sheetBox"></div>
     <div class="info" id="impCalc"></div>
@@ -872,7 +1008,7 @@
     </div>
     <div class="row adv" id="backShiftRow" data-eq="digi"><span class="k">Сдвиг оборота → × ↑, мм</span><input type="text" id="backDX"><span class="x">×</span><input type="text" id="backDY"></div>
     <div class="ex under" id="backShiftNote" data-eq="digi">Для цифровой печати. Напечатайте пробный лист с двух сторон, проколите иглой угол карты на лице и посмотрите, где прокол на обороте. Оборот ушёл вправо на 1 мм — впишите −1; вверх на 0,5 — впишите −0,5 во второе поле. Макрос сдвинет весь оборот навстречу. 0 — без поправки.</div>
-    <label class="chk adv"><input type="checkbox" id="guides">Голубые контуры карт в файле</label>
+    <label class="chk adv"><input type="checkbox" id="guides"><span id="guidesTxt">Голубые контуры карт в файле</span></label>
     <div class="ex under adv">Только для глаз, не печатаются.</div>
     <label class="chk"><input type="checkbox" id="cutMarks">Метки реза по краям листа</label>
     <div class="ex under">Чёрточки снаружи блока по каждой линии реза — если лист режут после печати. Как принято в типографии: регистрационный цвет (во всех красках), линия 0,1 мм, длина 5 мм, начало не ближе вылета + 1 мм. На готовые заготовки не нужны.</div>
@@ -934,6 +1070,8 @@
         <div class="row"><span class="k">В макете отмечены</span><select id="prnMark" class="wide"><option value="spot">плашечными цветами с этими именами</option><option value="layer">слоями «Белила» и «Лак»</option><option value="">как на шаге «Белила и лак»</option></select></div>
         <div class="ex">Плашечными цветами — объекты закрашены цветом «W» или «LAK» (с наложением), как в ваших макетах для PDF. Выбор принтера сам переключит шаг «Белила и лак».</div>
         <label class="chk"><input type="checkbox" id="prnMir">Зеркально (плёнка DTF)</label>
+        <label class="chk"><input type="checkbox" id="prnCrop">По содержимому — без полей листа</label>
+        <div class="ex under">Файл размером с сами карты и метки, без пустых полей до края листа — как «Экспорт → только объекты» в CorelDRAW. Включите, если в RIP рядом встают файлы, сохранённые так: иначе наш лист съедет на величину полей.</div>
         <div id="prnPdfBox">
           <div class="row"><span class="k">Версия PDF</span><select id="prnVer" class="wide"><option value="14">PDF 1.4</option><option value="15">PDF 1.5</option><option value="17">PDF 1.7</option><option value="x4">PDF/X-4</option></select></div>
           <label class="chk"><input type="checkbox" id="prnCurves" checked>Текст в кривые</label>
@@ -941,15 +1079,12 @@
           <label class="chk"><input type="checkbox" id="prnNoDown" checked>Картинки без ужатия</label>
           <div class="ex">Белила и лак — всегда плашечными цветами с наложением: так их понимает RIP.</div>
         </div>
-        <div class="btnpair"><button class="btn main" data-act="prnsave">Сохранить</button><button class="btn" data-act="prnnew">Новый принтер</button></div>
+        <div class="btnpair"><button class="btn" data-act="prnsave">Сохранить</button><button class="btn" data-act="prnnew">Новый принтер</button></div>
         <button class="btn full" data-act="prndel" id="prnDelBtn">Удалить этот принтер</button>
       </div>
     </div>
     <div class="card" data-eq="uv"><h4>Шаблон стола</h4>
-      <div class="ex">Печатается первым прямо на стол: уголки по местам карт. По ним раскладываете заготовки. В раскладке это последняя страница «Шаблон стола».</div>
-      <div class="row adv"><span class="k">Уголок: длина × толщина</span><input type="text" id="markLen"><span class="x">×</span><input type="text" id="markW"></div>
-      <div class="row adv"><span class="k">Отступ от края карты</span><input type="text" id="markGap"></div>
-      <div class="ex adv">0 — карта упирается в уголки; −0,5 — уголки под картой.</div>
+      <div class="ex">Печатается первым прямо на стол: уголки по местам карт. По ним раскладываете заготовки. Уголки настраиваются в «Раскладке».</div>
       <button class="btn full" data-act="template" data-mod="U" id="tplOut">Шаблон стола → TIFF</button>
     </div>
 
@@ -958,15 +1093,15 @@
       <div class="info adv" id="planTrial"></div>
       <div class="btns">
         <button class="btn" data-act="run" data-mode="preview" data-scope="trial">Показать на экране</button>
-        <button class="btn main" data-act="run" data-mode="tiff" data-scope="trial" data-mod="UW" id="trialOut">TIFF пробного…</button>
+        <button class="btn" data-act="run" data-mode="tiff" data-scope="trial" data-mod="UW" id="trialOut">TIFF пробного…</button>
       </div>
       <div class="ex" data-eq="uv wide" id="trialNote">«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем TIFF пробного листа — откройте его в Фотошопе или в программе печати.</div>
       <div class="ex eqonly" data-eq="digi offset">«Показать» подставит номера этого листа в раскладку — проверьте глазами первый номер, оборот и нули. Затем PDF пробного листа — откройте и посмотрите перед всем заказом.</div>
     </div>
 
     <div class="card"><h4>Весь заказ</h4>
-      <label class="chk adv"><input type="radio" name="what" value="all" checked><span id="allLbl">Все листы</span></label>
-      <label class="chk adv"><input type="radio" name="what" value="range">Листы с&nbsp;<input type="text" id="from" value="1" style="width:40px">&nbsp;по&nbsp;<input type="text" id="to" value="2" style="width:40px"></label>
+      <label class="chk"><input type="radio" name="what" value="all" checked><span id="allLbl">Все листы</span></label>
+      <label class="chk"><input type="radio" name="what" value="range">Листы с&nbsp;<input type="text" id="from" value="1" style="width:40px">&nbsp;по&nbsp;<input type="text" id="to" value="2" style="width:40px"></label>
       <div class="info" id="plan"></div>
       <button class="btn main full" data-act="run" data-mode="tiff" data-scope="order" data-mod="UW" style="height:32px" id="orderOut">TIFF всего заказа…</button>
       <div class="ex adv" id="orderOutNote">На каждый лист два файла: «Лицо» и «Оборот» (или только нужная сторона — ниже). Фон в CMYK, белила — канал W. CorelDRAW будет занят, остановить — «Стоп» в окошке.</div>
@@ -985,10 +1120,16 @@
       <label class="chk adv"><input type="checkbox" id="register">Ведомость листов рядом с файлами</label>
       <div class="ex under adv">Две таблицы для Excel: на каком листе какие номера и что на каждом месте каждого листа. По ней ищут, где карта, и сверяют тираж.</div>
     </div>
+    <div class="card"><h4>Для производства</h4>
+      <button class="btn full" data-act="sheetsprev">Превью листов для бланка</button>
+      <div class="ex">Одна картинка: шаблон стола, лицо и оборот с подписями и данными заказа. PNG рядом с раскладкой — для бланка заказа.</div>
+      <button class="btn full" data-act="jobsheet" style="margin-top:8px">Задание в печать</button>
+      <div class="ex">PDF для оператора: что и в каком порядке печатать, таблица листов с номерами.</div>
+    </div>
 
 
-    <div class="sec-h adv"><span class="caret"></span>Порядок листов и объём</div>
-    <div class="fold-body adv" id="fOrder">
+    <div class="sec-h"><span class="caret"></span>Порядок листов и объём</div>
+    <div class="fold-body" id="fOrder">
       <label class="chk"><input type="radio" name="order" value="0">Подряд: лист 1 — записи 1, 2, 3…</label>
       <label class="chk"><input type="radio" name="order" value="1">Стопкой: для резки пачкой</label>
       <div class="ex">Стопкой — после резки пачки номера идут по порядку в каждой стопке.</div>
@@ -1000,8 +1141,6 @@
     <div class="subpage" data-group="gPrint" id="sInk" data-lock="UW">
     <div class="card" id="inkSimple"></div>
     <div class="ex adv">Для УФ-печати и DTF: кроме цветных красок печатают белила (подложка под цвет или белый рисунок) и лак для рельефа. В макете их отмечают отдельным слоем или отдельным плашечным цветом — как принято у вашей печати. Отсюда же задаётся, как краска называется в программе печати.</div>
-    <label class="chk adv"><input type="checkbox" id="inkOn">Печатать со спецкрасками</label>
-    <div class="ex under adv">Выключено — в вывод идут только цветные краски, слои и плашки спецкрасок не печатаются.</div>
     <div class="adv" id="inkBox">
       <div id="inkCards"></div>
       <label class="chk"><input type="checkbox" id="inkMirror">Зеркально (плёнка DTF)</label>
@@ -1094,6 +1233,8 @@
       <div class="ex">По образцу карты — одна страница: лицо и оборот с линией реза, где лягут белила и лак, размер, тираж, номера «с — по» и строка «Согласовано». Картинка и PDF — в папку «… — на согласование», картинку можно сразу отправить клиенту.</div>
       <button class="btn full" data-act="jobsheet" style="margin-top:8px">Задание в печать</button>
       <div class="ex">По раскладке — для оператора: что печатать, на каком принтере, порядок (шаблон стола, лицо, оборот) и таблица листов с номерами и квадратиками для отметок. PDF рядом с раскладкой — распечатайте и отдайте в цех.</div>
+      <button class="btn full" data-act="sheetsprev" style="margin-top:8px">Превью листов для бланка</button>
+      <div class="ex">По раскладке — одна картинка: лицо, оборот и шаблон стола рядом, с подписями — что это, в каком порядке печатать, лист, карт на листе, листов, принтер и краски. PNG рядом с раскладкой — вставьте в бланк заказа.</div>
     </div>
     <div class="card adv"><h4>Ещё</h4>
       <button class="btn full" data-act="proof">Превью каждой страницы</button>
@@ -1136,7 +1277,7 @@
       <div class="row"><span class="k">Отверстие × отступ, мм</span><input type="text" id="eyeHole"><span class="x">×</span><input type="text" id="eyeEdge"></div>
       <div class="row"><span class="k">Шаг не реже, мм</span><input type="text" id="eyeStep"></div>
       <div class="ex">Шаг подгоняется под длину стороны: между люверсами не останется куска вдвое длиннее остальных.</div>
-      <div class="row adv"><span class="k">Подгиб, мм</span><input type="text" id="eyeHem"></div>
+      <div class="row"><span class="k">Подгиб, мм</span><input type="text" id="eyeHem"></div>
       <div class="ex adv">0 — без подгиба. Иначе рисуется линия, по которой край заворачивается: люверс садится в двойную ткань и не вырывается на ветру.</div>
       <label class="chk adv"><input type="checkbox" id="eyePrint">Печатать метки на баннере</label>
       <div class="ex" id="eyeInfo"></div>
@@ -1361,19 +1502,22 @@
 
   <!-- «Помощь и настройки»: закреплена внизу на каждой вкладке, разворачивается вверх -->
   <div class="svcdim" data-act="svc"></div>
+  <div class="svctip" id="svcTip"><b>Здесь — «Помощь и настройки».</b> Расширенный режим со всеми настройками (сейчас на шагах только главное), «Моё оборудование», обновления, ключ и связь с разработчиком.
+    <div class="row2"><button class="btn" data-act="svctipok">Понятно</button><a class="lnk" data-act="svctipopen">Открыть</a></div></div>
   <div class="svcbar" id="svcBar">
     <div class="svcbody">
     <div class="card"><h4>Вид панели</h4>
       <div class="modebar" id="modeBar"></div>
       <div class="ex keep">Простой — на каждом шаге только главное. Расширенный — все настройки.</div>
       <label class="chk"><input type="checkbox" id="svcTerse">Показывать пояснения под полями</label>
+      <label class="chk"><input type="checkbox" id="svcMotion">Плавные переходы (анимации)</label>
     </div>
     <div class="card"><h4>Подсказки</h4>
       <div class="btns"><button class="btn" data-act="helpcat">Справка</button><button class="btn" data-act="tour" title="Проведёт по шагам: подсветит нужную кнопку и подскажет, что сделать. Можно прервать и продолжить позже.">Пройти по шагам</button></div>
       <div class="ex keep">У каждого поля есть «?» — короткая подсказка с примером.</div>
     </div>
     <div class="card"><h4>Моё оборудование</h4>
-      <div class="ex keep">Какие значки показывать сверху. Снимите галочку — значок спрячется.</div>
+      <div class="ex keep">Какие значки показывать сверху. Снимите галочку — значок спрячется. Пункты под значком (раскладка, белила, вывод…) можно переставить: перетащите мышью.</div>
       <div class="eqpick" id="svcEq"></div>
     </div>
     <div class="card"><h4>Обновления</h4>
@@ -1464,9 +1608,23 @@
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function say(t) {
-    var m = $('msg'); if (!t) { m.style.display = 'none'; return; } m.style.display = 'block'; m.innerText = t;
+    var m = $('msg');
+    if (!t) {
+      // гаснет, потом убирается (без анимаций — сразу)
+      if (m.style.display == 'none') return;
+      if (/\bnomotion\b/.test(document.body.className)) { m.style.display = 'none'; return; }
+      m.className = 'msg gone'; clearTimeout(m.goneT);
+      m.goneT = setTimeout(function () { if (/\bgone\b/.test(m.className)) m.style.display = 'none'; }, 190);
+      return;
+    }
+    clearTimeout(m.goneT);
+    var was = m.style.display == 'block' && !/\bgone\b/.test(m.className);
+    m.style.display = 'block'; m.innerText = t;
+    m.className = 'msg'; void m.offsetWidth; m.className = was ? 'msg again' : 'msg show';
     // строка сообщений — внизу длинной панели: если её не видно, прокрутить к ней (иначе кажется, что ничего не произошло)
-    try { var rb = m.getBoundingClientRect(); if (rb.bottom > (window.innerHeight || document.documentElement.clientHeight) - 40 || rb.top < 0) m.scrollIntoView(false); } catch (x) { }
+    // нижняя полоса и облачко закрывают низ окна — сообщение поднимаем над ними
+    try { var cover = ($('svcBar') ? $('svcBar').offsetHeight : 34) + ($('svcTip') && $('svcTip').offsetHeight ? $('svcTip').offsetHeight + 4 : 0);
+      var rb = m.getBoundingClientRect(); if (rb.bottom > (window.innerHeight || document.documentElement.clientHeight) - cover - 6 || rb.top < 0) { m.scrollIntoView(false); window.scrollBy(0, cover + 8); } } catch (x) { }
     // «нет в ключе» от макроса: без повтора кода компьютера и контактов — они в плашке или кнопками
     var cut = String(t).search(/\s*Код (этого )?компьютера:/);
     if (cut > 0 && S && S.lic && S.lic.contact) lockMsg(String(t).substring(0, cut));
@@ -1478,7 +1636,7 @@
   // Бегущая полоса: показывается при нажатии кнопки, убирается, когда макрос ответил.
   // Кнопки, которые ничего не считают, её не держат: если за полсекунды вызова не было — убрать.
   var busyEl = null, busyUsed = false;
-  var NOBUSY = { prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, updcheck: 1, updrestart: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
+  var NOBUSY = { svctipok: 1, svctipopen: 1, prnnew: 1, latableshow: 1, help: 1, helpcat: 1, calcatalog: 1, calhelp: 1, calprev: 1, calstylesave: 1, calstylecancel: 1, calstyleok: 1, calstyledel: 1, calstop: 1, updcheck: 1, updrestart: 1, calbuild: 1, calrestyle: 1, sub: 1, eq: 1, eqstep: 1, eqvis: 1, eqlock: 1, terse: 1, eqfirst: 1, eqfirstok: 1, eqfirstskip: 1, uimode: 1, svc: 1, calsec: 1, machine: 1, pt9: 1, ctg: 1, cmail: 1, cphone: 1, ccode: 1, fold: 1, goto: 1, nestdel: 1, nestswap: 1, nestclear: 1, neststop: 1, tour: 1, report: 1 };
   function busyShow(btn) {
     busyHide();
     var w = document.createElement('div'); w.className = 'busy'; w.innerHTML = '<span></span>';
@@ -1486,7 +1644,12 @@
     busyEl = w; busyUsed = false;
     setTimeout(function () { if (!busyUsed) busyHide(); }, 500);
   }
-  function busyHide() { if (busyEl && busyEl.parentNode) busyEl.parentNode.removeChild(busyEl); busyEl = null; }
+  function busyHide() {
+    var b = busyEl; busyEl = null;
+    if (!b || !b.parentNode) return;
+    b.className += ' out';
+    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 260);
+  }
 
   function call() {
     var a = [];
@@ -1607,6 +1770,7 @@
     el.style.display = t ? '' : 'none';
     el.className = 'ex keep cst' + (/^(Не |Нет |Отчёт собрать не|Не удалось)|не открыл|не получилось/.test(t) ? ' warn' : '');
     el.innerText = t;
+    if (t) { void el.offsetWidth; el.className += ' show'; }
   }
   function copyText(t) { try { return !!window.clipboardData.setData('Text', t); } catch (x) { return false; } }
   function lockSay(id) { lockMsg(lockWhy(id)); }
@@ -1701,7 +1865,8 @@
   // пояснения под полями — свой выключатель, независимо от режима (по умолчанию спрятаны)
   try { terse = (LS.getItem('vpTerse') || '1') == '1'; } catch (x) { terse = true; }
   function uiClasses() {
-    document.body.className = document.body.className.replace(/\s*\b(terse|simple)\b/g, '') + (uiMode == 'simple' ? ' simple' : '') + (terse ? ' terse' : '');
+    var nh = false, nm = false; try { nh = LS.getItem('vpNoHint') == '1'; nm = LS.getItem('vpNoMotion') == '1'; } catch (x) { }
+    document.body.className = document.body.className.replace(/\s*\b(terse|simple|nohint|nomotion)\b/g, '') + (uiMode == 'simple' ? ' simple' : '') + (terse ? ' terse' : '') + (nh ? ' nohint' : '') + (nm ? ' nomotion' : '');
   }
   uiClasses();
   var cutMachine = 'laser';
@@ -1709,6 +1874,19 @@
   try { eqCur = LS.getItem('vpEq') || 'all'; } catch (x) { }
   // лазер и фрезер были отдельными значками — теперь один «Резка», станок запоминается
   if (eqCur == 'mill' || eqCur == 'laser') { cutMachine = eqCur; eqCur = 'cut'; try { LS.setItem('vpEq', 'cut'); LS.setItem('cutMachine', cutMachine); } catch (x) { } }
+  // Свой порядок пунктов у оборудования: пункты перетаскивают мышью, порядок помнится по названиям
+  function eqOrderApply(E) {
+    var o = ''; try { o = LS.getItem('vpEqOrd_' + E.id) || ''; } catch (x) { }
+    if (!E.steps0) E.steps0 = E.steps.slice(0);
+    if (!o) { E.steps = E.steps0.slice(0); return; }
+    var names = o.split('|'), out = [], rest = [], i, j;
+    for (i = 0; i < names.length; i++) for (j = 0; j < E.steps0.length; j++) if (E.steps0[j].n == names[i] && !inArr(out, E.steps0[j])) out.push(E.steps0[j]);
+    for (j = 0; j < E.steps0.length; j++) if (!inArr(out, E.steps0[j])) rest.push(E.steps0[j]);
+    E.steps = out.concat(rest);
+  }
+  function eqOrderAll() { for (var i = 0; i < EQ.length; i++) eqOrderApply(EQ[i]); }
+  eqOrderAll();
+  function eqOrderAny() { for (var i = 0; i < EQ.length; i++) { try { if (LS.getItem('vpEqOrd_' + EQ[i].id)) return true; } catch (x) { } } return false; }
   try { eqStep = +(LS.getItem('vpEqStep_' + eqCur) || 0); } catch (x) { }
   function eqOf(id) { for (var i = 0; i < EQ.length; i++) if (EQ[i].id == id) return EQ[i]; return EQ[EQ.length - 1]; }
   function eqHidden() {
@@ -1803,13 +1981,13 @@
   // Тона светлой темы — сняты с панели «Свойства» CorelDRAW: фон F3F4F6, списки E5E7EB, поля белые,
   // рамки D1D5DB, текст 2E3238, выделение — светло-голубое ACC8E5 с тёмными значками.
   // kind: 0 — фон, 1 — текст или линия; input — поле ввода (у CorelDRAW белое)
-  function ltMap(c, kind, input) {
+  function ltMap(c, kind, input, text) {
     var x = ltHsl(c), o, y, v;
     if (Math.max(c[0], c[1], c[2]) - Math.min(c[0], c[1], c[2]) < 24) {
       // серый — каналы почти равны (у светлых по насыщенности не понять: #e2e5e9 выходит «цветным»)
       y = 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2];
       if (kind == 0) v = input && y < 50 ? 255 : (y <= 128 ? 243 + (38 - y) * 0.6 : 281 - y);
-      else v = 300 - 1.2 * y;
+      else v = (text ? 275 : 300) - 1.2 * y;   // текст темнее рамок: подсказки в светлой теме читаются
       v = Math.max(24, Math.min(255, v));
       o = [v, v + 1, v + 3];
     } else if (ltBlue(c)) {
@@ -1836,7 +2014,7 @@
       c = ltParse(v); if (!c) continue;
       if (LT_PROPS[i][0] == 'color' && onBlue) { out += 'color:rgb(46,50,56);'; continue; }
       if (LT_PROPS[i][0] == 'color' && onAccent) { out += 'color:' + v + ';'; continue; }
-      out += LT_PROPS[i][1] + ':' + ltMap(c, LT_PROPS[i][2], input) + ';';
+      out += LT_PROPS[i][1] + ':' + ltMap(c, LT_PROPS[i][2], input, LT_PROPS[i][0] == 'color') + ';';
     }
     return out;
   }
@@ -1885,10 +2063,29 @@
     var th = ''; try { th = String(call('UiTheme') || ''); } catch (x) { }
     themeApply(th);
   }
-  function topPad() { var f = $('topFix'); if (f) $('topPad').style.height = f.offsetHeight + 'px'; }
+  function topPad() {
+    var f = $('topFix'); if (f) $('topPad').style.height = f.offsetHeight + 'px';
+    // облачко над нижней полосой — под ним оставляем место, чтобы конец страницы не прятался
+    var t = $('svcTip'), th = t && t.offsetHeight ? t.offsetHeight + 6 : 0;
+    document.body.style.paddingBottom = th && !/\btour\b/.test(document.body.className) ? (38 + th) + 'px' : '';
+  }
   // высота шапки меняется: имя файла, перенос значков, ширина панели — пересчёт без обращения к CorelDRAW
   window.addEventListener('resize', topPad); setInterval(topPad, 700);
   function intoView(el) { try { el.scrollIntoView(); window.scrollBy(0, -($('topFix').offsetHeight + 6)); } catch (x) { } }
+  // Черта под открытым пунктом: ряд пунктов перерисовывается целиком, поэтому черта — отдельная полоска,
+  // которая ставится на прежнее место и переезжает на новое. Пункт тот же — просто на месте, без движения
+  var lastInd = null, lastEqOn = '';
+  function stepInd() {
+    var box = document.querySelector('.stp'); if (!box) { lastInd = null; return; }
+    var a = box.querySelector('.st.on'); if (!a) return;
+    var ind = document.createElement('div'); ind.className = 'ind noanim'; box.appendChild(ind); box.className += ' hasind';
+    var L = a.offsetLeft, W = a.offsetWidth, key = eqCur;
+    function put(l, w) { ind.style.left = l + 'px'; ind.style.width = w + 'px'; }
+    if (lastInd && lastInd.key == key && (lastInd.l != L || lastInd.w != W)) {
+      put(lastInd.l, lastInd.w); void ind.offsetWidth; ind.className = 'ind'; put(L, W);
+    } else put(L, W);
+    lastInd = { l: L, w: W, key: key };
+  }
   function renderEq() {
     if (eqCur == 'cut') cutStatus();
     var h = '', i, E, hid = eqHidden(), A = eqOf(eqCur), vis = 0;
@@ -1920,6 +2117,9 @@
       return;
     }
     $('tabs').innerHTML = h;
+    // оборудование сменилось — новый значок заливается плавно (ряд перерисовывается при каждом обновлении — только при смене)
+    if (lastEqOn && lastEqOn != eqCur) { var eon = document.querySelector('.eq.on'); if (eon) eon.className += ' just'; }
+    lastEqOn = eqCur;
     var act = eqActive(), g = '<div class="eqhead"><b>' + esc(A.n) + '</b>';
     var lkA = eqLocked(A);
     if (lkA == 2) g += '<span class="eqlk">' + LOCK_SVG + '<a class="lnk" data-act="eqlock">по ключу</a></span>';
@@ -1937,7 +2137,7 @@
         if (st.sub == 'sCutCheck') dn = cutSt.check == 'ok' || cutSt.check == 'warns' ? '✓' : (cutSt.check != 'none' ? '!' : '');
         if (st.sub == 'sLaser') dn = +cutSt.lines > 0 ? '✓' : '';
       }
-      sr += '<div class="st' + (i == act ? ' on' : '') + (md && !hasMod(md) ? ' off' : '') + '" data-act="eqstep" data-i="' + i + '" title="' + esc(st.n) + '">' +
+      sr += '<div class="st' + (i == act ? ' on' : '') + (md && !hasMod(md) ? ' off' : '') + '" data-act="eqstep" data-i="' + i + '" title="' + esc(st.n) + ' — перетащите, чтобы поменять порядок">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">' + STIC[si[0]] + '</svg>' +
             '<span class="lb">' + esc(si[1]) + '</span>' + (dn ? '<span class="dn' + (dn == '!' ? ' warn' : '') + '">' + dn + '</span>' : '') +
             (md && !hasMod(md) ? '<span class="lk">' + LOCK_SVG + '</span>' : '') + '</div>';
@@ -1946,21 +2146,26 @@
     var mh = eqCur != 'cut' ? '' : '<div class="modesw machsw"><a data-act="machine" data-v="laser"' + (cutMachine == 'laser' ? ' class="on"' : '') + '>Лазер</a>' +
       '<a data-act="machine" data-v="mill"' + (cutMachine == 'mill' ? ' class="on"' : '') + '>Фрезер</a></div>';
     $('eqHead').innerHTML = g + mh + (sr ? '<div class="stp' + (vis.length > 6 ? ' many' : '') + '">' + sr + '</div>' : '');
+    stepInd();
     $('stepNav').innerHTML = '';
     renderSvc();
   }
   // «Помощь и настройки»: режим, пояснения, какие значки показывать, ключ
   function renderSvc() {
     var i, E, hid = eqHidden(), sq = '';
-    $('modeBar').innerHTML = '<div class="modesw"><a data-act="uimode" data-v="simple"' + (uiMode == 'simple' ? ' class="on"' : '') + '>Простой режим</a>' +
+    // переключатель не перерисовываем, если он уже есть: плашка под ним должна ехать, а не появляться заново
+    if (!$('modeBar').querySelector('.modesw')) $('modeBar').innerHTML = '<div class="modesw"><a data-act="uimode" data-v="simple"' + (uiMode == 'simple' ? ' class="on"' : '') + '>Простой режим</a>' +
       '<a data-act="uimode" data-v="adv"' + (uiMode == 'adv' ? ' class="on"' : '') + '>Расширенный</a></div>';
+    else swMove($('modeBar').querySelector('.modesw'), uiMode);
     $('svcTerse').checked = !terse;
+    try { $('svcMotion').checked = LS.getItem('vpNoMotion') != '1'; } catch (x) { }
     for (i = 0; i < EQ.length; i++) {
       E = EQ[i]; if (E.id == 'all') continue;
       if (E.id == 'cal') sq += '<div class="grp">Отдельно от оборудования:</div>';
       var off = inArr(hid, E.id);
       sq += '<div class="it' + (off ? ' off' : '') + '" data-act="eqvis" data-v="' + E.id + '"><span class="ck">' + (off ? '' : '✓') + '</span>' + eqSvg(E.id) + '<span>' + esc(E.n) + '</span></div>';
     }
+    if (eqOrderAny()) sq += '<a class="lnk" data-act="eqordreset" style="display:block;margin-top:6px">Вернуть обычный порядок пунктов</a>';
     $('svcEq').innerHTML = sq;
     var L = S && S.lic ? S.lic : null;
     if (L) {
@@ -2127,10 +2332,10 @@
     'selsize': 'Размер по резу = выделенное минус вылет с каждой стороны.',
     'swap': 'Поменять ширину и высоту листа местами.',
     'impose': 'Сделать раскладку. Исходный файл не меняется — результат сохраняется отдельно.',
-    'template': 'Страницу «Шаблон стола» — уголки по местам карт — в TIFF. Печатается первой прямо на стол.',
+    'template': 'Страницу «Шаблон стола» — уголки по местам карт — в файл для принтера (TIFF или PDF, как в профиле). Печатается первой прямо на стол.',
     'run|preview|trial': 'Подставить номера этого листа в раскладку на экране. Ничего не сохраняет.',
     'run|tiff|trial': 'TIFF одного пробного листа — проверить перед всем заказом.',
-    'run|tiff|order': 'TIFF для УФ-принтера: все листы (или диапазон), фон CMYK и белила каналом W.',
+    'run|tiff|order': 'Все листы (или диапазон) в файлы для УФ-принтера: CMYK, белила и лак — под именами из профиля принтера.',
     'run|pdf|order': 'Все листы с подставленными номерами — в PDF: одним файлом или по файлу на лист. Для типографии, цифровой печати или проверки.',
     'run|print|order': 'Все листы с номерами — сразу на принтер. Сначала откроется окно выбора принтера.',
     'white': 'Выделенные белые объекты — на слой «Белила»: они напечатаются белой краской.',
@@ -2198,6 +2403,38 @@
     e.insertAdjacentHTML('afterbegin', '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">' + ICONS[ic] + '</svg>');
   }
 
+  // Плашки переключателей (.modesw): ставится на прежнее место и перетекает к выбранному. Переключатели
+  // перерисовываются целиком — прежнее место помним по тому, что они переключают (data-act)
+  var swLast = {};
+  // Переключатель на месте: отметить вариант v и сдвинуть плашку (она уже есть — едет плавно)
+  function swMove(b, v) {
+    if (!b) return;
+    var as = b.getElementsByTagName('a'), i, a = null, t = b.querySelector('.thumb');
+    for (i = 0; i < as.length; i++) { as[i].className = as[i].getAttribute('data-v') == v ? 'on' : ''; if (as[i].className == 'on') a = as[i]; }
+    if (!a || !t) return;
+    t.className = 'thumb'; t.style.left = a.offsetLeft + 'px'; t.style.width = a.offsetWidth + 'px';
+    var key = (as[0] && as[0].getAttribute('data-act')) || ''; swLast[key] = { l: a.offsetLeft, w: a.offsetWidth };
+  }
+  function uiModeApply() {
+    uiClasses();
+    // в простом режиме нет редких шагов — с такого шага уходим на первый
+    var ca = eqActive(), CE = eqOf(eqCur);
+    if (uiMode == 'simple' && ca >= 0 && CE.steps[ca].adv) { eqGo(0, false); load(); return; }
+    renderEq(); bind();
+  }
+  function swThumbs() {
+    var sw = document.querySelectorAll('.modesw'), i, b, a, key, t, L, W, p;
+    for (i = 0; i < sw.length; i++) {
+      b = sw[i]; if (b.querySelector('.thumb') || !b.offsetWidth) continue;
+      a = b.querySelector('a.on'); if (!a) continue;
+      key = (b.querySelector('a') || a).getAttribute('data-act') || ('sw' + i);
+      t = document.createElement('div'); t.className = 'thumb noanim'; b.insertBefore(t, b.firstChild); b.className += ' hasthumb';
+      L = a.offsetLeft; W = a.offsetWidth; p = swLast[key];
+      if (p && (p.l != L || p.w != W)) { t.style.left = p.l + 'px'; t.style.width = p.w + 'px'; void t.offsetWidth; t.className = 'thumb'; }
+      t.style.left = L + 'px'; t.style.width = W + 'px';
+      swLast[key] = { l: L, w: W };
+    }
+  }
   function bind() {
     var all = document.getElementsByTagName('*'), i, e;
     for (i = 0; i < all.length; i++) {
@@ -2208,7 +2445,14 @@
     }
     for (i = 0; i < all.length; i++) {
       e = all[i];
-      if (e.getAttribute('data-act') || e.getAttribute('data-field') || e.getAttribute('data-tab')) e.onclick = (function (x) { return function () { onClickEl(x); return false; }; })(e);
+      if (e.getAttribute('data-act') || e.getAttribute('data-field') || e.getAttribute('data-tab')) {
+        e.onclick = (function (x) { return function () { onClickEl(x); return false; }; })(e);
+        // не кнопка и не поле — сами делаем нажимаемым с клавиатуры
+        if (!/^(BUTTON|INPUT|SELECT|TEXTAREA|LABEL)$/.test(e.tagName) && !e.getAttribute('tabindex')) {
+          e.setAttribute('tabindex', '0'); e.setAttribute('role', 'button');
+          e.onkeydown = (function (x) { return function (ev) { ev = ev || window.event; if (ev.keyCode == 13 || ev.keyCode == 32) { onClickEl(x); return false; } }; })(e);
+        }
+      }
       // список — свой выпадающий вместо родного (см. ddOpen)
       if (e.tagName == 'SELECT' && !e.ddOn) {
         e.ddOn = true;
@@ -2220,6 +2464,21 @@
         if (e.type == 'checkbox' || e.type == 'radio') e.onclick = (function (x) { return function () { onChangeEl(x); }; })(e);
         if (e.type == 'text') e.onkeyup = (function (x) { return function () { onKeyEl(x); }; })(e);
       }
+    }
+    swThumbs();
+    cbxDress();
+  }
+  // Свои галочки: после каждого флажка в подписи — квадратик .cbx (один раз на флажок)
+  function cbxDress() {
+    var ins = document.getElementsByTagName('input'), i, e, sp;
+    for (i = 0; i < ins.length; i++) {
+      e = ins[i];
+      if ((e.type != 'checkbox' && e.type != 'radio') || e.cbxDone || !e.parentNode || e.parentNode.tagName != 'LABEL') continue;
+      e.cbxDone = true;
+      sp = document.createElement('span'); sp.className = 'cbx' + (e.type == 'radio' ? ' rd' : '');
+      e.parentNode.insertBefore(sp, e.nextSibling);
+      e.className += ' cbxin';
+      e.parentNode.className += ' hascbx';
     }
   }
 
@@ -2469,6 +2728,17 @@
       '</svg><b>' + esc(dn) + '</b>' + (S.doc.sample || !(S.run.places > 0) ? '' : '<span class="dnote">' + S.run.places + ' на лист</span>');
     $('doc').title = (S.doc.sample ? 'Образец карты: ' : 'Раскладка: ') + S.doc.name + (S.doc.sample ? '' : ' — ' + S.run.places + ' на лист');
     renderFields(); renderEditor(); renderImpose(); renderOutput(); renderPF(); renderInks(); renderLocks(); renderEq(); applyEq(); renderVer(); renderTour(); bind();
+    animEnter();
+  }
+  // Содержимое шага въезжает, только когда шаг сменился (обновления панели раз в несколько секунд — без движения)
+  var animKey = '';
+  function animEnter() {
+    var pg = $('p' + tab); if (!pg) return;
+    var sb = pg.querySelector('.subpage.on'), key = eqCur + '|' + tab + '|' + (sb ? sb.id : '') + '|' + eqStep + '|' + impMode;
+    if (key == animKey) return;
+    var first = animKey == ''; animKey = key;
+    if (first) return;
+    pg.className = pg.className.replace(/\s*\benter\b/g, ''); void pg.offsetWidth; pg.className += ' enter';
   }
 
   // «Печать» → «Белила и лак»: белила и лак — чем отмечены в макете и как называются в файле для печати
@@ -2477,25 +2747,25 @@
     if (!K) return;
     // простая карточка: выделил — добавил белила и лак; ненужное — снял галочку
     var sh = '<h4>Белила и лак</h4>';
-    if (!K.on) sh += '<label class="chk"><input type="checkbox" data-ink="on">Печатать белила и лак</label><div class="ex keep">Сейчас выключено: в печать идут только цветные краски.</div>';
+    if (!K.on) sh += '<div class="ex keep">Сейчас белила и лак не печатаются — только цвет. Нужна краска — отметьте её ниже.</div>';
     sh += '<button class="btn full main" data-act="inkboth">Добавить белила и лак к выделенному</button>' +
           '<div class="btnpair eq2"><button class="btn" data-act="inkcopy" data-i="1" title="Добавить к выделенному только белила, без лака">только белила</button><button class="btn" data-act="inkcopy" data-i="2" title="Добавить к выделенному только лак, без белил">только лак</button></div>' +
           '<div class="ex">Поверх выделенного ложатся копии: белила под цветным чуть ужаты, под белым и лак — точно по форме.</div>';
     for (var si = 0; si < K.list.length; si++) {
       var sk = K.list[si];
-      sh += '<label class="chk"' + (sk.count > 0 ? '' : ' style="opacity:.6"') + '><input type="checkbox" data-ink="use' + sk.i + '"' + (sk.use ? ' checked' : '') + '>Печатать ' + esc(sk.title.toLowerCase()) +
+      sh += '<label class="chk"' + '' + '><input type="checkbox" data-ink="use' + sk.i + '"' + (sk.use && K.on ? ' checked' : '') + '>Печатать ' + esc(sk.title.toLowerCase()) +
             '<span class="inkcnt">' + (sk.count > 0 ? 'на этой стороне: ' + sk.count : 'на этой стороне нет') + '</span></label>';
     }
     sh += '<div class="ex">Не нужна краска на этом заказе — снимите галочку: копии останутся в макете, но печататься не будут.</div>';
     $('inkSimple').innerHTML = sh;
-    $('inkOn').checked = !!K.on;
     $('inkMirror').checked = !!K.mirror;
-    $('inkBox').style.display = K.on ? '' : 'none';
+    $('inkBox').style.display = '';   // у каждой краски своя галочка «Печатать этой краской» — общего выключателя нет
     var h = '', i, k, j, o;
     for (i = 0; i < K.list.length; i++) {
       k = K.list[i];
+      // настройки краски — только когда она отмечена «Печатать …» выше: одна галочка, без повтора
+      if (!(k.use && K.on)) continue;
       h += '<div class="card"><h4>' + esc(k.title) + '</h4>';
-      h += '<label class="chk"><input type="checkbox" data-ink="use' + k.i + '"' + (k.use ? ' checked' : '') + '>Печатать этой краской</label>';
       h += '<div class="note">Как отмечена в макете:</div>';
       h += '<div class="seg"><button class="btn' + (k.byColor ? '' : ' sel') + '" data-act="inkmark" data-i="' + k.i + '" data-v="0">Слоем<small>всё на слое — эта краска</small></button>' +
            '<button class="btn' + (k.byColor ? ' sel' : '') + '" data-act="inkmark" data-i="' + k.i + '" data-v="1">Плашечным цветом<small>объекты этого цвета</small></button></div>';
@@ -2520,7 +2790,7 @@
                          '<div class="row"><span class="k">но не больше, мм</span><input type="text" id="choke"></div>' +
                          '<div class="ex keep">Толщина считается у каждого объекта: у фона ужатие упрётся в предел, у тонкой буквы — доли её штриха. 0 % — всем одинаково, на предел.</div>';
       // копии выделенного поверх рисунка: плашкой с наложением, а если краска отмечена слоем — на её слой
-      h += '<button class="btn full main" data-act="inkcopy" data-i="' + k.i + '">Копии выделенного → ' + esc(k.title.toLowerCase()) + '</button>';
+      h += '<button class="btn full" data-act="inkcopy" data-i="' + k.i + '">Добавить ' + esc(k.title.toLowerCase()) + ' к выделенному</button>';
       h += '<div class="ex">Поверх рисунка ложатся копии выделенных объектов ' + (k.byColor ? 'цветом «' + esc(k.spot) + '»' : 'на слой «' + esc(k.layer) + '»') + ' с наложением заливки' +
            (k.i == 1 ? '. Под цветным рисунком белила ужаты внутрь, чтобы не выглядывали; под белым объектом — точно по форме: он сам печатается белилами.' : ' — точно по форме.') +
            ' Текст станет кривыми, у картинки — её прямоугольник. Номер из данных остаётся живым текстом: при выводе в копию подставится то же число.</div>';
@@ -2529,12 +2799,13 @@
       if (k.i == 1) {
         h += '<button class="btn full" data-act="white">Выделенное белое → белила</button>';
         h += '<button class="btn full" data-act="underlay">Сделать подслой белил</button>';
-        h += '<div class="ex">Обводит выделенное (или весь рисунок стороны, если ничего не выделено) и кладёт белую подложку. Подложка чуть меньше рисунка — на 0,1–0,2 мм с каждой стороны, чтобы белое не выглядывало из-под краски при сдвиге.</div>';
+        h += '<div class="ex">Обводит выделенное (или весь рисунок стороны, если ничего не выделено) и кладёт белую подложку. Подложка меньше рисунка на величину из поля «но не больше, мм» выше — чтобы белое не выглядывало из-под краски при сдвиге.</div>';
       }
       h += '</div>';
     }
     $('inkCards').innerHTML = h;
-    $('choke').value = num(S.doc.choke); if ($('chokePct')) $('chokePct').value = num(S.doc.chokePct == null ? 10 : S.doc.chokePct);
+    // ужатие — в карточке белил; белила не отмечены — карточки нет
+    if ($('choke')) $('choke').value = num(S.doc.choke); if ($('chokePct')) $('chokePct').value = num(S.doc.chokePct == null ? 10 : S.doc.chokePct);
     var names = [];
     for (i = 0; i < K.list.length; i++) if (K.list[i].use) names.push('«' + K.list[i].out + '»');
     $('inkOutInfo').innerHTML = K.on && names.length
@@ -2772,6 +3043,34 @@
 
   function opt(list, sel, suf) { var o = ''; for (var i = 0; i < list.length; i++) o += '<option value="' + list[i] + '"' + (String(list[i]) == String(sel) ? ' selected' : '') + '>' + list[i] + suf + '</option>'; return o; }
 
+  // Офсет, новая работа: по умолчанию — еврофлаеры своим оборотом на печатный лист с метками реза, крестами, шкалой и подписью листа.
+  // Что человек поменял на офсете — запоминается и в следующий раз стоит так же (у карт на УФ свои настройки)
+  var OFF_KEYS = ['sheetW', 'sheetH', 'gapX', 'gapY', 'radius', 'margin', 'cutMarks', 'regMarks', 'colorBar', 'sheetInfo', 'mirror', 'guides', 'gripperSide', 'gripper', 'orient', 'workTurn', 'wtMode', 'wtCal'];
+  var OFF_DEF = { sheetW: 700, sheetH: 500, radius: 0, margin: 12, cutMarks: true, regMarks: true, colorBar: true, sheetInfo: true, mirror: true, guides: false, gripperSide: '2', gripper: 10, orient: '0', workTurn: true, wtMode: '1', wtCal: '0' };
+  function offOn() { return eqCur == 'offset' && S && S.doc && S.imp && (impMode == 'sel' || (impMode == 'sample' && S.doc.sample)); }   // открытая раскладка помнит своё
+  function offApply() {
+    var P = {}, k, i;
+    try { P = JSON.parse(LS.getItem('offImp3') || '{}') || {}; } catch (x) { P = {}; }
+    // «Только выделенное»: размер и вылет не из файла — по умолчанию еврофлаер 99 × 210 с вылетом 2 мм
+    if (impMode == 'sel') { S.imp.cutW = P.cutW || 99; S.imp.cutH = P.cutH || 210; S.imp.bleed = P.hasOwnProperty('bleed') ? P.bleed : 2; }
+    // флаеры режут в одну линию: зазор 0, вылет между ними срезается по линии реза
+    var g = 0;
+    for (i = 0; i < OFF_KEYS.length; i++) {
+      k = OFF_KEYS[i];
+      S.imp[k] = P.hasOwnProperty(k) ? P[k] : (k == 'gapX' || k == 'gapY' ? g : OFF_DEF[k]);
+    }
+  }
+  function offSave() {
+    if (!offOn()) return;
+    var P = {}, k, e;
+    for (var i = 0; i < OFF_KEYS.length; i++) {
+      k = OFF_KEYS[i]; e = $(k); if (!e) continue;
+      P[k] = e.type == 'checkbox' ? e.checked : (e.tagName == 'SELECT' ? e.value : (parseFloat(String(e.value).replace(',', '.')) || 0));
+    }
+    if (impMode == 'sel') { P.cutW = parseFloat($('cutW').value.replace(',', '.')) || 0; P.cutH = parseFloat($('cutH').value.replace(',', '.')) || 0; P.bleed = parseFloat($('bleed').value.replace(',', '.')) || 0; }
+    else { try { var O = JSON.parse(LS.getItem('offImp3') || '{}'); if (O.cutW) { P.cutW = O.cutW; P.cutH = O.cutH; P.bleed = O.bleed; } } catch (x) { } }
+    try { LS.setItem('offImp3', JSON.stringify(P)); } catch (x) { }
+  }
   var IMP = ['sheetW', 'sheetH', 'cutW', 'cutH', 'bleed', 'radius', 'gapX', 'gapY', 'margin', 'marginT', 'marginB', 'marginL', 'marginR', 'cutLen', 'cutOff', 'cutLine', 'plateW', 'plateH', 'klapan'];
   // Печатники: список из printers.js; выбранный помним в панели
   function klapanText(k) { return k == null ? 'клапан не указан' : (k < 0 ? 'по центру' : 'клапан ' + k); }
@@ -2800,6 +3099,7 @@
   try { impMode = LS.getItem('impMode') || 'sample'; } catch (x) { }
   function selSize() { var t = call('SelInfo'); if (!t) return null; var a = t.split('|'); return [parseFloat(a[0]), parseFloat(a[1])]; }
   function renderImpose() {
+    if (offOn()) offApply();
     for (var i = 0; i < IMP.length; i++) $(IMP[i]).value = num(S.imp[IMP[i]]);
     $('marginSides').checked = S.imp.marginSides; $('cutMarks').checked = S.imp.cutMarks;
     $('regMarks').checked = S.imp.regMarks; $('colorBar').checked = S.imp.colorBar; $('sheetInfo').checked = S.imp.sheetInfo;
@@ -2843,7 +3143,17 @@
       applyFolds(); if ($('cutMarks').checked) $('cutBox').style.display = '';
       bookLoad(); bookUi(); bookPlan();
     }
-    $('cardSheetH').innerText = book ? 'Лист печати, мм' : 'Лист и карта, мм';
+    // что раскладываем — словом своего оборудования: у плоттера наклейки, у лазера и фрезера детали
+    var W = eqCur == 'plot' ? ['наклейка', 'наклейки', 'наклеек'] : eqCur == 'cut' ? ['деталь', 'детали', 'деталей'] : eqCur == 'uv' ? ['карта', 'карты', 'карт'] : ['макет', 'макеты', 'макетов'];
+    // офсет и цифра — флаеры, буклеты, визитки: «макет»; на УФ — карты и таблички
+    var Wc = function (t) { return t.charAt(0).toUpperCase() + t.slice(1); };
+    $('cardSheetH').innerText = book ? 'Лист печати, мм' : 'Лист и ' + W[0] + ', мм';
+    $('cardPlaceH').innerText = 'Как расставить ' + W[1] + ', мм';
+    $('orientLbl').innerText = Wc(W[1]);
+    $('guidesTxt').innerText = 'Голубые контуры ' + W[2] + ' в файле';
+    if (!$('plate').checked) $('sheetLbl').innerText = eqCur == 'uv' ? 'Лист (стол)' : 'Лист';
+    // на УФ лист — это стол: одно слово на экране
+    $('marginLbl').innerText = eqCur == 'uv' ? 'Отступ от края стола' : 'Отступ от края листа';
     if (roll) { var R = S.roll || {}; if (!$('rollW').value) { $('rollW').value = num(R.w); $('rollSide').value = num(R.side); $('rollQty').value = num(R.qty); $('rollCut').value = String(R.cut); $('rollMarks').value = String(R.marks); $('rollMSize').value = num(R.msize); $('rollMGap').value = num(R.mgap); } $('rollMarkRow').style.display = $('rollMarks').value == '0' ? 'none' : ''; }
     else if (!book && !nest && !ctp) { $('fOffset').style.display = ''; applyFolds(); if ($('cutMarks').checked) $('cutBox').style.display = ''; }
     if (ctp) { $('askOut').parentNode.style.display = 'none'; plLoad(); plInfo(); } else $('askOut').parentNode.style.display = '';
@@ -2867,7 +3177,7 @@
       nsKey = 'common'; nsSync();
     }
     // на УФ-планшете печатают по готовым заготовкам — резать нечего
-    $('cutLbl').innerText = eqCur == 'uv' ? (sel ? 'Размер макета' : 'Размер карты') : (sel ? 'Макет по резу' : 'Карта по резу');
+    $('cutLbl').innerText = eqCur == 'uv' ? (sel ? 'Размер макета' : 'Размер карты') : (sel ? 'Макет по резу' : Wc(W[0]) + ' по резу');
     $('gangRow').style.display = impMode == 'sel' ? '' : 'none';
     if (impMode != 'sel') $('gang').checked = false;
     if (!$('gangQty').value && S.gangQty) $('gangQty').value = S.gangQty;
@@ -2875,16 +3185,19 @@
     if (sel) { var z = selSize(); $('selInfo').innerText = z ? 'Выделено: ' + num(z[0]) + ' × ' + num(z[1]) + ' мм' : 'Сейчас ничего не выделено.'; }
     $('backDX').value = num(S.imp.backDX || 0); $('backDY').value = num(S.imp.backDY || 0);
     $('presetRow').style.display = roll ? 'none' : ''; $('presetNote').style.display = roll ? 'none' : '';
-    $('workTurn').checked = S.imp.workTurn; $('wtRow').style.display = sel ? 'none' : ''; $('mirBox').style.display = sel ? 'none' : ''; $('wtNote').style.display = sel ? 'none' : '';
-    $('mirror').checked = S.imp.mirror; $('guides').checked = S.imp.guides; $('orient').value = String(S.imp.orient); $('alignH').value = String(S.imp.alignH); $('alignV').value = String(S.imp.alignV); uvAlignSync();
+    // свой или чужой оборот — переключателем наверху (офсет); старая галочка — только хранит выбор
+    $('workTurn').checked = S.imp.workTurn; $('wtRow').style.display = 'none';
+    $('wtMode').value = String(S.imp.wtMode || 1) == '2' ? '2' : '1'; $('wtCal').value = S.imp.wtCal === true || String(S.imp.wtCal) == '1' ? '1' : '0'; $('wtNote').style.display = 'none'; $('mirBox').style.display = sel ? 'none' : '';
+    $('mirror').checked = S.imp.mirror; turnUi(); $('guides').checked = S.imp.guides; $('orient').value = String(S.imp.orient); $('alignH').value = String(S.imp.alignH); $('alignV').value = String(S.imp.alignV); uvAlignSync();
     $('markLen').value = num(S.imp.markLen); $('markW').value = num(S.imp.markW); $('markGap').value = num(S.imp.markGap);
+    $('tplCard').style.display = impMode == 'sample' || impMode == 'sel' ? '' : 'none';
     $('impHint').innerHTML = S.doc.sample
-      ? '<div class="card"><span class="big">Открыт образец карты.</span><div class="ex">Из него макрос сделает отдельный файл — лист с картами. Сам образец не меняется.</div></div>'
+      ? '<div class="card"><span class="big">Открыт образец — ' + W[0] + ' в одном экземпляре.</span><div class="ex">Из него макрос сделает отдельный файл — лист, где он стоит рядами. Сам образец не меняется.</div></div>'
       : '<div class="card"><span class="big">Открыта раскладка.</span><div class="ex">' + (S.imp.src ? 'Сделана из образца «' + esc(S.imp.src) + '». Поменяйте что нужно и нажмите «Переразложить» — образец откроется сам.'
                    : 'Образец для неё не найден — при «Переразложить» макрос попросит его выбрать.') + '</div></div>';
     $('impBtn').innerText = book ? 'Разложить тетради…' : roll ? 'Разложить на рулон…' : sel ? 'Разложить выделенное в новый документ' : (S.doc.sample ? 'Разложить в новый файл…' : 'Переразложить…');
     $('impBtnNote').innerText = book ? 'Спросит, куда сохранить. Исходная брошюра не меняется.' : roll ? 'Спросит, куда сохранить. Лист — ширина рулона, длина по тиражу; контур реза и метки — отдельными слоями.' : sel ? 'Откроется новый документ: лист с копиями и страница «Шаблон стола». Сохраните его сами.'
-      : (S.doc.sample ? 'Спросит, куда сохранить; в конце файла появится страница «Шаблон стола».'
+      : (S.doc.sample ? (eqCur == 'offset' || eqCur == 'digi' || $('plate').checked || ($('workTurn').checked && impMode == 'sample') ? 'Спросит, куда сохранить, и откроет готовый лист.' : 'Спросит, куда сохранить; в конце файла появится страница «Шаблон стола».')
       : 'Предложит сохранить поверх этой раскладки. Старая заменится новой.');
     if (sel) $('impHint').innerHTML = '';
     impCalc();
@@ -3063,7 +3376,14 @@
   // выбранный пункт подсвечен. Данные и обработчики — у самого списка: выбор ставит его значение и шлёт
   // «изменено», как при обычном выборе. Клавиатура по-прежнему работает с родным списком
   var ddEl = null, ddSel = null;
-  function ddClose() { if (ddEl && ddEl.parentNode) ddEl.parentNode.removeChild(ddEl); ddEl = null; ddSel = null; }
+  function ddClose() {
+    var d = ddEl; if (ddSel) ddSel.className = ddSel.className.replace(/\s*\bddon\b/g, ''); ddEl = null; ddSel = null;
+    if (!d || !d.parentNode) return;
+    // гаснет и убирается; без анимаций — сразу
+    if (/\bnomotion\b/.test(document.body.className)) { d.parentNode.removeChild(d); return; }
+    d.className += ' out';
+    setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 110);
+  }
   function ddPick(sel, i) {
     if (sel.selectedIndex == i) return;
     sel.selectedIndex = i;
@@ -3093,7 +3413,8 @@
     var left = r.left; if (left + d.offsetWidth > vw - 4) left = Math.max(4, vw - 4 - d.offsetWidth);
     d.style.left = Math.round(left + sx) + 'px';
     d.style.top = Math.round((up ? r.top - ph : r.bottom) + sy) + 'px';
-    ddEl = d; ddSel = sel;
+    d.className += up ? ' up' : ' dn';
+    ddEl = d; ddSel = sel; sel.className += ' ddon';
     var on = d.querySelector('.on'); if (on && on.offsetTop + on.offsetHeight > d.clientHeight) d.scrollTop = on.offsetTop - 20;
     d.onmousedown = function (ev) {
       ev = ev || window.event; var tg = ev.target || ev.srcElement;
@@ -3106,7 +3427,12 @@
   document.addEventListener('mousedown', function (e) { if (ddEl && !ddEl.contains(e.target) && e.target != ddSel) ddClose(); }, true);
   window.addEventListener('scroll', function () { if (ddEl) ddClose(); });
   window.addEventListener('resize', function () { if (ddEl) ddClose(); });
-  document.addEventListener('keydown', function (e) { if (ddEl && (e.keyCode == 27 || e.keyCode == 9)) ddClose(); });
+  document.addEventListener('keydown', function (e) {
+    if (ddEl && (e.keyCode == 27 || e.keyCode == 9)) ddClose();
+    if (e.keyCode == 9 && !/\bkbd\b/.test(document.body.className)) document.body.className += ' kbd';
+    if (e.keyCode == 27 && /\bopen\b/.test($('svcBar').className)) svcShow(false);
+  });
+  document.addEventListener('mousedown', function () { document.body.className = document.body.className.replace(/\s*\bkbd\b/g, ''); });
   function docWatch() {
     if (!host || calBusy || selActive() || (typeof nestTimer != 'undefined' && nestTimer)) return;
     var k = call('DocKey');
@@ -3685,19 +4011,19 @@
     // ---- Раскладка: лист и карта ----
     sheetPreset: { s: 'Готовый формат листа: подставит размер и поле, которое машина не пропечатывает.', il: 'sheet', a: { W: 450, H: 320 }, z: { W: 297, H: 210 }, la: 'SRA3 450 × 320', lz: 'A4 297 × 210' },
     sheetW: { s: 'Размер листа или стола принтера, мм. ⇄ — повернуть лист.', il: 'sheet', a: { W: 450, H: 320 }, z: { W: 320, H: 450 }, la: 'лёжа', lz: 'стоя' },
-    cutW: { s: 'Размер готовой карты после резки, мм — без вылета.', il: 'sheet', a: { cw: 90, ch: 55 }, z: { cw: 85, ch: 54, radius: 3 }, la: '90 × 55', lz: '85 × 54' },
+    cutW: { s: 'Размер готового изделия после резки (карты, наклейки, детали), мм — без вылета.', il: 'sheet', a: { cw: 90, ch: 55 }, z: { cw: 85, ch: 54, radius: 3 }, la: '90 × 55', lz: '85 × 54' },
     bleed: { s: 'Вылет — фон заходит за линию реза, чтобы после резки не осталось белых краёв.', il: 'card', a: { bleed: 0 }, z: { bleed: 3 }, la: 'без вылета', lz: 'вылет 3 мм' },
     radius: { s: 'Скругление углов карты — для пластиковых карт и бейджей.', il: 'card', a: { radius: 0 }, z: { radius: 4 }, la: 'прямые', lz: '4 мм' },
-    gapX: { s: 'Расстояние между картами по горизонтали и вертикали, мм.', il: 'sheet', a: { gx: 2, gy: 2 }, z: { gx: 12, gy: 12 }, la: '2 мм', lz: '12 мм' },
-    margin: { s: 'Отступ блока карт от краёв листа, мм.', il: 'sheet', a: { mt: 5, mb: 5, ml: 5, mr: 5 }, z: { mt: 25, mb: 25, ml: 25, mr: 25 }, la: '5 мм', lz: '25 мм' },
+    gapX: { s: 'Расстояние между изделиями по горизонтали и вертикали, мм.', il: 'sheet', a: { gx: 2, gy: 2 }, z: { gx: 12, gy: 12 }, la: '2 мм', lz: '12 мм' },
+    margin: { s: 'Отступ блока изделий от краёв листа, мм.', il: 'sheet', a: { mt: 5, mb: 5, ml: 5, mr: 5 }, z: { mt: 25, mb: 25, ml: 25, mr: 25 }, la: '5 мм', lz: '25 мм' },
     marginSides: { s: 'Разные отступы с каждой стороны — например, сверху больше под клапан.', il: 'sheet', a: {}, z: { mt: 30, mb: 5, ml: 5, mr: 5, av: 'top' }, la: 'одинаковые', lz: 'сверху 30 мм' },
-    orient: { s: 'Как повернуть карты на листе: как больше влезет, лёжа или стоя.', il: 'sheet', a: { orient: 'land' }, z: { orient: 'port' }, la: 'лёжа', lz: 'стоя' },
-    alignV: { s: 'К какому краю прижать блок карт, если остаётся место.', il: 'sheet', b: { cols: 3, rows: 3 }, a: { av: 'center', ah: 'center' }, z: { av: 'top', ah: 'left' }, la: 'по центру', lz: 'вверх и влево' },
+    orient: { s: 'Как повернуть изделия на листе: как больше влезет, лёжа или стоя.', il: 'sheet', a: { orient: 'land' }, z: { orient: 'port' }, la: 'лёжа', lz: 'стоя' },
+    alignV: { s: 'К какому краю прижать блок изделий, если остаётся место.', il: 'sheet', b: { cols: 3, rows: 3 }, a: { av: 'center', ah: 'center' }, z: { av: 'top', ah: 'left' }, la: 'по центру', lz: 'вверх и влево' },
     cols: { s: 'Ограничить число колонок и рядов. Пусто — сколько влезет.', il: 'sheet', a: {}, z: { cols: 2, rows: 2 }, la: 'авто', lz: '2 × 2' },
     workTurn: { s: 'Свой оборот: лица и обороты на одном листе, печать одними пластинами с переворотом.', il: 'sheet', a: { turn: 0 }, z: { turn: 1 }, la: 'обычно', lz: 'лица | обороты' },
     mirror: { s: 'Оборот зеркально — карты оборота встают в обратном порядке по строке, как после переворота листа.', il: 'sheet', b: { num: 1, back: 1 }, a: { mirror: 0 }, z: { mirror: 1 }, la: 'оборот как лицо', lz: 'оборот зеркально' },
     backDX: { s: 'Сдвиг всего оборота, если на цифровой машине он печатается со смещением.', il: 'sheet', b: { back: 1, cols: 3, rows: 2 }, a: { shift: 0 }, z: { shift: 12 }, la: 'без сдвига', lz: 'сдвинут влево' },
-    guides: { s: 'Голубые контуры карт в файле — только для глаз, не печатаются.', il: 'sheet', a: { guides: 0 }, z: { guides: 1 }, la: 'без контуров', lz: 'контуры' },
+    guides: { s: 'Голубые контуры изделий в файле — только для глаз, не печатаются.', il: 'sheet', a: { guides: 0 }, z: { guides: 1 }, la: 'без контуров', lz: 'контуры' },
     cutMarks: { s: 'Метки реза снаружи блока по каждой линии реза — для резки после печати.', il: 'sheet', a: { cut: 0 }, z: { cut: 1 }, la: 'без меток', lz: 'метки реза' },
     gang: { s: 'Сборный лист: разные макеты на одном листе, у каждого свой тираж.', il: 'sheet', a: { gang: 0 }, z: { gang: 1 }, la: 'один макет', lz: 'A, B, C вместе' },
     gangQty: { s: 'Тиражи макетов через запятую — в том же порядке, как они выделены.' },
@@ -3771,7 +4097,6 @@
     orderStack: { sel: 'input[name="order"]', s: 'Порядок номеров: подряд по листам или стопкой — для резки пачкой.', il: 'order', a: { stack: 0 }, z: { stack: 1 }, la: 'подряд', lz: 'стопкой' },
     startRecord: { s: 'С какой записи начать — продолжить прерванный заказ.', il: 'order', a: { start: 1 }, z: { start: 101 }, la: 'с 1', lz: 'с 101' },
     sheetsAuto: { s: 'Сколько листов: сколько нужно по данным или ровно столько, сколько впишете.' },
-    inkOn: { s: 'Печатать белила и лак (спецкраски) или только цвет.' },
     inkMirror: { s: 'Зеркально — для плёнки DTF, её печатают с обратной стороны.', il: 'sides', b: { show: 'front' }, a: { mirror: 0 }, z: { mirror: 1 }, la: 'УФ-стол', lz: 'DTF' },
     client: { s: 'Заказчик — в его журнал пишутся номера, чтобы не напечатать их дважды.' },
 
@@ -3854,11 +4179,11 @@
       'Файл для плоттера': ['Контур реза отдельным файлом: PLT, DXF или AI, с метками плоттера или без. Начало координат — левый нижний угол.', '', null],
       'Цена': ['Длина реза и врезки — в деньги и минуты. Отдельно по цвету линий.', 'cost', { pierce: 1 }] } },
     digi: { lead: 'Цифровая печать: визитки, флаеры, брошюры на SRA3 и A3. Раскладка на лист, брошюра, вывод в PDF или сразу на принтер. Проверка, правки и номера — в «Макете».', st: {
-      'Раскладка': ['«Лист» — карты на SRA3 или A3 с метками реза; сдвиг оборота подгонит лицо и оборот. «Брошюра» — развороты для фальцовки.', 'sheet', { cut: 1 }],
+      'Раскладка': ['«Лист» — визитки, флаеры и другие макеты на SRA3 или A3 с метками реза; сдвиг оборота подгонит лицо и оборот. «Брошюра» — развороты для фальцовки.', 'sheet', { cut: 1 }],
       'Вывод': ['Пробный лист, потом весь заказ — в PDF или сразу на принтер.', 'order', { sheets: 2 }],
       'PDF для типографии': ['PDF/X-4 для цифровой печати: цвет CMYK, шрифты внутри, вылет по формату. Перед сохранением макет проверится.', '', null] } },
     offset: { lead: 'Офсет: спуск на печатный лист, клапан, шкала, кресты, пластина печатника, свой оборот, брошюра и PDF для типографии. Проверка, правки и номера — в «Макете».', st: {
-      'Раскладка': ['«Лист» — карты на печатный лист; клапан, шкала, кресты и пластина — в разделе «Офсет». «Брошюра» — развороты для фальцовки. «Пластина» — готовый лист на пластину печатника с метками и PDF для вывода.', 'plate', {}],
+      'Раскладка': ['«Лист» — флаеры, листовки и другие макеты на печатный лист; клапан, шкала, кресты и пластина — в разделе «Офсет». «Брошюра» — развороты для фальцовки. «Пластина» — готовый лист на пластину печатника с метками и PDF для вывода.', 'plate', {}],
       'Вывод': ['PDF с номерами — по файлу на лист или одним файлом.', 'order', { sheets: 2 }],
       'PDF для типографии': ['PDF/X-1a — его принимает любая типография. Перед сохранением макет проверится.', '', null] } },
     cut: { lead: 'Резка на станке — лазер CO2 или фрезер: укладка деталей по форме, объёмные буквы, порядок реза, файл для станка и цена. Станок выбирается переключателем «Лазер · Фрезер».', st: {
@@ -5668,8 +5993,11 @@
     return k == 'mill' ? 'bl' : 'tl';
   }
   // УФ, «На лист»: точка старта = куда прижат блок карт (те же «Прижать блок», только квадратиком)
+  function uvCenterOn() { try { return LS.getItem('uvCenter') == '1'; } catch (x) { return false; } }
   function uvAlignSync() {
     if (eqCur != 'uv') return;
+    if ($('uvCenter')) $('uvCenter').checked = uvCenterOn();
+    if (uvCenterOn()) { $('alignV').value = '0'; $('alignH').value = '0'; return; }
     var v = cutStart(), h = v.charAt(v.length - 1);
     $('alignV').value = v.charAt(0) == 't' ? '2' : v.charAt(0) == 'b' ? '1' : '0';
     $('alignH').value = h == 'l' ? '1' : h == 'r' ? '2' : '0';
@@ -5956,13 +6284,15 @@
     p.push('gripperSide=' + $('gripperSide').value); p.push('gripper=' + $('gripper').value);
     p.push('plateStyle=' + $('plateStyle').value);
     p.push('workTurn=' + ($('workTurn').checked && impMode == 'sample' ? 1 : 0));
+    p.push('wtMode=' + $('wtMode').value); p.push('wtCal=' + $('wtCal').value);
+    if (eqCur == 'uv') { p.push('markLen=' + $('markLen').value); p.push('markW=' + $('markW').value); p.push('markGap=' + $('markGap').value); }
     p.push('backDX=' + $('backDX').value.replace('−', '-')); p.push('backDY=' + $('backDY').value.replace('−', '-'));
     var RK = ['rollW', 'rollSide', 'rollQty', 'rollCut', 'rollMarks', 'rollMSize', 'rollMGap'];
     for (var ri = 0; ri < RK.length; ri++) if ($(RK[ri]).value !== '') p.push(RK[ri] + '=' + $(RK[ri]).value);
     p.push('plate=' + ($('plate').checked ? 1 : 0)); p.push('plateCenter=' + ($('plateCenter').checked ? 1 : 0));
     var P = window.PRINTERS || [], pi = $('printer').value;
     if (pi !== '' && P[pi]) p.push('printer=' + P[pi][0]);
-    p.push('mirror=' + ($('mirror').checked ? 1 : 0)); p.push('guides=' + ($('guides').checked ? 1 : 0)); p.push('orient=' + $('orient').value); uvAlignSync(); p.push('alignH=' + $('alignH').value); p.push('alignV=' + $('alignV').value); p.push('numCorner=' + (eqCur == 'uv' ? 1 : 0));
+    p.push('mirror=' + ($('mirror').checked ? 1 : 0)); p.push('guides=' + ($('guides').checked ? 1 : 0)); p.push('orient=' + $('orient').value); uvAlignSync(); p.push('alignH=' + $('alignH').value); p.push('alignV=' + $('alignV').value); p.push('numCorner=' + (eqCur == 'uv' ? 1 : 0)); p.push('numStart=' + (eqCur == 'uv' && uvCenterOn() ? cutStart() : '')); p.push('noTemplate=' + (eqCur == 'offset' || eqCur == 'digi' ? 1 : 0));
     return p.join('|');
   }
 
@@ -6110,8 +6440,24 @@
     el.className = 'info'; el.innerText = t;
   }
 
+  function turnUi() {
+    var on = eqCur == 'offset' && impMode == 'sample', own = $('workTurn').checked;
+    $('turnBox').style.display = on ? '' : 'none';
+    $('turnOwn').className = 'btn' + (own ? ' sel' : ''); $('turnAlien').className = 'btn' + (own ? '' : ' sel');
+    // при своём обороте «Оборот зеркально» не нужен — лист переворачивают по оси, обороты уже стоят зеркально
+    if (on) $('mirBox').style.display = own ? 'none' : '';
+    $('wtOpts').style.display = own ? '' : 'none';
+    var tb = $('wtMode').value == '2', cal = $('wtCal').value == '1';
+    $('turnNote').innerText = own
+      ? (tb ? 'Лица — на верхней половине листа, обороты — на нижней. Печатают одну сторону, переворачивают лист через голову (снизу вверх) и печатают теми же пластинами. Клапаном при этом становится другой край листа — нужны поля под захваты сверху и снизу.'
+            : 'Лица — на левой половине листа, обороты — на правой. Печатают одну сторону, переворачивают лист слева направо и печатают теми же пластинами.') +
+        (tb != cal ? ' Обороты на листе стоят вверх ногами — развёрнуты на 180° к лицам, так и должно быть.' : '') +
+        ' Пластин вдвое меньше, с листа — два комплекта. Номера так не печатают — они повторятся.'
+      : 'Лицо и оборот — каждое на весь лист, у каждой стороны свои пластины. Оборот встанет зеркально — так, как ляжет после переворота листа.';
+  }
   function impCalc() {
     if (impMode == 'book') { bookPlan(); return; }
+    offSave();
     if (impMode == 'sel' && $('gang').checked) {
       $('impCalc').innerText = call('GangInfo', impParams(), $('gangQty').value);
       $('sheetBox').innerHTML = '';
@@ -6195,6 +6541,40 @@
     $('sheetBox').innerHTML = '<svg width="' + (W * k + 2) + '" height="' + (L * k + 2) + '" xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
   }
 
+  // Раздача карт на превью листа: раскладка поменялась (сколько, как повёрнуты, какой лист) — карты «ложатся»
+  // волной от угла карты 1: проявляются и чуть подрастают. Цифры в полях поменялись без смены сетки — без движения.
+  // Анимация — через атрибуты SVG по кадрам: встроенный браузер CorelDRAW не анимирует SVG стилями
+  var dealKey = '', dealRun = 0;
+  function sheetDeal(key) {
+    var first = dealKey === '', same = key == dealKey; dealKey = key;
+    if (first || same || /\bnomotion\b/.test(document.body.className)) return;
+    var cs = $('sheetBox').querySelectorAll('rect.cd'), i, mx = 0, it = [];
+    if (!cs.length || cs.length > 600) return;
+    for (i = 0; i < cs.length; i++) {
+      var w = +cs[i].getAttribute('data-w'), x = +cs[i].getAttribute('x') + cs[i].getAttribute('width') / 2, y = +cs[i].getAttribute('y') + cs[i].getAttribute('height') / 2;
+      if (w > mx) mx = w;
+      it.push({ e: cs[i], w: w, x: x, y: y }); cs[i].setAttribute('opacity', '0');
+    }
+    var step = Math.min(28, 380 / Math.max(1, mx)), dur = 260, t0 = null, run = ++dealRun;
+    var raf = window.requestAnimationFrame || function (f) { return setTimeout(function () { f(+new Date()); }, 16); };
+    function frame(ts) {
+      if (run != dealRun) return;
+      if (t0 === null) t0 = ts;
+      var el = ts - t0, done = true, j, p, e, sc;
+      for (j = 0; j < it.length; j++) {
+        p = (el - it[j].w * step) / dur;
+        if (p < 1) done = false;
+        p = p < 0 ? 0 : (p > 1 ? 1 : p);
+        // выход с лёгким перелётом: 0 → 1.06 → 1
+        e = 1 - Math.pow(1 - p, 3); sc = 0.55 + 0.45 * e + 0.06 * Math.sin(Math.PI * p);
+        it[j].e.setAttribute('opacity', String(Math.min(1, p * 1.6)));
+        if (p >= 1) it[j].e.removeAttribute('transform');
+        else it[j].e.setAttribute('transform', 'translate(' + it[j].x + ' ' + it[j].y + ') scale(' + sc + ') translate(' + (-it[j].x) + ' ' + (-it[j].y) + ')');
+      }
+      if (!done) raf(frame); else for (j = 0; j < it.length; j++) { it[j].e.removeAttribute('transform'); it[j].e.removeAttribute('opacity'); }
+    }
+    raf(frame);
+  }
   function drawSheet(c, n, rot, bx0, by0) {
     var W = parseFloat($('sheetW').value) || 900, H = parseFloat($('sheetH').value) || 600;
     var PW = W, PH = H, px = 0, py = 0, plate = $('plate').checked;
@@ -6210,8 +6590,11 @@
     var sides = $('marginSides').checked, mv = function (id) { var v = parseFloat($(id).value); return isNaN(v) ? m : v; };
     var mL = sides ? mv('marginL') : m, mR = sides ? mv('marginR') : m, mT = sides ? mv('marginT') : m, mB = sides ? mv('marginB') : m;
     var ah = $('alignH').value, av = $('alignV').value;
-    var x0 = ah == '1' ? mL : (ah == '2' ? W - mR - bw : mL + (W - mL - mR - bw) / 2);
+    // свой оборот: лица — левая половина, обороты — правая зеркально; блок считается в половине листа
+    var wt = $('workTurn').checked && impMode == 'sample', tb = wt && $('wtMode').value == '2', HW = wt && !tb ? W / 2 : W;
+    var x0 = wt && !tb ? HW - gx / 2 - bw : (ah == '1' ? mL : (ah == '2' ? HW - mR - bw : mL + (HW - mL - mR - bw) / 2));
     var y0 = av == '2' ? mT : (av == '1' ? H - mB - bh : mT + (H - mT - mB - bh) / 2);
+    if (tb) y0 = H / 2 - gy / 2 - bh;
     if (!isNaN(bx0)) x0 = bx0; if (!isNaN(by0)) y0 = by0;
     var s0 = '';
     if (plate) {
@@ -6236,28 +6619,65 @@
         else { var byq = 1 + 10 * k + bi * (h - 20 * k) / 40, bxq = tail == 'r' ? 1 + w - be - bz : 1 + be; s += '<rect x="' + bxq + '" y="' + byq + '" width="' + bz + '" height="' + ((h - 20 * k) / 40) + '" fill="' + cc + '"/>'; }
       }
     }
-    for (var r = 0; r < n; r++) for (var q = 0; q < c; q++)
-      s += '<rect x="' + (1 + (x0 + q * (cw + gx)) * k) + '" y="' + (1 + (y0 + r * (ch + gy)) * k) + '" width="' + cw * k + '" height="' + ch * k + '" fill="' + SCH.card + '" stroke="' + SCH.cardEdge + '" stroke-width="0.6"/>';
+    // блоки: без своего оборота — один; со своим — лица (синие) слева и обороты (оранжевые) справа зеркально
+    // блоки: без своего оборота — один; со своим — лица (синие) и обороты (оранжевые): справа зеркально
+    // или снизу (через голову). Обороты, развёрнутые на 180°, — надпись и стрелки вверх ногами
+    var turn180 = wt && (tb != ($('wtCal').value == '1'));
+    var dealSt = eqCur == 'uv' ? cutStart() : 'tl';
+    var blocks = !wt ? [[x0, SCH.card, SCH.cardEdge, '', y0, 0]]
+      : [[x0, '#2d5d93', '#9cc7f0', 'ЛИЦО', y0, 0], [tb ? x0 : W - x0 - bw, '#a8561c', '#f5c79f', 'ОБОРОТ', tb ? H - y0 - bh : y0, turn180 ? 180 : 0]];
+    for (var b = 0; b < blocks.length; b++) {
+      var bx = blocks[b][0], byb = blocks[b][4], brot = blocks[b][5];
+      for (var r = 0; r < n; r++) for (var q = 0; q < c; q++) {
+        var rx = 1 + (bx + q * (cw + gx)) * k, ry = 1 + (byb + r * (ch + gy)) * k;
+        // волна раздачи — от угла, где карта 1: по диагонали ряд + колонка; у второго блока (оборотов) — чуть позже
+        var dr = dealSt.charAt(0) == 'b' ? n - 1 - r : r, dq = dealSt.charAt(dealSt.length - 1) == 'r' ? c - 1 - q : q;
+        s += '<rect class="cd" data-w="' + (dr + dq + b * 3) + '" x="' + rx + '" y="' + ry + '" width="' + cw * k + '" height="' + ch * k + '" fill="' + blocks[b][1] + '" stroke="' + blocks[b][2] + '" stroke-width="0.6"/>';
+        // у каждого макета — стрелка к его верху: видно, как он стоит
+        if (wt && cw * k > 10 && ch * k > 14) {
+          var ax = rx + cw * k / 2, ay = brot ? ry + ch * k - 4 : ry + 4, ad = brot ? -1 : 1;
+          s += '<path d="M' + ax + ' ' + ay + ' l-3 ' + (5 * ad) + ' h6 z" fill="#ffffff" opacity="0.9"/>';
+        }
+      }
+      if (wt && c > 0 && n > 0) {
+        var tf = Math.max(8, Math.min(13, bw * k / 6)), tx = 1 + (bx + bw / 2) * k, ty = 1 + (byb + bh / 2) * k;
+        s += '<text x="' + tx + '" y="' + (ty + tf * 0.36) + '" font-size="' + tf + '" font-weight="bold" text-anchor="middle" fill="#ffffff" stroke="rgba(0,0,0,.35)" stroke-width="0.4"' +
+          (brot ? ' transform="rotate(180 ' + tx + ' ' + ty + ')"' : '') + '>' + blocks[b][3] + '</text>';
+      }
+    }
+    if (wt && !tb) {
+      // ось переворота: лист переворачивают слева направо вокруг середины
+      s += '<line x1="' + (1 + w / 2) + '" y1="1" x2="' + (1 + w / 2) + '" y2="' + (1 + h) + '" stroke="#e05050" stroke-width="1" stroke-dasharray="4,3"/>';
+      s += '<text x="' + (1 + w / 2) + '" y="' + (1 + h - 3 - (gs == '2' ? gm : 0)) + '" font-size="9" text-anchor="middle" fill="#c43c3c">⇄ переворот</text>';
+    }
+    if (tb) {
+      // через голову: ось — поперёк листа
+      s += '<line x1="1" y1="' + (1 + h / 2) + '" x2="' + (1 + w) + '" y2="' + (1 + h / 2) + '" stroke="#e05050" stroke-width="1" stroke-dasharray="4,3"/>';
+      s += '<text x="' + (1 + w - 3) + '" y="' + (1 + h / 2 - 3) + '" font-size="9" text-anchor="end" fill="#c43c3c">⇅ переворот</text>';
+    }
     // УФ: карта 1 — в углу точки старта, с неё пойдут номера
     if (eqCur == 'uv' && impMode == 'sample' && c > 0 && n > 0) {
-      var fr = av == '1' ? n - 1 : 0, fq = ah == '2' ? c - 1 : 0, fs = Math.max(7, Math.min(14, Math.min(cw, ch) * k * 0.6));
+      var cs1 = cutStart(), fr = cs1.charAt(0) == 'b' ? n - 1 : 0, fq = cs1.charAt(cs1.length - 1) == 'r' ? c - 1 : 0, fs = Math.max(7, Math.min(14, Math.min(cw, ch) * k * 0.6));
       s += '<text x="' + (1 + (x0 + fq * (cw + gx) + cw / 2) * k) + '" y="' + (1 + (y0 + fr * (ch + gy) + ch / 2) * k + fs * 0.36) + '" font-size="' + fs + '" font-weight="bold" text-anchor="middle" fill="' + SCH.cardEdge + '">1</text>';
     }
-    if ($('cutMarks').checked && c > 0 && n > 0) {
+    if ($('cutMarks').checked && c > 0 && n > 0) for (var mb = 0; mb < blocks.length; mb++) {
       var L = 4, e = 1;   // метки на схеме — условно, чтобы было видно, где они будут
+      x0 = blocks[mb][0]; y0 = blocks[mb][4];
       for (var q2 = 0; q2 < c; q2++) for (var k2 = 0; k2 < 2; k2++) {
         var xx = 1 + (x0 + q2 * (cw + gx) + k2 * cw) * k;
-        s += '<line x1="' + xx + '" y1="' + (1 + y0 * k - e) + '" x2="' + xx + '" y2="' + (1 + y0 * k - e - L) + '" stroke="#e0806a"/>';
-        s += '<line x1="' + xx + '" y1="' + (1 + (y0 + bh) * k + e) + '" x2="' + xx + '" y2="' + (1 + (y0 + bh) * k + e + L) + '" stroke="#e0806a"/>';
+        if (!(tb && mb == 1)) s += '<line x1="' + xx + '" y1="' + (1 + y0 * k - e) + '" x2="' + xx + '" y2="' + (1 + y0 * k - e - L) + '" stroke="#e0806a"/>';
+        if (!(tb && mb == 0)) s += '<line x1="' + xx + '" y1="' + (1 + (y0 + bh) * k + e) + '" x2="' + xx + '" y2="' + (1 + (y0 + bh) * k + e + L) + '" stroke="#e0806a"/>';
       }
       for (var r2 = 0; r2 < n; r2++) for (var k3 = 0; k3 < 2; k3++) {
         var yy = 1 + (y0 + r2 * (ch + gy) + k3 * ch) * k;
-        s += '<line x1="' + (1 + x0 * k - e) + '" y1="' + yy + '" x2="' + (1 + x0 * k - e - L) + '" y2="' + yy + '" stroke="#e0806a"/>';
-        s += '<line x1="' + (1 + (x0 + bw) * k + e) + '" y1="' + yy + '" x2="' + (1 + (x0 + bw) * k + e + L) + '" y2="' + yy + '" stroke="#e0806a"/>';
+        // свой оборот: у оси переворота меток нет — там вплотную другой блок
+        if (!(wt && !tb && mb == 1)) s += '<line x1="' + (1 + x0 * k - e) + '" y1="' + yy + '" x2="' + (1 + x0 * k - e - L) + '" y2="' + yy + '" stroke="#e0806a"/>';
+        if (!(wt && !tb && mb == 0)) s += '<line x1="' + (1 + (x0 + bw) * k + e) + '" y1="' + yy + '" x2="' + (1 + (x0 + bw) * k + e + L) + '" y2="' + yy + '" stroke="#e0806a"/>';
       }
     }
     if (plate) s = s0 + s + '</g>';
     $('sheetBox').innerHTML = '<svg width="' + (PW * k + 2) + '" height="' + (PH * k + 2) + '" xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
+    sheetDeal([c, n, rot, Math.round(cw), Math.round(ch), Math.round(W), Math.round(H), wt, tb, PW, PH].join('|'));
   }
 
   function what() { var r = document.getElementsByName('what'); for (var i = 0; i < r.length; i++) if (r[i].checked) return r[i].value; return 'all'; }
@@ -6290,20 +6710,20 @@
   function prnToFields() {
     var p = prnList[prnCur];
     $('prnName').value = p.n; $('prnFmt').value = p.fmt; $('tiffDpi').value = p.dpi; $('tiffRotate').value = String(p.rot || 0);
-    $('prnW').value = p.w; $('prnV').value = p.v; $('prnMir').checked = p.mir == 1; $('prnMark').value = p.mark || '';
+    $('prnW').value = p.w; $('prnV').value = p.v; $('prnMir').checked = p.mir == 1; $('prnCrop').checked = p.crop == 1; $('prnMark').value = p.mark || '';
     $('prnVer').value = p.ver || '15'; $('prnCurves').checked = p.curves != 0; $('prnCmyk').checked = p.cmyk != 0; $('prnNoDown').checked = p.nodown != 0;
     prnUi();
   }
   function prnFromFields() {
     var p = prnList[prnCur];
     p.n = $('prnName').value.replace(/^\s+|\s+$/g, '') || p.n; p.fmt = $('prnFmt').value; p.dpi = parseInt($('tiffDpi').value, 10) || 720; p.rot = +$('tiffRotate').value;
-    p.w = $('prnW').value.replace(/^\s+|\s+$/g, '') || 'W'; p.v = $('prnV').value.replace(/^\s+|\s+$/g, '') || 'V'; p.mir = $('prnMir').checked ? 1 : 0; p.mark = $('prnMark').value;
+    p.w = $('prnW').value.replace(/^\s+|\s+$/g, '') || 'W'; p.v = $('prnV').value.replace(/^\s+|\s+$/g, '') || 'V'; p.mir = $('prnMir').checked ? 1 : 0; p.crop = $('prnCrop').checked ? 1 : 0; p.mark = $('prnMark').value;
     p.ver = $('prnVer').value; p.curves = $('prnCurves').checked ? 1 : 0; p.cmyk = $('prnCmyk').checked ? 1 : 0; p.nodown = $('prnNoDown').checked ? 1 : 0;
   }
   // выбранный профиль — в настройки вывода и в кнопки
   function prnApply() {
     var p = prnList[prnCur];
-    call('PrinterApply', ['fmt=' + p.fmt, 'dpi=' + p.dpi, 'rot=' + p.rot, 'w=' + p.w, 'v=' + p.v, 'mark=' + (p.mark || ''), 'mir=' + p.mir, 'ver=' + p.ver, 'curves=' + p.curves, 'cmyk=' + p.cmyk, 'nodown=' + p.nodown].join('|').replace(/[\r\n]/g, ''));
+    call('PrinterApply', ['fmt=' + p.fmt, 'dpi=' + p.dpi, 'rot=' + p.rot, 'w=' + p.w, 'v=' + p.v, 'mark=' + (p.mark || ''), 'mir=' + p.mir, 'ver=' + p.ver, 'curves=' + p.curves, 'cmyk=' + p.cmyk, 'nodown=' + p.nodown, 'crop=' + (p.crop || 0)].join('|').replace(/[\r\n]/g, ''));
     call('PrinterSave', JSON.stringify(prnList), p.n);
   }
   function prnUi() {
@@ -6388,7 +6808,64 @@
   }
 
   // ---------- действия ----------
+  // ---- перетаскивание пунктов оборудования ----
+  var stepDrag = null, stepDragged = false;
+  function stepEl(t) { while (t && t != document) { if (t.className && /\bst\b/.test(t.className) && t.getAttribute && t.getAttribute('data-act') == 'eqstep') return t; t = t.parentNode; } return null; }
+  function stepItems() { var r = [], a = document.querySelectorAll('.stp .st'); for (var i = 0; i < a.length; i++) r.push(a[i]); return r; }
+  function stepMark(items, to) {
+    for (var i = 0; i < items.length; i++) items[i].className = items[i].className.replace(/\s*\b(dropl|dropr)\b/g, '');
+    if (to == null) return;
+    if (to < items.length) items[to].className += ' dropl'; else items[items.length - 1].className += ' dropr';
+  }
+  // запомнить, что шаг cs снова выбран после перестановки (номер шага у него сменился)
+  function eqStepKeep(cs) {
+    var E = eqOf(eqCur);
+    for (var i = 0; i < E.steps.length; i++) if (E.steps[i] == cs) { eqStep = i; try { LS.setItem('vpEqStep_' + eqCur, String(i)); } catch (x) { } }
+  }
+  document.addEventListener('mousedown', function (ev) {
+    if (ev.button !== 0) return;
+    var el = stepEl(ev.target); if (!el) return;
+    stepDrag = { el: el, x: ev.clientX, on: false, to: null };
+  }, true);
+  document.addEventListener('mousemove', function (ev) {
+    if (!stepDrag) return;
+    if (!stepDrag.on) {
+      if (Math.abs(ev.clientX - stepDrag.x) < 6) return;
+      stepDrag.on = true; stepDrag.el.className += ' drag';
+    }
+    var items = stepItems(), to = items.length, i, r;
+    for (i = 0; i < items.length; i++) { r = items[i].getBoundingClientRect(); if (ev.clientX < (r.left + r.right) / 2) { to = i; break; } }
+    stepDrag.to = to; stepMark(items, to);
+    ev.preventDefault();
+  }, true);
+  document.addEventListener('mouseup', function () {
+    if (!stepDrag) return;
+    var d = stepDrag; stepDrag = null;
+    if (!d.on) return;
+    stepDragged = true; setTimeout(function () { stepDragged = false; }, 400);
+    var items = stepItems(), from = -1, i;
+    stepMark(items, null); d.el.className = d.el.className.replace(/\s*\bdrag\b/g, '');
+    for (i = 0; i < items.length; i++) if (items[i] == d.el) from = i;
+    if (from < 0 || d.to == null || d.to == from || d.to == from + 1) return;
+    // видимые пункты в новом порядке; скрытые (редкие в простом режиме) остаются на своих местах в хвосте
+    var E = eqOf(eqCur), cs = E.steps[eqStep], vis = visSteps(E), seq = [], all = [];
+    for (i = 0; i < vis.length; i++) seq.push(E.steps[vis[i]]);
+    var mv = seq.splice(from, 1)[0];
+    seq.splice(d.to > from ? d.to - 1 : d.to, 0, mv);
+    for (i = 0; i < E.steps.length; i++) if (!inArr(seq, E.steps[i])) seq.push(E.steps[i]);
+    for (i = 0; i < seq.length; i++) all.push(seq[i].n);
+    try { LS.setItem('vpEqOrd_' + E.id, all.join('|')); } catch (x) { }
+    eqOrderApply(E); eqStepKeep(cs); renderEq(); bind();
+  }, true);
+
   function onClickEl(e) {
+    // переключатель режима — плашка трогается сразу; запись в журнал через CorelDRAW и перестройка панели —
+    // после того как она доехала: пока панель занята, движение замирает
+    if (e.getAttribute('data-act') == 'uimode' && !e.swGo && /\bmodesw\b/.test(e.parentNode.className) && e.getAttribute('data-v') != uiMode) {
+      swMove(e.parentNode, e.getAttribute('data-v'));
+      e.swGo = true; setTimeout(function () { try { onClickEl(e); } finally { e.swGo = false; } }, /\bnomotion\b/.test(document.body.className) ? 0 : 280);
+      return;
+    }
     if (!e.busyGo) call('LogLine', 'щелчок: ' + (e.getAttribute('data-act') || '') + (e.getAttribute('data-field') ? 'поле ' + e.getAttribute('data-field') : '') + (e.getAttribute('data-tab') ? 'вкладка ' + e.getAttribute('data-tab') : ''));
     var md = e.getAttribute('data-mod');
     if (md && !hasMod(md)) { lockSay(md); return; }
@@ -6514,7 +6991,7 @@
       cfBuilt = ''; renderEq(); applyEq(); bind(); return;
     }
     if (ac == 'calsec') { calSec = e.getAttribute('data-v'); try { LS.setItem('calSec', calSec); } catch (x) { } calSecShow(); return; }
-    if (ac == 'svc') { svcShow($('svcBar').className.indexOf('open') < 0); return; }
+    if (ac == 'svc') { try { LS.setItem('vpNoHint', '1'); } catch (x) { } uiClasses(); svcShow($('svcBar').className.indexOf('open') < 0); return; }
     if (ac == 'helpcat') { svcShow(false); helpShow(e.getAttribute('data-v') || eqCur); return; }
     if (ac == 'calcatalog') {
       helpShow(5);
@@ -6591,6 +7068,7 @@
     if (ac == 'pfcheck') { say('Проверяю…'); setTimeout(function () { pfRun(); say(''); }, 30); return; }
     if (ac == 'pfpdf') { say('Проверяю и сохраняю PDF…'); setTimeout(function () { var pr = call('PFExport', $('pfProfile').value, $('pfBleed').value, $('pfCrop').checked ? '1' : '0'); say(pr); }, 30); return; }
     if (ac == 'approval') { say('Делаю лист согласования…'); setTimeout(function () { say(call('OrderApproval', $('pfBleed').value)); }, 30); return; }
+    if (ac == 'sheetsprev') { say('Делаю превью листов…'); setTimeout(function () { say(call('OrderSheets')); load(); }, 30); return; }
     if (ac == 'jobsheet') { say('Делаю задание в печать…'); setTimeout(function () { say(call('OrderJob')); }, 30); return; }
     if (ac == 'proof') { say('Делаю превью…'); setTimeout(function () { say(call('ProofRun', $('pfBleed').value)); }, 30); return; }
     if (ac == 'package') { say('Собираю заказ: макет, PDF, превью, шрифты… Это займёт минуту-другую.'); setTimeout(function () { say(call('PackageRun', $('pfProfile').value, $('pfBleed').value)); }, 30); return; }
@@ -6627,16 +7105,23 @@
       if (!sst || (sst.adv && uiMode == 'simple')) si = 0;
       eqGo(si, fresh); say(''); load(); return;
     }
-    if (ac == 'eqstep') { eqGo(+e.getAttribute('data-i'), false); say(''); load(); return; }
-    if (ac == 'uimode') {
-      uiMode = e.getAttribute('data-v');
-      try { LS.setItem('vpMode', uiMode); } catch (x) { }
-      uiClasses();
-      // в простом режиме нет редких шагов — с такого шага уходим на первый
-      var ca = eqActive(), CE = eqOf(eqCur);
-      if (uiMode == 'simple' && ca >= 0 && CE.steps[ca].adv) { eqGo(0, false); load(); return; }
-      renderEq(); bind(); return;
+    if (ac == 'eqstep') { if (stepDragged) { stepDragged = false; return; } eqGo(+e.getAttribute('data-i'), false); say(''); load(); return; }
+    if (ac == 'eqordreset') {
+      var cs = eqOf(eqCur).steps[eqStep];
+      for (var oi = 0; oi < EQ.length; oi++) try { LS.removeItem('vpEqOrd_' + EQ[oi].id); } catch (x) { }
+      eqOrderAll(); eqStepKeep(cs); renderEq(); renderSvc(); bind(); say('Порядок пунктов — как было.'); return;
     }
+    if (ac == 'uimode') {
+      var nmode = e.getAttribute('data-v');
+      if (nmode == uiMode) return;
+      // сначала плашка спокойно переезжает, потом панель перестраивается под режим — иначе перестройка рвёт движение
+      if (/\bmodesw\b/.test(e.parentNode.className)) swMove(e.parentNode, nmode);
+      uiMode = nmode;
+      try { LS.setItem('vpMode', uiMode); } catch (x) { }
+      if (e.swGo || /\bnomotion\b/.test(document.body.className)) uiModeApply(); else setTimeout(function () { uiModeApply(); }, 280);
+      return;
+    }
+    if (ac == 'svctipok' || ac == 'svctipopen') { try { LS.setItem('vpNoHint', '1'); } catch (x) { } uiClasses(); if (ac == 'svctipopen') svcShow(true); return; }
     if (ac == 'terse') {
       terse = !terse;
       try { LS.setItem('vpTerse', terse ? '1' : '0'); } catch (x) { }
@@ -6730,7 +7215,8 @@
       load(); return;
     }
     if (a == 'del') { if (call('RemoveField', cur) == 'ok') cur = 0; load(); return; }
-    if (a == 'show') { call('ShowField', cur); return; }
+    // подставить в макет значения первого листа (как «Показать лист 1» при выводе) и выделить поле
+    if (a == 'show') { var rs = call('Run', 'preview', '1', '1'); call('ShowField', cur); say(rs || 'Подставил первые значения — номер выделен на макете.'); return; }
     if (a == 'pickfile') { if (call('PickDataFile', cur)) load(); return; }
     if (a == 'pickfolder') { if (call('PickPicFolder', cur)) load(); return; }
     if (a == 'white') { say(call('WhiteMove')); load(); return; }
@@ -6816,6 +7302,11 @@
       try { LS.setItem('impMode', impMode); } catch (x) { }
       load(); return;
     }
+    if (a == 'turn') {
+      $('workTurn').checked = e.getAttribute('data-v') == '1';
+      if (!$('workTurn').checked) $('mirror').checked = true;
+      turnUi(); impCalc(); return;
+    }
     if (a == 'impsrc') { impMode = e.getAttribute('data-v'); try { LS.setItem('impMode', impMode); } catch (x) { } load(); return; }
     if (a == 'selsize') {
       var z = selSize();
@@ -6836,6 +7327,7 @@
   };
 
   function onChangeEl(e) {
+    if (e.id == 'svcMotion') { try { LS.setItem('vpNoMotion', e.checked ? '0' : '1'); } catch (x) { } uiClasses(); return; }
     if (e.id == 'svcTerse') {
       terse = !e.checked; try { LS.setItem('vpTerse', terse ? '1' : '0'); } catch (x) { }
       uiClasses(); return;
@@ -6844,9 +7336,21 @@
     if (lm && !hasMod(lm)) { if (e.type == 'checkbox') e.checked = false; lockSay(lm); return; }
     try { if (e.type != 'password' && e.id != 'licKey') call('LogLine', 'изменено: ' + (e.id || e.getAttribute('data-set') || e.name || '?') + ' = ' + (e.type == 'checkbox' ? (e.checked ? 'да' : 'нет') : String(e.value).substring(0, 100))); } catch (x) { }
     var ink = e.getAttribute('data-ink'), pick = e.getAttribute('data-pick');
-    if (ink) { call('SetInk', ink, e.type == 'checkbox' ? (e.checked ? '1' : '0') : e.value); load(); return; }
+    if (ink) {
+      call('SetInk', ink, e.type == 'checkbox' ? (e.checked ? '1' : '0') : e.value);
+      // общего выключателя нет: печатается хоть одна краска — спецкраски включены, сняты обе — выключены
+      if (/^use\d$/.test(ink) && S && S.inks) {
+        var anyUse = e.checked;
+        // были выключены — на виду все галочки сняты; включается только отмеченная краска
+        if (!S.inks.on && e.checked) { for (var uk = 0; uk < S.inks.list.length; uk++) if ('use' + S.inks.list[uk].i != ink) call('SetInk', 'use' + S.inks.list[uk].i, '0'); }
+        else for (var ui = 0; ui < S.inks.list.length; ui++) if ('use' + S.inks.list[ui].i != ink && S.inks.list[ui].use) anyUse = true;
+        if (anyUse != !!S.inks.on) call('SetInk', 'on', anyUse ? '1' : '0');
+      }
+      if (ink == 'on' && e.checked) for (var uj = 0; uj < S.inks.list.length; uj++) if (!S.inks.list[uj].use) call('SetInk', 'use' + S.inks.list[uj].i, '1');
+      load(); return;
+    }
     if (pick) { if (e.value) { call('SetInk', pick, e.value); load(); } return; }
-    if (e.id == 'inkOn' || e.id == 'inkMirror') { call('SetInk', e.id == 'inkOn' ? 'on' : 'mirror', e.checked ? '1' : '0'); load(); return; }
+    if (e.id == 'inkMirror') { call('SetInk', 'mirror', e.checked ? '1' : '0'); load(); return; }
     var k = e.getAttribute('data-set'), v;
     if (k) {
       v = (e.type == 'checkbox') ? (e.checked ? '1' : '0') : e.value;
@@ -6875,15 +7379,17 @@
       if (id == 'marginSides' && $('marginSides').checked) { var mm = $('margin').value; if (!parseFloat($('marginT').value) && !parseFloat($('marginB').value) && !parseFloat($('marginL').value) && !parseFloat($('marginR').value)) { $('marginT').value = mm; $('marginB').value = mm; $('marginL').value = mm; $('marginR').value = mm; } }
       impCalc(); return;
     }
+    if (id == 'wtMode' || id == 'wtCal') { turnUi(); impCalc(); return; }
     if (id == 'askOut') { call('SetAskOut', e.checked ? '1' : '0'); return; }
     if (id == 'pfProfile') { pfDefaults(); return; }
     if (id == 'gang') { $('gangBox').style.display = e.checked ? '' : 'none'; $('selSizeBtn').style.display = e.checked ? 'none' : ''; impCalc(); return; }
     if (id == 'gangQty') { impCalc(); return; }
     if (inArr(CK, id)) { calcSave(); calcUpdate(); return; }
-    if (id == 'sheetPreset') { if (e.value) { var ps = e.value.split('|'); $('sheetW').value = ps[0]; $('sheetH').value = ps[1]; $('margin').value = ps[2]; } impCalc(); return; }
+    if (id == 'sheetPreset') { if (e.value) { var ps = e.value.split('|'); $('sheetW').value = ps[0]; $('sheetH').value = ps[1]; if (!offOn()) $('margin').value = ps[2]; } impCalc(); return; }
     if (id == 'backDX' || id == 'backDY') { return; }
     if (id && id.indexOf('bk') == 0 && inArr(BK, id)) { bookSave(); bookUi(); bookPlan(); return; }
     if (id && id.indexOf('pl') == 0 && inArr(PL, id)) { plChange(id); return; }
+    if (id == 'uvCenter') { try { LS.setItem('uvCenter', e.checked ? '1' : '0'); } catch (x) { } uvAlignSync(); impCalc(); return; }
     if (id == 'smGap') { try { LS.setItem('smGap', e.value); } catch (x) { } return; }
     if (id == 'nsMarks') { try { LS.setItem('nsMarks', e.checked ? '1' : '0'); } catch (x) { } return; }
     if (id == 'rollMarks') { var dm = { '1': [3, 10], '2': [5, 10], '3': [10, 10], '4': [4, 3] }[e.value]; if (dm) { $('rollMSize').value = dm[0]; $('rollMGap').value = dm[1]; } $('rollMarkRow').style.display = e.value == '0' ? 'none' : ''; impCalc(); return; }
