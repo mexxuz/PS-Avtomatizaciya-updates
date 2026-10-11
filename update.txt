@@ -1,9 +1,10 @@
-version=1.8.6
-note=Офсет: раскладка флаеров по умолчанию (еврофлаер, рез в одну линию, метки, шкалы), свой оборот с вариантами (вбок или через голову, книжный или календарный) и цветом на превью. Вывод «по содержимому» для РИПа. PDF раскладки стал в десятки раз легче. Превью листов для бланка заказа. УФ: блок по центру стола, настройки шаблона в «Раскладке». Шаги можно переставлять перетаскиванием. Спецкраски — по одной галочке. Проверка ловит картинку на слое белил/лака. Новое поле нумерации получает первый свободный номер. Плавная анимация панели и управление с клавиатуры.
-file=VarPrint.gms|e5a8d2d0bad3ffcee47d965b4f15d50e2d05320170bdbf2a0cdc0580f7725fb0
-file=index.html|eed0e8077471429204e24ec20a0877a28702fe33ce328f4bb19f4eb6eecc8668
-file=VarPrint_merge.exe|9c8349f340350068e77756772dfc979c9c36bca0df69b9c8c3eca7f4e57f2191
-file=VarPrint_nest.exe|73d8f9909789c9100e868c8ebc7ea23b429ee14826cc9cfd0f5fca9379fac834
+version=1.9.2
+note=Проверка макета ловит плохие тени: чёрные из четырёх красок и в цветах экрана — исправляются кнопкой в чистую чёрную, тень на плашке, белилах и у линии реза — предупреждение, детализация теней — 300. Новое: панель для Illustrator 2021 и новее (ключ общий с CorelDRAW). Сообщение разработчику можно отправить с фото и снимком экрана. Установщик сам находит CorelDRAW и Illustrator и спрашивает окном, куда ставить.
+file=VarPrint.gms|1ca4fe88e18953597b6f6a5f847749f1d316f9069a950b437e20f4d7a5add06b
+file=index.html|abac51f5ab89a508db9fbe31b7d298f9b4f73335fd34671536b572b876c39c25
+file=VarPrint_merge.exe|7a7a2ca7262ee2d954bce3e180b7c5903d97487c773ae70004313aeff70c9675
+file=VarPrint_nest.exe|803751a935d760f2e14459ce856a4cb5aae4f2f5d3aeea55ac5efd3eb0094a58
 file=VarPrint_white.jsx|dcf0d65cab851bd80481fb015aed97779a75e37fb42a8da3d2b81b3d54b5fed0
 file=VarPrint.ico|b2bf09223388e9d4ae4da0465fe2e80f934ce812468df78b6978210350772dac
-sig=HoRTlChjnnL56V4ueSTZkRMJHzg_LcibnzxGZrrmWDA95h5uYf5ikUvhLMKABQ1yuqVqPUKhLbXofNyjqBqyyQ
+aifile=illustrator.zip|1766750d9e0afd48d9625fe33f3061a8e8c6cbf011a1861fc628974b01b53af0
+sig=g-7LTy-esgRZ5VSx3y9ibonixPSXv-WupY-Zn6wnWE5myasiWHjqARGLwrkq_ViHriioxTpA4MZI93qC_bN6Rw
